@@ -1,6 +1,6 @@
 1. <program> ===> <otherFunctions> <mainFunction>
 2. <mainFunction>===> TK_MAIN <stmts> TK_END
-3. <otherFunctions>===> <function><otherFunctions> | ∈
+3. <otherFunctions====> <function><otherFunctions> | ∈
 4. <function>===>TK_FUNID <input_par> <output_par> TK_SEM <stmts> TK_END
 5. <input_par>===>TK_INPUT TK_PARAMETER TK_LIST TK_SQL <parameter_list> TK_SQR
 6. <output_par>===>TK_OUTPUT TK_PARAMETER TK_LIST TK_SQL <parameter_list> TK_SQR
@@ -36,9 +36,12 @@ TK_ENDWHILE
 30. <conditionalStmt>===> TK_IF <booleanExpression> TK_THEN <stmt><otherStmts> TK_ELSE <otherStmts> TK_ENDIF
 31. <conditionalStmt>===> TK_IF <booleanExpression> TK_THEN <stmt><otherStmts> TK_ENDIF
 32. <ioStmt>===>TK_READ TK_OP <var> TK_CL TK_SEM | TK_WRITE TK_OP <var> TK_CL TK_SEM
-33. <arithmeticExpression>===><arithmeticExpression> <operator> <arithmeticExpression>
+33. <arithmeticExpression>===> <arithmeticExpression> <operator> <term> | <term>
+<term> -> <term> <op_H> <factor> | <factor>
+<factor> ====> TK_ID | TK_NUM | TK_RNUM | OP <arithmeticExpreession> CP
 34. <arithmeticExpression> ====>TK_OP <arithmeticExpression> TK_CL | <var>
-35. <operator> ===> TK_PLUS | TK_MUL |TK_MINUS|TK_DIV
+35. <operator> ===> TK_PLUS | TK_MINUS
+<op_H> ====> TK_MUL | TK_DIV
 36. <booleanExpression>===>TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP
 <booleanExpression> TK_CL
 37. <booleanExpression>===> <var> <relationalOp> <var>
