@@ -33,19 +33,18 @@
 28. <inputParameters>===> TK_SQL <idList> TK_SQR
 29. <iterativeStmt>===> TK_WHILE TK_OP <booleanExpression> TK_CL <stmt><otherStmts>
 TK_ENDWHILE
-30. <conditionalStmt>===> TK_IF <booleanExpression> TK_THEN <stmt><otherStmts> TK_ELSE <otherStmts> TK_ENDIF
-31. <conditionalStmt>===> TK_IF <booleanExpression> TK_THEN <stmt><otherStmts> TK_ENDIF
+30. <conditionalStmt>===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt><otherStmts> TK_ELSE <stmt> <otherStmts> TK_ENDIF
+31. <conditionalStmt>===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt><otherStmts> TK_ENDIF
 32. <ioStmt>===>TK_READ TK_OP <var> TK_CL TK_SEM | TK_WRITE TK_OP <var> TK_CL TK_SEM
 33. <arithmeticExpression>===> <arithmeticExpression> <operator> <term> | <term>
 <term> -> <term> <op_H> <factor> | <factor>
-<factor> ====> TK_ID | TK_NUM | TK_RNUM | OP <arithmeticExpreession> CP
-34. <arithmeticExpression> ====>TK_OP <arithmeticExpression> TK_CL | <var>
+<factor> ====> <var> | TK_OP <arithmeticExpreession> TK_CL
 35. <operator> ===> TK_PLUS | TK_MINUS
 <op_H> ====> TK_MUL | TK_DIV
 36. <booleanExpression>===>TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP
 <booleanExpression> TK_CL
 37. <booleanExpression>===> <var> <relationalOp> <var>
-38. <booleanExpression>===> TK_NOT OP <booleanExpression> CP | TK_NOT <booleanExpression> 
+38. <booleanExpression>===> TK_NOT TK_OP <booleanExpression> TK_CL | TK_NOT <booleanExpression> 
 39. <var>===> <singleOrRecId> | TK_NUM | TK_RNUM 
 40. <logicalOp>===>TK_AND | TK_OR
 41. <relationalOp>===> TK_LT | TK_LE | TK_EQ |TK_GT | TK_GE | TK_NE
