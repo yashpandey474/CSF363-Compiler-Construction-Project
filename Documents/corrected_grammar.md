@@ -45,8 +45,8 @@ TK_ENDWHILE
 36. <booleanExpression>===>TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP
 <booleanExpression> TK_CL
 37. <booleanExpression>===> <var> <relationalOp> <var>
-38. <booleanExpression>===> TK_NOT <booleanExpression>
-39. <var>===> <singleOrRecId> | TK_NUM | TK_RNUM | TK_ID <newRec>
+38. <booleanExpression>===> TK_NOT OP <booleanExpression> CP | TK_NOT <booleanExpression> 
+39. <var>===> <singleOrRecId> | TK_NUM | TK_RNUM 
 40. <logicalOp>===>TK_AND | TK_OR
 41. <relationalOp>===> TK_LT | TK_LE | TK_EQ |TK_GT | TK_GE | TK_NE
 42. <returnStmt>===>TK_RETURN <optionalReturn> TK_SEM
