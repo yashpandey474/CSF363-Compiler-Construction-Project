@@ -1,3 +1,4 @@
+KEYWORDS:
 as
 call
 definetype
@@ -7,16 +8,20 @@ input, int, if
 list
 output
 parameters, parameter
-ral, read, return, record
+real, read, return, record
 type, then
 union
 with, while write
 <---, <, <=
 >, >=
 ==, !=, ~, @@@, &&&, /, *, -, +, ., :, ;, ,,(, ), [, ]
-_main, _[a-z|A-Z][a-z|A-Z]*[0-9]*
-#[a-z][a-z]*
-[a-z][a-z]*
-[0-9][0-9]*
-[0-9][0-9]*.[0-9][0-9] | [0-9][0-9]*.[0-9][0-9]E(+|-|eps)[0-9][0-9]
+_main, 
 
+OTHER:
+TK_FUNID: _[a-z|A-Z][a-z|A-Z]*[0-9]*
+TK_ID: [b-d] [2-7][b-d] *[2-7] *
+TK_RUID: #[a-z][a-z]*
+TK_FIELDID: [a-z][a-z]*
+TK_NUM: [0-9][0-9]*
+TK_RNUM: [0-9][0-9]*.[0-9][0-9] | [0-9][0-9]*.[0-9][0-9]E(+|-|eps)[0-9][0-9]
+DELIMITER: \n, \t, " "
