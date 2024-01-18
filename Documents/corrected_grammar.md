@@ -32,9 +32,11 @@
 30. <conditionalStmt>===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt><otherStmts> <new3> TK_ENDIF 
 <new3> ====> TK_ELSE <stmt> <otherStmts> | ∈
 32. <ioStmt>===>TK_READ TK_OP <var> TK_CL TK_SEM | TK_WRITE TK_OP <var> TK_CL TK_SEM
-33. <arithmeticExpression>===> <arithmeticExpression> <operator> <term> | <term>
-<term> -> <term> <op_H> <factor> | <factor>
-<factor> ====> <var> | TK_OP <arithmeticExpreession> TK_CL
+33. <arithmeticExpression>===> <term> <new5>
+<new5> ====> <operator> <term> <new5> | ∈
+<term> ====> <factor> <new6>
+<new6> ====> <op_H> <factor> <new6> | ∈
+<factor> ====> <var> | TK_OP <arithmeticExpression> TK_CL
 35. <operator> ===> TK_PLUS | TK_MINUS
 <op_H> ====> TK_MUL | TK_DIV
 36. <booleanExpression>===> TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP <booleanExpression> TK_CL | <var> <relationalOp> <var> | TK_NOT <new4>
