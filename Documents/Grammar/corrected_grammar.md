@@ -39,8 +39,7 @@
 <factor> ====> <var> | TK_OP <arithmeticExpression> TK_CL
 35. <operator> ===> TK_PLUS | TK_MINUS
 <op_H> ====> TK_MUL | TK_DIV
-36. <booleanExpression>===> TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP <booleanExpression> TK_CL | <var> <relationalOp> <var> | TK_NOT <new4>
-<new4> ====> TK_OP <booleanExpression> TK_CL  | <booleanExpression>
+36. <booleanExpression>===> TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP <booleanExpression> TK_CL | <var> <relationalOp> <var> | TK_NOT TK_OP <booleanExpression> TK_CL 
 39. <var>===> <singleOrRecId> | TK_NUM | TK_RNUM 
 40. <logicalOp>===>TK_AND | TK_OR
 41. <relationalOp>===> TK_LT | TK_LE | TK_EQ |TK_GT | TK_GE | TK_NE
