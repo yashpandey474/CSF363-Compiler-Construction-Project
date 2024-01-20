@@ -1,5 +1,28 @@
 // Enumerated token types
-typedef enum Tokentype {
+#include <stdio.h>
+#define HASH_MAP_SIZE 69
+
+
+//LEXICAL ANALYSER
+struct LexicalAnalyzer{
+    int lineNo, begin, forward;
+};
+
+//DECLARATIONS AND GLOBAL VARIABLES
+extern struct SymbolTableNode* symbolTable[HASH_MAP_SIZE] = { NULL };
+struct SymbolTableNode
+{
+    struct SymbolTableEntry *entry;
+    struct SymbolTableNode *next;
+};
+struct SymbolTableEntry
+{
+    char *lexeme;
+    int lineNo;
+    enum Tokentype tokenType;
+};
+
+typedef enum Tokentype{
     TK_ASSIGNOP,
     TK_COMMENT,
     TK_WITH,
@@ -48,59 +71,38 @@ typedef enum Tokentype {
     TK_EQ,
     TK_GT,
     TK_GE,
-    TK_NE
+    TK_NE,
+    TK_COMMENT,
+    TK_FIELDID ,
+    TK_ID,
+    TK_NUM,
+    TK_RNUM,
+    TK_FUNID
 };
-
-// Corresponding keywords or symbols
-char* keywordList[] = {
+typedef enum sigma{
+    "<",
+    ">",
     "=",
+    "-",
     "%",
-    "with",
-    "parameters",
-    "end",
-    "while",
-    "union",
-    "endunion",
-    "definetype",
-    "as",
-    "type",
-    "_main",
-    "global",
-    "parameter",
-    "list",
-    "input",
-    "output",
-    "int",
-    "real",
-    "endwhile",
-    "if",
-    "then",
-    "endif",
-    "read",
-    "write",
-    "return",
-    "call",
-    "record",
-    "endrecord",
-    "else",
     ",",
     ";",
     ":",
     ".",
     "(",
     ")",
+    "[",
+    "]",
     "+",
     "-",
     "*",
     "/",
-    "&&&",
-    "@@@",
+    "&",
+    "@",
     "~",
-    "<",
-    "<=",
-    "==",
-    ">",
-    ">=",
-    "!="
+    "\n",
+    "\t",
+    " ",
+    "=", 
+    "#"
 };
-

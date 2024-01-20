@@ -2,6 +2,8 @@
 
 //INCLUDE LIBRARIES
 #include <stdio.h>
+#include <string.h>
+#include <lexical.h>
 
 //PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
 #define BUFFER_SIZE 256
@@ -39,7 +41,7 @@ void readIntoBuffer(struct TwinBuffer* twinBuffer, FILE* file){
     {
         buffer=twinBuffer->buffer+BUFFER_SIZE+1;
     }
-
+    //READING ALTERNATE BUFFER 
     twinBuffer->readingFirst = 1-twinBuffer->readingFirst;
     size_t read_bytes = fread(buffer, sizeof(char), BUFFER_SIZE, file);
 }
@@ -54,6 +56,56 @@ struct TwinBuffer initialiseTwinBuffer(){
     twinBuffer.buffer[2*BUFFER_SIZE + 1] = '\0';
 
     return twinBuffer;
+}
+
+
+char* lexicalError(){
+    return NULL;
+}
+
+struct SymbolTableEntry* scanToken(struct LexicalAnalyzer LA, struct TwinBuffer* twinBuffer, FILE* file){
+    
+    struct SymbolTableEntry* token;
+    token = (struct SymbolTableEntry*) malloc(sizeof(struct SymbolTableEntry*));
+
+    while(1)
+    {
+        //GET CHARACTER CURRENTLY BEING READ
+        char character = twinBuffer->buffer[LA.forward];
+        //CHECK AGAINST DFA - TO BE DONE LATER
+
+        //INCRMENT LINENO
+        // EOF ENCOUNTERED
+        if (character == '\0')
+        {
+            //RELOAD OTHER BUFER 
+            readIntoBuffer(twinBuffer, file);
+
+            //INCREMENT FORWARD
+            LA.forward = (LA.forward + 1)%(BUFFER_SIZE*2 + 2);
+
+        }
+        
+        else{
+            //INCREMENT FORWARD
+            LA.forward  = (LA.forward + 1)%(BUFFER_SIZE*2 + 2);
+
+        }
+
+        //GOT THE TOKEN
+        break;
+    }
+    //GET THE LEXEME
+    strncpy(token->lexeme, twinBuffer->buffer + LA.begin, LA.forward - LA.begin + 1);
+
+    // GET FINAL TOKEN
+    token = insertIntoSymbolTable (token);
+
+    //ADVANCE BEGIN FOR NEXT TOKEN
+    LA.begin = LA.forward;
+
+    //RETURN TOKEN
+    return token;
 }
 
 
