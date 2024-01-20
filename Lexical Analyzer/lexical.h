@@ -1,6 +1,12 @@
 // Enumerated token types
 #include <stdio.h>
+#include <stdlib.h>
+#ifndef LEXICAL_H
+#define LEXICAL_H
 #define HASH_MAP_SIZE 69
+#define MAX_ID_SIZE 20
+#define MAX_FUNID_SIZE 30
+
 
 
 //LEXICAL ANALYSER
@@ -9,20 +15,16 @@ struct LexicalAnalyzer{
 };
 
 //DECLARATIONS AND GLOBAL VARIABLES
-extern struct SymbolTableNode* symbolTable[HASH_MAP_SIZE] = { NULL };
+extern struct SymbolTableNode* symbolTable[HASH_MAP_SIZE];
 struct SymbolTableNode
 {
     struct SymbolTableEntry *entry;
     struct SymbolTableNode *next;
 };
-struct SymbolTableEntry
-{
-    char *lexeme;
-    int lineNo;
-    enum Tokentype tokenType;
-};
 
-typedef enum Tokentype{
+
+typedef enum Tokentype
+{
     TK_ASSIGNOP,
     TK_COMMENT,
     TK_WITH,
@@ -72,37 +74,43 @@ typedef enum Tokentype{
     TK_GT,
     TK_GE,
     TK_NE,
-    TK_COMMENT,
-    TK_FIELDID ,
+    TK_FIELDID,
     TK_ID,
     TK_NUM,
     TK_RNUM,
     TK_FUNID
+} ;
+struct SymbolTableEntry
+{
+    char *lexeme;
+    int lineNo;
+    enum Tokentype tokenType;
 };
-typedef enum sigma{
-    "<",
-    ">",
-    "=",
-    "-",
-    "%",
-    ",",
-    ";",
-    ":",
-    ".",
-    "(",
-    ")",
-    "[",
-    "]",
-    "+",
-    "-",
-    "*",
-    "/",
-    "&",
-    "@",
-    "~",
-    "\n",
-    "\t",
-    " ",
-    "=", 
-    "#"
-};
+// typedef enum sigma{
+//     "<",
+//     ">",
+//     "=",
+//     "-",
+//     "%",
+//     ",",
+//     ";",
+//     ":",
+//     ".",
+//     "(",
+//     ")",
+//     "[",
+//     "]",
+//     "+",
+//     "-",
+//     "*",
+//     "/",
+//     "&",
+//     "@",
+//     "~",
+//     "\n",
+//     "\t",
+//     " ",
+//     "=", 
+//     "#"
+// };
+#endif

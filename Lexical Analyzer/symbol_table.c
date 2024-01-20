@@ -51,7 +51,7 @@ struct SymbolTableNode* createNode(char* lexeme,enum Tokentype token,struct Symb
     newEntry->lexeme=lexeme;
     newEntry->tokenType=token;
     newNode->next=next;
-    newNode->entry = newEntry;
+    newEntry->lexeme = strdup(lexeme);
     return newNode;
 }
 
@@ -75,7 +75,20 @@ struct SymbolTableEntry* insert(char* lexeme, enum Tokentype token){
     }
 }
 
+void printSymbolTable(){
+    for (int i=0;i<HASH_MAP_SIZE;i++){
+        if (symbolTable[i]!=NULL){
+            struct SymbolTableNode* node=symbolTable[i];
+            while(node){
+                printf("%s %d\n",node->entry->lexeme,node->entry->tokenType);
+                node=node->next;
+            }
+        }
+    }
+}
+
 void insertAllKeywords(){
+    
     insert("=",TK_ASSIGNOP);
     insert("%f%%",TK_COMMENT);
     insert("with",TK_WITH);
@@ -128,3 +141,11 @@ void insertAllKeywords(){
 }
 
 
+//TEST SYMBOL TABLE
+int main(){
+
+    //INSERT ALL KEYWORDS
+    insertAllKeywords();
+    printSymbolTable();
+    
+}

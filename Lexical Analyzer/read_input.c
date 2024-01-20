@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <lexical.h>
+#include <stdlib.h>
 
 //PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
 #define BUFFER_SIZE 256
@@ -59,8 +60,22 @@ struct TwinBuffer initialiseTwinBuffer(){
 }
 
 
-char* lexicalError(){
-    return NULL;
+char* lexicalError(struct SymbolTableEntry* token){
+    if (token->tokenType == TK_ID){
+        if (strlen(token->lexeme)>MAX_ID_SIZE){
+            // char errorMessage[100];
+            char* errorMessage;
+            sprintf(errorMessage, "Lexical Error: Identifier %s of length %zu greater than maximum size", token->lexeme, strlen(token->lexeme));
+            return errorMessage;
+            // return "Lexical Error: Identifier %s of length %d greater than maximum size";
+        }
+    }
+
+    if (token->tokenType == TK_FUNID){
+        if (strlen(token->lexeme) > MAX_FUNID_SIZE){
+            return "Lexical Error: Function Identifier %s of length %d greater than maximum size";
+        }
+    }
 }
 
 struct SymbolTableEntry* scanToken(struct LexicalAnalyzer LA, struct TwinBuffer* twinBuffer, FILE* file){
@@ -75,21 +90,23 @@ struct SymbolTableEntry* scanToken(struct LexicalAnalyzer LA, struct TwinBuffer*
         //CHECK AGAINST DFA - TO BE DONE LATER
 
         //INCRMENT LINENO
+        if (character == '\n'){
+            LA.lineNo += 1;
+        }
+
         // EOF ENCOUNTERED
         if (character == '\0')
         {
             //RELOAD OTHER BUFER 
             readIntoBuffer(twinBuffer, file);
-
+            
             //INCREMENT FORWARD
             LA.forward = (LA.forward + 1)%(BUFFER_SIZE*2 + 2);
-
         }
         
         else{
             //INCREMENT FORWARD
             LA.forward  = (LA.forward + 1)%(BUFFER_SIZE*2 + 2);
-
         }
 
         //GOT THE TOKEN
@@ -97,9 +114,10 @@ struct SymbolTableEntry* scanToken(struct LexicalAnalyzer LA, struct TwinBuffer*
     }
     //GET THE LEXEME
     strncpy(token->lexeme, twinBuffer->buffer + LA.begin, LA.forward - LA.begin + 1);
+    token->lineNo = LA.lineNo;
 
     // GET FINAL TOKEN
-    token = insertIntoSymbolTable (token);
+    token = insert (token);
 
     //ADVANCE BEGIN FOR NEXT TOKEN
     LA.begin = LA.forward;
@@ -126,5 +144,4 @@ int main(){
     }
     
 }
-
 
