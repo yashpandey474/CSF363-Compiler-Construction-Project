@@ -27,7 +27,7 @@ struct SymbolTableEntry *lookup(const char *lexeme)
     // GET THE INDEX
     int index = hash(lexeme);
 
-    // GET THE NODE
+    // GET THE NODE: SEARCH IN HASH TABLE
     struct SymbolTableNode *nodeFound = symbolTable[index];
 
     // CHECK IF EXISTS
@@ -38,6 +38,7 @@ struct SymbolTableEntry *lookup(const char *lexeme)
 
     else
     {
+        // LINEAR SEARCH IN LINKED LIST
         while (nodeFound)
         {
             if (strcmp(lexeme, nodeFound->entry->lexeme) == 0)
@@ -63,6 +64,8 @@ struct SymbolTableEntry *insertTester(char *lexeme, enum Tokentype token)
     symbolTableEntry->lexeme = lexeme;
     symbolTableEntry->tokenType = token;
     symbolTableEntry = insertIntoSymbolTable(symbolTableEntry);
+
+    return symbolTableEntry;
 }
 
 struct SymbolTableEntry *insertIntoSymbolTable(struct SymbolTableEntry *symbolTableEntry)

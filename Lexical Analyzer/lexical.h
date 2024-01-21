@@ -7,6 +7,7 @@
 #define MAX_ID_SIZE 20
 #define MAX_FUNID_SIZE 30
 
+
 // LEXICAL ANALYSER
 struct LexicalAnalyzer
 {
@@ -20,6 +21,9 @@ struct SymbolTableNode
     struct SymbolTableEntry *entry;
     struct SymbolTableNode *next;
 };
+
+//FUNCTION DECLARATIONS
+struct SymbolTableEntry *insertIntoSymbolTable(struct SymbolTableEntry *symbolTableEntry);
 
 typedef enum Tokentype
 {
