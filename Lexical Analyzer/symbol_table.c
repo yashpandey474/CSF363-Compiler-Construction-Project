@@ -12,7 +12,8 @@ struct SymbolTableNode *symbolTable[HASH_MAP_SIZE] = {NULL};
 
 int hash(const char *lexeme)
 {
-    unsigned int hash = 0;
+    // can write functions to rehash when reached 70% of the size
+    int hash = 0;
     while (*lexeme)
     {
         hash = hash * 31 + *(lexeme++);
@@ -79,12 +80,15 @@ struct SymbolTableEntry *insert(char *lexeme, enum Tokentype token)
     {
         // ignore
         // return the existing symbol table entry
+        printf("Lexeme %s already exists in the symbol table", lexeme);
         return exists;
     }
 }
 
 void printSymbolTable()
 {
+    int collisionCount = 0;
+    int entriesCount = 0;
     for (int i = 0; i < HASH_MAP_SIZE; i++)
     {
         printf("%d --->", i);
@@ -93,8 +97,11 @@ void printSymbolTable()
             struct SymbolTableNode *node = symbolTable[i];
             while (node)
             {
+                entriesCount++;
                 printf("%s of enum tokentype %d --->", node->entry->lexeme, node->entry->tokenType);
                 node = node->next;
+                if (node != NULL)
+                    collisionCount++;
             }
             printf("NULL\n");
         }
@@ -103,6 +110,9 @@ void printSymbolTable()
             printf("NULL\n");
         }
     }
+    printf("Total entries: %d\n", entriesCount);
+    printf("Total collisions: %d\n", collisionCount);
+    printf("Hash map size: %d\n", HASH_MAP_SIZE);
 }
 
 void insertAllKeywords()
@@ -165,5 +175,6 @@ int main()
 
     // INSERT ALL KEYWORDS
     insertAllKeywords();
+    insert("!=", TK_NE);
     printSymbolTable();
 }

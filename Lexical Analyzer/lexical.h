@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #ifndef LEXICAL_H
 #define LEXICAL_H
-#define HASH_MAP_SIZE 69
+#define HASH_MAP_SIZE 91
 #define MAX_ID_SIZE 20
 #define MAX_FUNID_SIZE 30
 
