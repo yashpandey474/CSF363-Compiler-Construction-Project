@@ -36,7 +36,7 @@ FILE *readTestFile(char *file_path)
 
     return file;
 }
-void readIntoBuffer(struct TwinBuffer *twinBuffer, FILE *file)
+int readIntoBuffer(struct TwinBuffer *twinBuffer, FILE *file)
 {
     char *buffer;
     if (twinBuffer->readingFirst)
@@ -58,7 +58,7 @@ void readIntoBuffer(struct TwinBuffer *twinBuffer, FILE *file)
     }
 
     //FOR LA TO RECOGNISE END OF INPUT FROM END OF BUFFER
-    return read_bytes
+    return read_bytes;
 }
 
 // CREATE THE BUFFER AND RETURN IT
