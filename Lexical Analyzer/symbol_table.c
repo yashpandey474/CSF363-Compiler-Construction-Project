@@ -17,6 +17,7 @@ int hash(const char *lexeme)
     while (*lexeme)
     {
         hash = hash * 31 + *(lexeme++);
+        hash = hash % HASH_MAP_SIZE;
     }
     return hash % HASH_MAP_SIZE;
 }
@@ -49,31 +50,33 @@ struct SymbolTableEntry *lookup(const char *lexeme)
     }
 }
 
-struct SymbolTableNode *createNode(char *lexeme, enum Tokentype token, struct SymbolTableNode *next)
+struct SymbolTableNode *createNode(struct SymbolTableEntry *symbolTableEntry, struct SymbolTableNode *next)
 {
-    struct SymbolTableEntry *newEntry = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry));
     struct SymbolTableNode *newNode = (struct SymbolTableNode *)malloc(sizeof(struct SymbolTableNode));
-
-    newEntry->tokenType = token;
     newNode->next = next;
-    newEntry->lexeme = strdup(lexeme);
-    newNode->entry = newEntry;
+    newNode->entry = symbolTableEntry;
     return newNode;
 }
-
-struct SymbolTableEntry *insert(char *lexeme, enum Tokentype token)
+struct SymbolTableEntry *insertTester(char *lexeme, enum Tokentype token)
 {
+    struct SymbolTableEntry *symbolTableEntry = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry));
+    symbolTableEntry->lexeme = lexeme;
+    symbolTableEntry->tokenType = token;
+    symbolTableEntry = insertIntoSymbolTable(symbolTableEntry);
+}
+
+struct SymbolTableEntry *insertIntoSymbolTable(struct SymbolTableEntry *symbolTableEntry)
+{
+    char *lexeme = symbolTableEntry->lexeme;
+    enum Tokentype token = symbolTableEntry->tokenType;
     struct SymbolTableEntry *exists = lookup(lexeme);
     if (exists == NULL)
     {
         // insert into the symbol table using the lexeme as the hash tabel
         // return the new entry
         int lexeme_hash = hash(lexeme);
-
         struct SymbolTableNode *next = symbolTable[lexeme_hash];
-
-        symbolTable[lexeme_hash] = createNode(lexeme, token, next);
-
+        symbolTable[lexeme_hash] = createNode(symbolTableEntry, next);
         return symbolTable[lexeme_hash]->entry;
     }
     else
@@ -87,6 +90,7 @@ struct SymbolTableEntry *insert(char *lexeme, enum Tokentype token)
 
 void printSymbolTable()
 {
+    printf("\n\n\nPrinting symbol table\n\n\n");
     int collisionCount = 0;
     int entriesCount = 0;
     for (int i = 0; i < HASH_MAP_SIZE; i++)
@@ -118,55 +122,55 @@ void printSymbolTable()
 void insertAllKeywords()
 {
 
-    insert("=", TK_ASSIGNOP);
-    insert("%f%%", TK_COMMENT);
-    insert("with", TK_WITH);
-    insert("parameters", TK_PARAMETERS);
-    insert("end", TK_END);
-    insert("while", TK_WHILE);
-    insert("union", TK_UNION);
-    insert("endunion", TK_ENDUNION);
-    insert("definetype", TK_DEFINETYPE);
-    insert("as", TK_AS);
-    insert("type", TK_TYPE);
-    insert("_main", TK_MAIN);
-    insert("global", TK_GLOBAL);
-    insert("parameter", TK_PARAMETER);
-    insert("list", TK_LIST);
-    insert("input", TK_INPUT);
-    insert("output", TK_OUTPUT);
-    insert("int", TK_INT);
-    insert("real", TK_REAL);
-    insert("endwhile", TK_ENDWHILE);
-    insert("if", TK_IF);
-    insert("then", TK_THEN);
-    insert("endif", TK_ENDIF);
-    insert("read", TK_READ);
-    insert("write", TK_WRITE);
-    insert("return", TK_RETURN);
-    insert("call", TK_CALL);
-    insert("record", TK_RECORD);
-    insert("endrecord", TK_ENDRECORD);
-    insert("else", TK_ELSE);
-    insert(",", TK_COMMA);
-    insert(";", TK_SEM);
-    insert(":", TK_COLON);
-    insert(".", TK_DOT);
-    insert("(", TK_OP);
-    insert(")", TK_CL);
-    insert("+", TK_PLUS);
-    insert("-", TK_MINUS);
-    insert("*", TK_MUL);
-    insert("/", TK_DIV);
-    insert("&&&", TK_AND);
-    insert("@@@", TK_OR);
-    insert("~", TK_NOT);
-    insert("<", TK_LT);
-    insert("<=", TK_LE);
-    insert("==", TK_EQ);
-    insert(">", TK_GT);
-    insert(">=", TK_GE);
-    insert("!=", TK_NE);
+    insertTester("=", TK_ASSIGNOP);
+    insertTester("%f%%", TK_COMMENT);
+    insertTester("with", TK_WITH);
+    insertTester("parameters", TK_PARAMETERS);
+    insertTester("end", TK_END);
+    insertTester("while", TK_WHILE);
+    insertTester("union", TK_UNION);
+    insertTester("endunion", TK_ENDUNION);
+    insertTester("definetype", TK_DEFINETYPE);
+    insertTester("as", TK_AS);
+    insertTester("type", TK_TYPE);
+    insertTester("_main", TK_MAIN);
+    insertTester("global", TK_GLOBAL);
+    insertTester("parameter", TK_PARAMETER);
+    insertTester("list", TK_LIST);
+    insertTester("input", TK_INPUT);
+    insertTester("output", TK_OUTPUT);
+    insertTester("int", TK_INT);
+    insertTester("real", TK_REAL);
+    insertTester("endwhile", TK_ENDWHILE);
+    insertTester("if", TK_IF);
+    insertTester("then", TK_THEN);
+    insertTester("endif", TK_ENDIF);
+    insertTester("read", TK_READ);
+    insertTester("write", TK_WRITE);
+    insertTester("return", TK_RETURN);
+    insertTester("call", TK_CALL);
+    insertTester("record", TK_RECORD);
+    insertTester("endrecord", TK_ENDRECORD);
+    insertTester("else", TK_ELSE);
+    insertTester(",", TK_COMMA);
+    insertTester(";", TK_SEM);
+    insertTester(":", TK_COLON);
+    insertTester(".", TK_DOT);
+    insertTester("(", TK_OP);
+    insertTester(")", TK_CL);
+    insertTester("+", TK_PLUS);
+    insertTester("-", TK_MINUS);
+    insertTester("*", TK_MUL);
+    insertTester("/", TK_DIV);
+    insertTester("&&&", TK_AND);
+    insertTester("@@@", TK_OR);
+    insertTester("~", TK_NOT);
+    insertTester("<", TK_LT);
+    insertTester("<=", TK_LE);
+    insertTester("==", TK_EQ);
+    insertTester(">", TK_GT);
+    insertTester(">=", TK_GE);
+    insertTester("!=", TK_NE);
 }
 
 // TEST SYMBOL TABLE
@@ -175,6 +179,6 @@ int main()
 
     // INSERT ALL KEYWORDS
     insertAllKeywords();
-    insert("!=", TK_NE);
+    insertTester("!=", TK_NE);
     printSymbolTable();
 }

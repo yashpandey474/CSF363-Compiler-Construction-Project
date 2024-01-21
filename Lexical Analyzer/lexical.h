@@ -76,7 +76,7 @@ typedef enum Tokentype
     TK_ID,
     TK_NUM,
     TK_RNUM,
-    TK_FUNID
+    TK_FUNID,
 } Tokentype;
 struct SymbolTableEntry
 {
@@ -112,3 +112,4 @@ struct SymbolTableEntry
 //     "#"
 // };
 #endif
+struct SymbolTableEntry *insertIntoSymbolTable(struct SymbolTableEntry * token);
