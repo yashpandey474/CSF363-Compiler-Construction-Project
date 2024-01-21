@@ -57,9 +57,8 @@ void readIntoBuffer(struct TwinBuffer *twinBuffer, FILE *file)
         buffer[read_bytes] = '\0';
     }
 
-    if (read_bytes == 0){
-        print("Complete File Read.");
-    }
+    //FOR LA TO RECOGNISE END OF INPUT FROM END OF BUFFER
+    return read_bytes
 }
 
 // CREATE THE BUFFER AND RETURN IT
@@ -163,7 +162,7 @@ struct SymbolTableEntry * scanToken(struct LexicalAnalyzer LA, struct TwinBuffer
             //RECOGNISE T_NUM OR T_RNUM
             case 3:
                 if (isdigit(character)){
-
+                    
                 }
 
         }
@@ -176,9 +175,13 @@ struct SymbolTableEntry * scanToken(struct LexicalAnalyzer LA, struct TwinBuffer
         if (character == '\0')
         {
             // RELOAD OTHER BUFER
-            readIntoBuffer(twinBuffer, file);
-
+            int res = readIntoBuffer(twinBuffer, file);
+            if (res == 0){
+                //GET THE TOKEN OR RETURN 0?
+            }
         }
+
+        //INCREMENT FORWARD
         LA.forward = (LA.forward + 1) % (BUFFER_SIZE * 2 + 2);
 
         // GOT THE TOKEN
