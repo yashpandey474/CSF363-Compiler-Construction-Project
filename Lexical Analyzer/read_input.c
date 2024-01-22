@@ -129,16 +129,18 @@ struct SymbolTableEntry * scanToken(struct LexicalAnalyzer LA, struct TwinBuffer
             case 0:
                 //LOWERCASE LETTER
                 if (character >= 'a' && character <= 'z'){
-
+                    //IDENTIFIER
                     if (character >= 'b' && character <= 'd'){
                         state = 10;
-                        break;
+                        
                     }
 
-                }
+                    //FIELD ID
+                    else{
+                        state = 14;
+                    }
 
-                //UPPERCASE LETTER
-                if (character >= 'A' && character <= 'Z'){
+                    break;
 
                 }
 
@@ -161,9 +163,13 @@ struct SymbolTableEntry * scanToken(struct LexicalAnalyzer LA, struct TwinBuffer
 
             //RECOGNISE T_NUM OR T_RNUM
             case 3:
-                if (isdigit(character)){
-                    
+                if (character == '.'){
+                    state = 4;
                 }
+                else if (~isdigit(character)){
+                    token->tokenType = TK_NUM;
+                }
+                break;
 
         }
         
@@ -178,6 +184,7 @@ struct SymbolTableEntry * scanToken(struct LexicalAnalyzer LA, struct TwinBuffer
             int res = readIntoBuffer(twinBuffer, file);
             if (res == 0){
                 //GET THE TOKEN OR RETURN 0?
+                break;
             }
         }
 
