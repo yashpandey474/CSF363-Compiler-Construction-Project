@@ -110,6 +110,9 @@ struct SymbolTableEntry * scanToken(struct LexicalAnalyzer LA, struct TwinBuffer
         // GET CHARACTER CURRENTLY BEING READ
         char character = twinBuffer->buffer[LA.forward];
 
+        // INCREMENT FORWARD
+        LA.forward = (LA.forward + 1) % (BUFFER_SIZE * 2 + 2);
+
         // TODO: GENERALISE FOR ALL DELIMITERS;
         // INCRMENT LINENO
         if (character == '\n')
@@ -182,20 +185,19 @@ struct SymbolTableEntry * scanToken(struct LexicalAnalyzer LA, struct TwinBuffer
         {
             // RELOAD OTHER BUFER
             int res = readIntoBuffer(twinBuffer, file);
+            
+            //ALL INPUT READ AND PROCESSED
             if (res == 0){
-                //GET THE TOKEN OR RETURN 0?
                 break;
             }
         }
 
-        //INCREMENT FORWARD
-        LA.forward = (LA.forward + 1) % (BUFFER_SIZE * 2 + 2);
-
+        
         // GOT THE TOKEN
         break;
     }
     // GET THE LEXEME
-    strncpy(token->lexeme, twinBuffer->buffer + LA.begin, LA.forward - LA.begin + 1);
+    strncpy(token->lexeme, twinBuffer->buffer + LA.begin, LA.forward - LA.begin);
     token->lineNo = LA.lineNo;
 
     // GET FINAL TOKEN
