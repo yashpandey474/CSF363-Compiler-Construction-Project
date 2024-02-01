@@ -29,6 +29,7 @@ struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry);
 
 typedef enum Tokentype
 {
+    CARRIAGE_RETURN,
     TK_ASSIGNOP,
     TK_COMMENT,
     TK_WITH,
@@ -86,7 +87,6 @@ typedef enum Tokentype
     TK_RNUM,
     TK_FUNID,
     TK_RUID,
-    CARRIAGE_RETURN,
     DELIMITER
 } Tokentype;
 struct SymbolTableEntry

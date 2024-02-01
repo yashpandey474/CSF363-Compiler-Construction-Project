@@ -1,1 +1,1 @@
-initializeCharacterTypeMap
+\n

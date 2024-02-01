@@ -31,7 +31,7 @@ void initialiseforIdDigit(int** input, int rownumber, int nextState){
     input[rownumber][characterTypeMap['2']] = nextState;
 }
 
-void main()
+int main()
 {
     initializeCharacterTypeMap();
     // the length of ans and the number of columns of input are randomly chosen
@@ -43,7 +43,12 @@ void main()
         nextState[i] = -1;
         checkState[i] = -1;
     }
-    int input[40][128];
+    
+    int **input = (int **)malloc(40 * sizeof(int *));
+    for (int i = 0; i < 40; ++i)
+    {
+        input[i] = (int *)malloc(128 * sizeof(int));
+    }
     int s=40;
 
 
@@ -62,21 +67,17 @@ void main()
     input[0][characterTypeMap['[']] = s + TK_SQL;
     input[0][characterTypeMap[']']] = s + TK_SQR;
     
-    input[0][characterTypeMap['\\n']] = s + CARRIAGE_RETURN;
-    input[s+CARRIAGE_RETURN][characterTypeMap['\\n']] = s + CARRIAGE_RETURN;
+    input[0][characterTypeMap['\n']] = s + CARRIAGE_RETURN;
+    input[s+CARRIAGE_RETURN][characterTypeMap['\n']] = s + CARRIAGE_RETURN;
     
     input[0][characterTypeMap[' ']] = 23;
-    input[0][characterTypeMap['\\t']] = 23;
+    input[0][characterTypeMap['\t']] = 23;
     initialisetooneNumber(input, 23, s+DELIMITER);
     input[23][characterTypeMap[' ']] = 23;
-    input[23][characterTypeMap['\\t']] = 23;
+    input[23][characterTypeMap['\t']] = 23;
 
     input[0][characterTypeMap['!']] = 25;
     input[25][characterTypeMap['=']] = s + TK_NE;
-
-    input[0][characterTypeMap['>']] = 26;
-    input[0][characterTypeMap['<']] = 27;
-
 
 
 
@@ -121,7 +122,8 @@ void main()
     
     
     //COMPARATIVE OPERATORS
-
+    input[0][characterTypeMap['>']] = 26;
+    input[0][characterTypeMap['<']] = 27;
     initialisetooneNumber(input, 26, s+TK_GT);
     input[26][characterTypeMap['=']] = s+TK_GE; 
     initialisetooneNumber(input, 27, s+TK_LT);
@@ -155,7 +157,7 @@ void main()
 
     
     initialiseforIdDigit(input, 10, 11);
-    
+
     initialisetooneNumber(input, 11, s + TK_ID);
     initialiseforIdLetter(input, 11, 12);
     initialiseforIdDigit(input, 11, 13);
@@ -171,56 +173,25 @@ void main()
 
     input[0][characterTypeMap['%']] = 24;
     initialisetooneNumber(input, 24, 24);
-    input[24][characterTypeMap['\\n']] = s + TK_COMMENT;
-
+    input[24][characterTypeMap['\n']] = s + TK_COMMENT;
     input[19][characterTypeMap['=']] = s + TK_EQ;
-
-    
-
 
     //change len to size everywhere
 
 
-    //to find the default array
-    //i need to find the closest possible transition
-    //if no close transition found, i simply make the default state the trap state
-    //so lets initialise the initial state as -1 for each
-    int default_array[40];
-    for(int i=0; i<40;i++){
-        default_array[i]=-1;
-    }
-    
-    for(int row=0; row<len(input); row++){
-        for (int prior=0; prior<row; prior++){
-            int flag=0;
-            for (int k=0; k<len(input[0]); k++){
-                if (input[row][k]!=input[prior][k]){
-                    flag=1;
-                    break;
-                }
-            }
-            if (flag==0){
-                for (int k=0; k<len(input[0]); k++){
-                    input[row][k]=-1;
-                }
-                default_array[row]=prior;
-            }
-        }
-    }
-
 
     //this is the loop to find the base(offset), next and check arrays
-    for (int row = 0; row < len(input); row++)
+    for (int row = 0; row < sizeof(input)/sizeof(input[0]); row++)
     {
         int j = 0;
-        while (j + len(input[0]) < len(nextState))
+        while (j + sizeof(input[0]) / sizeof(input[0][0]) < sizeof(nextState) / sizeof(nextState[0]))
         { // if there is a collision then we make the flag 1 and increment the value of j
             // then we break out of that checker loop
             int flag = 0;
             for (int k = 0; k < 128; k++)
             {
                 // checker loop
-                if (nextState[j + k] != -1 || input[row][k] != -1)
+                if (nextState[j + k] != -1 && input[row][k] != -1)
                 {
                     flag = 1;
                     j++;
@@ -238,12 +209,32 @@ void main()
                         checkState[j + k] = row;
                     }
                 }
+                break;
             }
         }
         offset[row]=j;
     }
-    printf(offset);
-    printf(default_array);
-    printf(nextState);
-    printf(checkState);
+
+    printf("Offset array:\n");
+    for (int i = 0; i < sizeof(offset) / sizeof(offset[0]); ++i)
+    {
+        printf("%d ", offset[i]);
+    }
+    printf("\n");
+
+    printf("Next State array:\n");
+    for (int i = 0; i < sizeof(nextState) / sizeof(nextState[0]); ++i)
+    {
+        printf("%d ", nextState[i]);
+    }
+    printf("\n");
+
+    printf("Check State array:\n");
+    for (int i = 0; i < sizeof(checkState) / sizeof(checkState[0]); ++i)
+    {
+        printf("%d ", checkState[i]);
+    }
+    printf("\n");
+
+    return 0;
 }
