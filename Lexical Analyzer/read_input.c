@@ -18,10 +18,29 @@
 // CODE TO READ FROM THE BUFFERS CHARACTER BY CHARACTER
 struct TwinBuffer
 {
-    //0 -> READING SECOND BUFFER, 1 -> READING FIRST BUFFER
+    // 0 -> READING SECOND BUFFER, 1 -> READING FIRST BUFFER
     int readingFirst;
     char buffer[BUFFER_SIZE * 2 + 2];
 };
+
+char *computeNumber(struct LexicalAnalyzer *lex)
+{
+    // BUFFER OF LEXICAL ANALYSER
+    char *buffer = lex->twinBuffer->buffer;
+
+    // STORE THE STRING
+    strncpy(buffer, lex->twinBuffer + lex->begin, lex->forward);
+    buffer[lex->forward] = '\0';
+
+    // RETURN COPIED STRING
+    return buffer;
+}
+
+void incrementLineNo(struct LexicalAnalyzer *LA)
+{
+    LA->lineNo += 1;
+    return LA->lineNo;
+}
 
 FILE *readTestFile(char *file_path)
 {
@@ -51,13 +70,14 @@ int readIntoBuffer(struct TwinBuffer *twinBuffer, FILE *file)
     twinBuffer->readingFirst = 1 - twinBuffer->readingFirst;
     size_t read_bytes = fread(buffer, sizeof(char), BUFFER_SIZE, file);
 
-    //MARK END OF INPUT
-    if (read_bytes < BUFFER_SIZE){
-        //MARK WITH ANOTHER EOF
+    // MARK END OF INPUT
+    if (read_bytes < BUFFER_SIZE)
+    {
+        // MARK WITH ANOTHER EOF
         buffer[read_bytes] = '\0';
     }
 
-    //FOR LA TO RECOGNISE END OF INPUT FROM END OF BUFFER
+    // FOR LA TO RECOGNISE END OF INPUT FROM END OF BUFFER
     return read_bytes;
 }
 
@@ -99,7 +119,24 @@ char *lexicalError(struct SymbolTableEntry *token)
     return "";
 }
 
-struct SymbolTableEntry * scanToken(struct LexicalAnalyzer LA, struct TwinBuffer *twinBuffer, FILE *file)
+struct SymbolTableEntry *equivalentNumber(struct LexicalAnalyzer *LA, int flag, )
+{
+    char *buffer = computeNumber(lex);
+    if (flag == 0)
+    {
+        // INTEGER
+    }
+    else
+    {
+        // DOUBLE
+    }
+}
+
+void incrementForward(struct LexicalAnalyzer *LA)
+{
+    LA.forward = (LA.forward + 1) % (BUFFER_SIZE * 2 + 2);
+}
+struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
 {
 
     struct SymbolTableEntry *token;
@@ -108,91 +145,96 @@ struct SymbolTableEntry * scanToken(struct LexicalAnalyzer LA, struct TwinBuffer
     while (1)
     {
         // GET CHARACTER CURRENTLY BEING READ
-        char character = twinBuffer->buffer[LA.forward];
+        char character = LA->twinBuffer->buffer[LA.forward];
 
         // INCREMENT FORWARD
-        LA.forward = (LA.forward + 1) % (BUFFER_SIZE * 2 + 2);
+        incrementForward(LA);
 
         // TODO: GENERALISE FOR ALL DELIMITERS;
-        // INCRMENT LINENO
+
+        // CARRIAGE RETURN
         if (character == '\n')
         {
-            LA.lineNo += 1;
+            incrementLineNo(LA);
         }
 
-        if (character == '\t'|| character == ' '){
+        // DELIMITER
+        if (character == '\t' || character == ' ')
+        {
             continue;
         }
 
-        //END OF PROGRAM ?
-        
+        // END OF PROGRAM ?
 
-        switch(state){
-            //START STATE
-            case 0:
-                //LOWERCASE LETTER
-                if (character >= 'a' && character <= 'z'){
-                    //IDENTIFIER
-                    if (character >= 'b' && character <= 'd'){
-                        state = 10;
-                        
-                    }
-
-                    //FIELD ID
-                    else{
-                        state = 14;
-                    }
-
-                    break;
-
+        switch (state)
+        {
+        // START STATE
+        case 0:
+            // LOWERCASE LETTER
+            if (character >= 'a' && character <= 'z')
+            {
+                // IDENTIFIER
+                if (character >= 'b' && character <= 'd')
+                {
+                    state = 10;
                 }
 
-                //DIGIT
-                if (isdigit(character)){
-                    state = 3;
-                    break;
+                // FIELD ID
+                else
+                {
+                    state = 14;
                 }
 
+                break;
+            }
 
-                switch(character){
-                    case '#':
-                        state = 1;
-                        break;
+            // DIGIT
+            if (isdigit(character))
+            {
+                state = 3;
+                break;
+            }
 
-                    case '_':
-                        state = 20;
-                        break;
-                }
-
-            //RECOGNISE T_NUM OR T_RNUM
-            case 3:
-                if (character == '.'){
-                    state = 4;
-                }
-                else if (~isdigit(character)){
-                    token->tokenType = TK_NUM;
-                }
+            switch (character)
+            {
+            case '#':
+                state = 1;
                 break;
 
+            case '_':
+                state = 20;
+                break;
+            }
+
+        // RECOGNISE T_NUM OR T_RNUM
+        case 3:
+            if (character == '.')
+            {
+                state = 4;
+            }
+            else if (~isdigit(character))
+            {
+                token->tokenType = TK_NUM;
+            }
+            break;
         }
-        
+
         // CHECK AGAINST DFA - TO BE DONE LATER
 
-        
         // EOF ENCOUNTERED
         // TODO: DIFFERENTIATE BETWEEN END OF INPUT AND END OF BUFFER
         if (character == '\0')
         {
             // RELOAD OTHER BUFER
             int res = readIntoBuffer(twinBuffer, file);
-            
-            //ALL INPUT READ AND PROCESSED
-            if (res == 0){
+
+            // ALL INPUT READ AND PROCESSED
+            if (res == 0)
+            {
                 break;
             }
         }
 
-        
         // GOT THE TOKEN
         break;
     }
@@ -201,7 +243,7 @@ struct SymbolTableEntry * scanToken(struct LexicalAnalyzer LA, struct TwinBuffer
     token->lineNo = LA.lineNo;
 
     // GET FINAL TOKEN
-    token = insertIntoSymbolTable(token);
+    token = getToken(token);
     // TODO: call dfa to get token type in case of id, num, rnum, funid, fieldid
 
     // ADVANCE BEGIN FOR NEXT TOKEN

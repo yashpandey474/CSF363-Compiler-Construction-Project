@@ -22,6 +22,11 @@ int hash(const char *lexeme)
     return hash % HASH_MAP_SIZE;
 }
 
+struct SymbolTableEntry *installId(const char *lexeme)
+{
+    return lookup(lexeme);
+}
+
 struct SymbolTableEntry *lookup(const char *lexeme)
 {
     // GET THE INDEX
@@ -63,12 +68,12 @@ struct SymbolTableEntry *insertTester(char *lexeme, enum Tokentype token)
     struct SymbolTableEntry *symbolTableEntry = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry));
     symbolTableEntry->lexeme = lexeme;
     symbolTableEntry->tokenType = token;
-    symbolTableEntry = insertIntoSymbolTable(symbolTableEntry);
+    symbolTableEntry = getToken(symbolTableEntry);
 
     return symbolTableEntry;
 }
 
-struct SymbolTableEntry *insertIntoSymbolTable(struct SymbolTableEntry *symbolTableEntry)
+struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
 {
     char *lexeme = symbolTableEntry->lexeme;
     enum Tokentype token = symbolTableEntry->tokenType;

@@ -1,1 +1,1 @@
-scanToken
+initializeCharacterTypeMap

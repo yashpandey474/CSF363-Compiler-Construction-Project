@@ -6,12 +6,14 @@
 #define HASH_MAP_SIZE 91
 #define MAX_ID_SIZE 20
 #define MAX_FUNID_SIZE 30
+#define NUM_STATES 40
 
-
+extern int numStates;
 // LEXICAL ANALYSER
 struct LexicalAnalyzer
 {
     int lineNo, begin, forward;
+    struct TwinBuffer *twinBuffer;
 };
 
 // DECLARATIONS AND GLOBAL VARIABLES
@@ -22,8 +24,8 @@ struct SymbolTableNode
     struct SymbolTableNode *next;
 };
 
-//FUNCTION DECLARATIONS
-struct SymbolTableEntry *insertIntoSymbolTable(struct SymbolTableEntry *symbolTableEntry);
+// FUNCTION DECLARATIONS
+struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry);
 
 typedef enum Tokentype
 {
@@ -63,6 +65,8 @@ typedef enum Tokentype
     TK_DOT,
     TK_OP,
     TK_CL,
+    TK_SQR,
+    TK_SQL,
     TK_PLUS,
     TK_MINUS,
     TK_MUL,
@@ -81,6 +85,8 @@ typedef enum Tokentype
     TK_NUM,
     TK_RNUM,
     TK_FUNID,
+    CARRIAGE_RETURN,
+    DELIMITER
 } Tokentype;
 struct SymbolTableEntry
 {
@@ -88,32 +94,44 @@ struct SymbolTableEntry
     int lineNo;
     enum Tokentype tokenType;
 };
-// typedef enum sigma{
-//     "<",
-//     ">",
-//     "=",
-//     "-",
-//     "%",
-//     ",",
-//     ";",
-//     ":",
-//     ".",
-//     "(",
-//     ")",
-//     "[",
-//     "]",
-//     "+",
-//     "-",
-//     "*",
-//     "/",
-//     "&",
-//     "@",
-//     "~",
-//     "\n",
-//     "\t",
-//     " ",
-//     "=",
-//     "#"
-// };
+typedef enum CharacterType
+{
+    CT_LETTER_LOWER_EXCEPT_ID_LETTER,
+    CT_ID_DIGIT,
+    CT_ID_LETTER,
+    CT_LETTER_UPPER,
+    CT_DIGIT_EXCEPT_ID_DIGIT,
+    CT_DELIMITER,
+    CT_INVALID,
+    CT_GREATER,
+    CT_LESSER,
+    CT_EQUAL,
+    CT_COMMA,
+    CT_SEM,
+    CT_COLON,
+    CT_DOT,
+    CT_OP,
+    CT_CL,
+    CT_PLUS,
+    CT_MINUS,
+    CT_MUL,
+    CT_DIV,
+    CT_AND,
+    CT_OR,
+    CT_NOT,
+    CT_HYPHEN,
+    CT_PERCENT,
+    CT_AT_THE_RATE,
+    CT_SQUARE_OPEN,
+    CT_SQUARE_CLOSE,
+    CT_ROUND_OPEN,
+    CT_ROUND_CLOSE, // Changed from CT_SQUARE_CLOSE to CT_ROUND_CLOSE
+    CT_EXCLAMATION,
+    CT_TILDE
+} CharacterType;
+
+// ID DIGIT IS 2-7. ID LETTER IS b-d
+CharacterType characterTypeMap[128];
+
+void initializeCharacterTypeMap();
 #endif
-struct SymbolTableEntry *insertIntoSymbolTable(struct SymbolTableEntry * token);
