@@ -103,6 +103,7 @@ typedef enum CharacterType
     CT_ID_DIGIT,
     CT_ID_LETTER,
     CT_LETTER_UPPER,
+    CT_EXPONENT,
     CT_DIGIT_EXCEPT_ID_DIGIT,
     CT_DELIMITER,
     CT_INVALID,
