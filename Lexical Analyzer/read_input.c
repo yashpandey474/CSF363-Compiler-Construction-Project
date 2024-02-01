@@ -119,22 +119,28 @@ char *lexicalError(struct SymbolTableEntry *token)
     return "";
 }
 
-struct SymbolTableEntry *equivalentNumber(struct LexicalAnalyzer *LA, int flag, )
+//FUNCTION TO GET CORRESPONDING NUMBER
+void equivalentNumber(struct LexicalAnalyzer *lex, int flag, struct SymbolTableEntry *token)
 {
     char *buffer = computeNumber(lex);
     if (flag == 0)
     {
         // INTEGER
+        token->intValue = atoi(buffer);
+        token->tokenType = TK_NUM;
     }
     else
     {
         // DOUBLE
+        token->doubleValue = atof(buffer);
+        token->tokenType = TK_RNUM;
     }
 }
 
-void incrementForward(struct LexicalAnalyzer *LA)
+void changeForward(struct LexicalAnalyzer *LA, int flag)
 {
-    LA.forward = (LA.forward + 1) % (BUFFER_SIZE * 2 + 2);
+    //FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
+    LA->forward = (LA->forward + flag) % (BUFFER_SIZE * 2 + 2);
 }
 struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
 {
@@ -145,7 +151,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
     while (1)
     {
         // GET CHARACTER CURRENTLY BEING READ
-        char character = LA->twinBuffer->buffer[LA.forward];
+        char character = LA->twinBuffer->buffer[LA->forward];
 
         // INCREMENT FORWARD
         incrementForward(LA);
@@ -226,7 +232,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
         if (character == '\0')
         {
             // RELOAD OTHER BUFER
-            int res = readIntoBuffer(twinBuffer, file);
+            int res = readIntoBuffer(LA->twinBuffer, file);
 
             // ALL INPUT READ AND PROCESSED
             if (res == 0)
@@ -239,15 +245,15 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
         break;
     }
     // GET THE LEXEME
-    strncpy(token->lexeme, twinBuffer->buffer + LA.begin, LA.forward - LA.begin);
-    token->lineNo = LA.lineNo;
+    strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
+    token->lineNo = LA->lineNo;
 
     // GET FINAL TOKEN
     token = getToken(token);
     // TODO: call dfa to get token type in case of id, num, rnum, funid, fieldid
 
     // ADVANCE BEGIN FOR NEXT TOKEN
-    LA.begin = LA.forward;
+    LA->begin = LA->forward;
 
     // RETURN TOKEN
     return token;

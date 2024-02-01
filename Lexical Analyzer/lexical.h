@@ -85,12 +85,15 @@ typedef enum Tokentype
     TK_NUM,
     TK_RNUM,
     TK_FUNID,
+    TK_RUID,
     CARRIAGE_RETURN,
     DELIMITER
 } Tokentype;
 struct SymbolTableEntry
 {
     char *lexeme;
+    int intValue;
+    double doubleValue;
     int lineNo;
     enum Tokentype tokenType;
 };

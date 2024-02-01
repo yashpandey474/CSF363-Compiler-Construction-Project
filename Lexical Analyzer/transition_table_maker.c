@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lexical.h"
-
+void initialisetooneNumber(int **input, int rownumber, int val)
+{
+    for (int i = 0; i < 128; i++)
+    {
+        input[rownumber][i] = val;
+    }
+}
 void main()
 {
     initializeCharacterTypeMap();
@@ -44,8 +50,14 @@ void main()
     input[0][characterTypeMap[']']] = s + TK_SQR;
     input[0][characterTypeMap['b']] = 10;
     input[0][characterTypeMap['a']] = 14;
+    input[0][characterTypeMap['A']] = 14;
     input[0][characterTypeMap['1']] = 3;
     input[0][characterTypeMap['2']] = 3;
+    input[1][characterTypeMap['a']] = 2;
+    input[1][characterTypeMap['b']] = 2;
+    initialisetooneNumber(input, 2, s + TK_RUID);
+    input[2][characterTypeMap['a']] = 2;
+    input[2][characterTypeMap['b']] = 2;
 
     for (int row = 0; row < len(input); row++)
     {
