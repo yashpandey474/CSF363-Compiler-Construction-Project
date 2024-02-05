@@ -5,6 +5,7 @@
 #define INPUT_FIRST_DIMENSION 60
 #define INPUT_SECOND_DIMENSION 128
 #define NUM_STATES 40
+#define STATE_ARRAY_SIZE 2000
 
 
 void initialisetooneNumber(int **input, int rownumber, int val)
@@ -36,7 +37,8 @@ void initialiseforIdDigit(int** input, int rownumber, int nextState){
     input[rownumber][characterTypeMap['2']] = nextState;
 }
 
-CharacterType characterTypeMap[128] = {6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 30, 6, 6, 6, 24, 20, 6, 28, 29, 18, 16, 10, 17, 13, 19, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 12, 11, 8, 9, 7, 6, 25, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 26, 6, 27, 6, 6, 6, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 21, 6, 31, 6};
+CharacterType characterTypeMap[128] = {6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 30, 6, 6, 6, 24, 20, 6, 28, 29, 18, 16, 10, 17, 13, 19, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 12, 11, 8, 9, 7, 6, 25, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+ 3, 3, 3, 3, 3, 3, 26, 6, 27, 6, 6, 6, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 21, 6, 31, 6};
 void initializeCharacterTypeMap()
 {
     for (int i = 0; i < 128; ++i)
@@ -160,10 +162,21 @@ int main()
         printf("%d,", characterTypeMap[i]);
     }
     // the length of ans and the number of columns of input are randomly chosen
-    int nextState[200];
-    int checkState[200];
+    int nextState[2000];
+    int checkState[2000];
+    int defaultArray[NUM_STATES];
     int offset[NUM_STATES];
-    for (int i = 0; i < 200; i++)
+
+    for (int i = 0; i<NUM_STATES; i += 1){
+        offset[i] = 0;
+        defaultArray[i] = -1;
+    }
+
+    //SET DEFAULT STATE FOR SIGMA - TO DESTINATION
+    defaultArray[26] = s + TK_GE;
+    defaultArray[27] = s + TK_LE;
+
+    for (int i = 0; i < 2000; i++)
     {
         nextState[i] = -1;
         checkState[i] = -1;
@@ -174,6 +187,14 @@ int main()
     {
         input[i] = (int *)malloc(INPUT_SECOND_DIMENSION * sizeof(int));
     }
+
+    printf("\n\nINPUT FIRST ROW\n\n");
+    for (int i = 0; i <INPUT_FIRST_DIMENSION; i ++){
+        for (int j = 0; j<INPUT_SECOND_DIMENSION; j ++){
+               input[i][j] = -1;
+        }
+    }
+    printf("\n\nINPUT FIRST ROW\n\n");
     int s=40;
 
     input[0][characterTypeMap['~']] = s + TK_NOT;
@@ -306,6 +327,16 @@ int main()
     //this is the loop to find the base(offset), next and check arrays
     for (int row = 0; row < INPUT_FIRST_DIMENSION; row++)
     {
+
+        // printf("%d ROW", row);
+
+        // printf("Check State array:\n");
+        // for (int i = 0; i < sizeof(checkState) / sizeof(checkState[0]); ++i)
+        // {
+        //     printf("%d ", checkState[i]);
+        // }
+        // printf("\n");
+
         int j = 0;
         while (j + INPUT_SECOND_DIMENSION < sizeof(nextState) / sizeof(nextState[0]))
         { // if there is a collision then we make the flag 1 and increment the value of j
