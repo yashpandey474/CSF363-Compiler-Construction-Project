@@ -3,7 +3,7 @@
 #include "lexical.h"
 #define INPUT_SECOND_DIMENSION 32 // number of character types
 #define NUM_NON_ACCEPT_STATES 29
-#define STATE_ARRAY_SIZE 600
+#define STATE_ARRAY_SIZE 505
 #define NUM_STATES 88 // 59 accept states number of states including accept states
 
 void initialisetooneNumber(int **input, int rownumber, int val)
@@ -156,7 +156,7 @@ void initializeCharacterTypeMap()
 }
 int main()
 {
-    printf("Hello, World!\n");
+    printf("Started with the execution !!!\n");
     initializeCharacterTypeMap();
 
     for (int i = 0; i < 128; ++i)
@@ -180,19 +180,18 @@ int main()
     defaultArray[26] = s + TK_GE;
     defaultArray[27] = s + TK_LE;
 
-    for (int i = 0; i < 2000; i++)
+    for (int i = 0; i < STATE_ARRAY_SIZE; i++)
     {
         nextState[i] = -1;
         checkState[i] = -1;
     }
-
     int **input = (int **)malloc(NUM_STATES * sizeof(int *));
+
     for (int i = 0; i < NUM_STATES; ++i)
     {
         input[i] = (int *)malloc(INPUT_SECOND_DIMENSION * sizeof(int));
     }
 
-    printf("\n\nINPUT FIRST ROW\n\n");
     for (int i = 0; i < NUM_STATES; i++)
     {
         for (int j = 0; j < INPUT_SECOND_DIMENSION; j++)
@@ -200,7 +199,6 @@ int main()
             input[i][j] = -1;
         }
     }
-    printf("\n\nINPUT FIRST ROW\n\n");
 
     input[0][characterTypeMap['~']] = s + TK_NOT;
     input[0][characterTypeMap['/']] = s + TK_DIV;
@@ -372,14 +370,12 @@ int main()
         offset[row] = j;
     }
 
-    printf("Offset array:\n");
+    printf("\nOffset array:\n");
     for (int i = 0; i < sizeof(offset) / sizeof(offset[0]); ++i)
     {
         printf("%d ", offset[i]);
     }
-    printf("\n");
-
-    printf("Next State array:\n");
+    printf("\n\nNext State array:\n");
     for (int i = 0; i < sizeof(nextState) / sizeof(nextState[0]); ++i)
     {
         printf("%d ", nextState[i]);
