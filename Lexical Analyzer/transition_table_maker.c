@@ -4,6 +4,7 @@
 
 #define INPUT_FIRST_DIMENSION 60
 #define INPUT_SECOND_DIMENSION 128
+#define NUM_STATES 40
 
 
 void initialisetooneNumber(int **input, int rownumber, int val)
@@ -161,7 +162,7 @@ int main()
     // the length of ans and the number of columns of input are randomly chosen
     int nextState[200];
     int checkState[200];
-    int offset[40];
+    int offset[NUM_STATES];
     for (int i = 0; i < 200; i++)
     {
         nextState[i] = -1;
@@ -337,6 +338,13 @@ int main()
         offset[row]=j;
     }
 
+    printf("\n\nINPUT ARRAY: \n");
+    for (int t = 0; t < INPUT_FIRST_DIMENSION; t += 1){
+        for (int j  = 0; j < INPUT_SECOND_DIMENSION; j += 1){
+            printf("%d, ", input[t][j]);
+        }
+        printf("\n");
+    }
     printf("Offset array:\n");
     for (int i = 0; i < sizeof(offset) / sizeof(offset[0]); ++i)
     {

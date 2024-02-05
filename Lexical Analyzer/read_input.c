@@ -137,6 +137,14 @@ void equivalentNumber(struct LexicalAnalyzer *lex, int flag, struct SymbolTableE
     }
 }
 
+//TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
+struct SymbolTableEntry* takeActions(struct LexicalAnalyzer* LA, int state){
+
+    
+
+    
+
+}
 void changeForward(struct LexicalAnalyzer *LA, int flag)
 {
     //FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
