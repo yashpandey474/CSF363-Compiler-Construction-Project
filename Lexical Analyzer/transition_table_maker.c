@@ -166,6 +166,7 @@ int main()
     int checkState[2000];
     int defaultArray[NUM_STATES];
     int offset[NUM_STATES];
+    int s = 40;
 
     for (int i = 0; i<NUM_STATES; i += 1){
         offset[i] = 0;
@@ -195,7 +196,7 @@ int main()
         }
     }
     printf("\n\nINPUT FIRST ROW\n\n");
-    int s=40;
+    
 
     input[0][characterTypeMap['~']] = s + TK_NOT;
     input[0][characterTypeMap['/']] = s + TK_DIV;
