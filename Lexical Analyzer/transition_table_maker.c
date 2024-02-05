@@ -5,6 +5,11 @@
 #define NUM_NON_ACCEPT_STATES 29
 #define STATE_ARRAY_SIZE 505
 #define NUM_STATES 88 // 59 accept states number of states including accept states
+int nextState[STATE_ARRAY_SIZE] = {14, 3, 10, 13, -1, 3, 23, 20, 26, 27, 19, 60, 61, 62, 63, 77, 80, 68, 69, 70, 71, 15, 2, 16, 2, 24, 17, 67, 66, 64, 65, 25, 2, 86, 2, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 83, 3, 83, 83, 83, 3, 83, 83, 83, 83, 83, 83, 83, 83, 4, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 5, 83, 83, 83, 5, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 6, 72, 18, 73, 6, 84, 84, 84, 84, 7, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 8, 55, 8, 29, 8, 55, 8, 21, -1, 21, 21, 21, -1, -1, -1, 30, 9, 9, 14, 11, 14, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 82, 13, 12, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 13, 12, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 21, 22, 21, 21, 21, 22, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 22, 85, 85, 85, 22, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 87, 87, 87, 87, 87, 87, 23, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 24, 24, 24, 24, 24, 24, 31, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 76, 75, 75, 75, 75, 75, 75, 75, 28, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 29, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, -1, -1};
+int checkState[STATE_ARRAY_SIZE] = {0, 0, 0, 13, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 25, 0, 0, 0, 0, 0, 1, 15, 1, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 16, 17, 18, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 8, 9, 29, 7, 8, 9, 20, -1, 20, 20, 20, -1, -1, -1, 29, 7, 7, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, -1, -1};
+int defaultArray[NUM_STATES] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 79, 76, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+int offset[NUM_STATES] = {0, 22, 32, 64, 96, 127, 133, 164, 165, 166, 183, 215, 247, 2, 0, 2, 108, 104, 105, 5, 172, 279, 311, 343, 375, 6, 407, 439, 471, 162, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+CharacterType characterTypeMap[128] = {7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 31, 7, 7, 7, 25, 21, 7, 29, 30, 19, 17, 11, 18, 14, 20, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 13, 12, 9, 10, 8, 7, 26, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 27, 7, 28, 7, 7, 7, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 22, 7, 32, 7};
 
 void initialisetooneNumber(int **input, int rownumber, int val)
 {
@@ -38,7 +43,6 @@ void initialiseforIdDigit(int **input, int rownumber, int nextState)
     input[rownumber][characterTypeMap['2']] = nextState;
 }
 
-CharacterType characterTypeMap[128] = {7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 31, 7, 7, 7, 25, 21, 7, 29, 30, 19, 17, 11, 18, 14, 20, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 13, 12, 9, 10, 8, 7, 26, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 27, 7, 28, 7, 7, 7, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 22, 7, 32, 7};
 void initializeCharacterTypeMap()
 {
     for (int i = 0; i < 128; ++i)
@@ -154,20 +158,17 @@ void initializeCharacterTypeMap()
         }
     }
 }
-int main()
+int reinitialiseArrays()
 {
     printf("Started with the execution !!!\n");
     initializeCharacterTypeMap();
-
+    printf("Character type map \n");
     for (int i = 0; i < 128; ++i)
     {
         printf("%d,", characterTypeMap[i]);
     }
     // the length of ans and the number of columns of input are randomly chosen
-    int nextState[STATE_ARRAY_SIZE];
-    int checkState[STATE_ARRAY_SIZE];
-    int defaultArray[NUM_STATES];
-    int offset[NUM_STATES];
+
     int s = NUM_NON_ACCEPT_STATES;
 
     for (int i = 0; i < NUM_STATES; i += 1)
@@ -223,8 +224,6 @@ int main()
     input[23][characterTypeMap[' ']] = 23;
     input[23][characterTypeMap['\t']] = 23;
 
-    printf("FIRST SET DONE");
-
     input[0][characterTypeMap['!']] = 25;
     input[25][characterTypeMap['=']] = s + TK_NE;
 
@@ -245,8 +244,6 @@ int main()
     initialisetooneNumber(input, 22, s + TK_FUNID);
     initialiseforDigit(input, 22, 22);
 
-    printf("SECOND SET DONE");
-
     // NUMBERS TK_NUM & TK_RNUM
     initialiseforDigit(input, 0, 3);
     initialisetooneNumber(input, 3, s + TK_NUM);
@@ -266,7 +263,6 @@ int main()
     initialiseforDigit(input, 9, 8);
     initialiseforDigit(input, 8, TK_RNUM);
 
-    printf("THIRD SET DONE");
     // COMPARATIVE OPERATORS
     input[0][characterTypeMap['>']] = 26;
     input[0][characterTypeMap['<']] = 27;
@@ -288,8 +284,6 @@ int main()
     input[18][characterTypeMap['@']] = s + TK_OR;
     input[0][characterTypeMap['=']] = 19;
     input[19][characterTypeMap['=']] = s + TK_EQ;
-
-    printf("FOURTH SET DONE");
 
     // TK_ID TK_FIELDID
     input[0][characterTypeMap['a']] = 14;
@@ -314,16 +308,16 @@ int main()
     initialisetooneNumber(input, 24, 24);
     input[24][characterTypeMap['\n']] = s + TK_COMMENT;
     input[19][characterTypeMap['=']] = s + TK_EQ;
-    printf("\n\nINPUT ARRAY: \n");
-    for (int t = 0; t < NUM_STATES; t += 1)
-    {
-        printf("\n\nState : %d\n", t);
-        for (int j = 0; j < INPUT_SECOND_DIMENSION; j += 1)
-        {
-            printf("%d, ", input[t][j]);
-        }
-        printf("\n");
-    }
+    // printf("\n\nINPUT ARRAY: \n");
+    // for (int t = 0; t < NUM_STATES; t += 1)
+    // {
+    //     printf("\n\nState : %d\n", t);
+    //     for (int j = 0; j < INPUT_SECOND_DIMENSION; j += 1)
+    //     {
+    //         printf("%d, ", input[t][j]);
+    //     }
+    //     printf("\n");
+    // }
 
     // this is the loop to find the base(offset), next and check arrays
     for (int row = 0; row < NUM_STATES; row++)
@@ -373,21 +367,58 @@ int main()
     printf("\nOffset array:\n");
     for (int i = 0; i < sizeof(offset) / sizeof(offset[0]); ++i)
     {
-        printf("%d ", offset[i]);
+        printf("%d,", offset[i]);
     }
     printf("\n\nNext State array:\n");
     for (int i = 0; i < sizeof(nextState) / sizeof(nextState[0]); ++i)
     {
-        printf("%d ", nextState[i]);
+        printf("%d,", nextState[i]);
     }
     printf("\n");
 
     printf("Check State array:\n");
     for (int i = 0; i < sizeof(checkState) / sizeof(checkState[0]); ++i)
     {
-        printf("%d ", checkState[i]);
+        printf("%d,", checkState[i]);
     }
     printf("\n");
 
+    printf("Default array:\n");
+    for (int i = 0; i < sizeof(defaultArray) / sizeof(defaultArray[0]); ++i)
+    {
+        printf("%d,", defaultArray[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
+
+int main()
+{
+    char testString[] = "_main@";
+    printf("String: %s\n", testString);
+    printf("Character type map: \n");
+    for (int i = 0; i < strlen(testString); i++)
+    {
+        printf("%d : %d\n", testString[i], characterTypeMap[testString[i]]);
+    }
+    printf("\n");
+    int startstate = 0;
+    int i = 0;
+    while (startstate < NUM_NON_ACCEPT_STATES && i < strlen(testString))
+    {
+        int actualOffset = offset[startstate] + characterTypeMap[testString[i]];
+        if (checkState[actualOffset] == startstate)
+        {
+            startstate = nextState[actualOffset];
+            printf("Going to %d \n", startstate);
+            i++; // Move to the next character
+        }
+        else
+        {
+            printf("Error\n");
+            break;
+        }
+    }
     return 0;
 }

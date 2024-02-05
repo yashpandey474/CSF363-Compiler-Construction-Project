@@ -1,6 +1,7 @@
 // Enumerated token types
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #ifndef LEXICAL_H
 #define LEXICAL_H
 #define HASH_MAP_SIZE 91
