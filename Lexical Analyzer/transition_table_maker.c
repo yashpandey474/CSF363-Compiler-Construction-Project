@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include "lexical.h"
 
+#define INPUT_FIRST_DIMENSION 60
+#define INPUT_SECOND_DIMENSION 128
+
+
 void initialisetooneNumber(int **input, int rownumber, int val)
 {
     for (int i = 0; i < 128; i++)
@@ -31,9 +35,129 @@ void initialiseforIdDigit(int** input, int rownumber, int nextState){
     input[rownumber][characterTypeMap['2']] = nextState;
 }
 
+CharacterType characterTypeMap[128] = {6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 30, 6, 6, 6, 24, 20, 6, 28, 29, 18, 16, 10, 17, 13, 19, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 12, 11, 8, 9, 7, 6, 25, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 26, 6, 27, 6, 6, 6, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 21, 6, 31, 6};
+void initializeCharacterTypeMap()
+{
+    for (int i = 0; i < 128; ++i)
+    {
+        if (i >= 'a' && i <= 'z')
+        {
+            if (i >= 'b' && i <= 'd')
+            {
+                characterTypeMap[i] = CT_ID_LETTER;
+            }
+            else
+            {
+                characterTypeMap[i] = CT_LETTER_LOWER_EXCEPT_ID_LETTER;
+            }
+        }
+        else if (i >= 'A' && i <= 'Z')
+        {
+            if (i == 'E')
+                characterTypeMap[i] = CT_EXPONENT;
+            else
+            {
+                characterTypeMap[i] = CT_LETTER_UPPER;
+            }
+        }
+        else if (i >= '0' && i <= '9')
+        {
+            if (i >= '2' && i <= '7')
+            {
+                characterTypeMap[i] = CT_ID_DIGIT;
+            }
+            else
+            {
+                characterTypeMap[i] = CT_DIGIT_EXCEPT_ID_DIGIT;
+            }
+        }
+        else
+        {
+            switch (i)
+            {
+            case '\t':
+            case ' ':
+            case '\n':
+                characterTypeMap[i] = CT_DELIMITER;
+                break;
+            case '>':
+                characterTypeMap[i] = CT_GREATER;
+                break;
+            case '<':
+                characterTypeMap[i] = CT_LESSER;
+                break;
+            case '=':
+                characterTypeMap[i] = CT_EQUAL;
+                break;
+            case ',':
+                characterTypeMap[i] = CT_COMMA;
+                break;
+            case ';':
+                characterTypeMap[i] = CT_SEM;
+                break;
+            case ':':
+                characterTypeMap[i] = CT_COLON;
+                break;
+            case '.':
+                characterTypeMap[i] = CT_DOT;
+                break;
+            case '(':
+                characterTypeMap[i] = CT_ROUND_OPEN;
+                break;
+            case ')':
+                characterTypeMap[i] = CT_ROUND_CLOSE;
+                break;
+            case '[':
+                characterTypeMap[i] = CT_SQUARE_OPEN;
+                break;
+            case ']':
+                characterTypeMap[i] = CT_SQUARE_CLOSE;
+                break;
+            case '+':
+                characterTypeMap[i] = CT_PLUS;
+                break;
+            case '-':
+                characterTypeMap[i] = CT_MINUS;
+                break;
+            case '*':
+                characterTypeMap[i] = CT_MUL;
+                break;
+            case '/':
+                characterTypeMap[i] = CT_DIV;
+                break;
+            case '&':
+                characterTypeMap[i] = CT_AND;
+                break;
+            case '|':
+                characterTypeMap[i] = CT_OR;
+                break;
+            case '!':
+                characterTypeMap[i] = CT_EXCLAMATION;
+                break;
+            case '~':
+                characterTypeMap['~'] = CT_TILDE;
+                break;
+            case '%':
+                characterTypeMap[i] = CT_PERCENT;
+                break;
+            case '@':
+                characterTypeMap[i] = CT_AT_THE_RATE;
+                break;
+            // Any other character is considered invalid
+            default:
+                characterTypeMap[i] = CT_INVALID;
+            }
+        }
+    }
+}
 int main()
 {
     initializeCharacterTypeMap();
+
+    for (int i = 0; i < 128; ++i)
+    {
+        printf("%d,", characterTypeMap[i]);
+    }
     // the length of ans and the number of columns of input are randomly chosen
     int nextState[200];
     int checkState[200];
@@ -44,14 +168,12 @@ int main()
         checkState[i] = -1;
     }
     
-    int **input = (int **)malloc(40 * sizeof(int *));
-    for (int i = 0; i < 40; ++i)
+    int **input = (int **)malloc(INPUT_FIRST_DIMENSION * sizeof(int *));
+    for (int i = 0; i < INPUT_FIRST_DIMENSION; ++i)
     {
-        input[i] = (int *)malloc(128 * sizeof(int));
+        input[i] = (int *)malloc(INPUT_SECOND_DIMENSION * sizeof(int));
     }
     int s=40;
-
-
 
     input[0][characterTypeMap['~']] = s + TK_NOT;
     input[0][characterTypeMap['/']] = s + TK_DIV;
@@ -76,13 +198,13 @@ int main()
     input[23][characterTypeMap[' ']] = 23;
     input[23][characterTypeMap['\t']] = 23;
 
+    printf("FIRST SET DONE");
+
     input[0][characterTypeMap['!']] = 25;
     input[25][characterTypeMap['=']] = s + TK_NE;
 
-
-
-
     
+
     input[0][characterTypeMap['#']] = 1;
     initialiseforLowerLetter(input, 1, 2);
     initialisetooneNumber(input, 2, s + TK_RUID);
@@ -100,6 +222,8 @@ int main()
     initialiseforDigit(input,21,22);
     initialisetooneNumber(input, 22, s + TK_FUNID);
     initialiseforDigit(input,22,22);
+
+    printf("SECOND SET DONE");
 
     //NUMBERS TK_NUM & TK_RNUM
     initialiseforDigit(input, 0, 3);
@@ -119,8 +243,8 @@ int main()
 
     initialiseforDigit(input, 9, 8);
     initialiseforDigit(input, 8, TK_RNUM);
-    
-    
+
+    printf("THIRD SET DONE");
     //COMPARATIVE OPERATORS
     input[0][characterTypeMap['>']] = 26;
     input[0][characterTypeMap['<']] = 27;
@@ -144,10 +268,8 @@ int main()
     input[0][characterTypeMap['=']] = 19;
     input[19][characterTypeMap['=']] = s+TK_EQ;
 
+    printf("FOURTH SET DONE");
 
-
-    
-    
     //TK_ID TK_FIELDID
     input[0][characterTypeMap['a']] = 14;
     initialiseforIdLetter(input, 0, 10);
@@ -181,10 +303,10 @@ int main()
 
 
     //this is the loop to find the base(offset), next and check arrays
-    for (int row = 0; row < sizeof(input)/sizeof(input[0]); row++)
+    for (int row = 0; row < INPUT_FIRST_DIMENSION; row++)
     {
         int j = 0;
-        while (j + sizeof(input[0]) / sizeof(input[0][0]) < sizeof(nextState) / sizeof(nextState[0]))
+        while (j + INPUT_SECOND_DIMENSION < sizeof(nextState) / sizeof(nextState[0]))
         { // if there is a collision then we make the flag 1 and increment the value of j
             // then we break out of that checker loop
             int flag = 0;
