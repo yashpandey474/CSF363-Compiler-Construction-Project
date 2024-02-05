@@ -1,0 +1,37 @@
+# Compiler and compiler flags
+CC=gcc
+CFLAGS=-I. -Wall
+
+# Source files
+SOURCES=$(wildcard *.c)
+# Exclude transition_table_maker.c from being compiled with the rest
+SOURCES_WITHOUT_TTM=$(filter-out transition_table_maker.c, $(SOURCES))
+# Object files
+OBJECTS=$(SOURCES_WITHOUT_TTM:.c=.o)
+# Executable name for the main project
+EXECUTABLE=main_program
+# Executable name for transition_table_maker
+TTM_EXECUTABLE=transition_table_maker
+
+# Default target
+all: $(EXECUTABLE) $(TTM_EXECUTABLE) run_ttm
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^
+
+$(TTM_EXECUTABLE): transition_table_maker.c
+	$(CC) $(CFLAGS) -o $@ $^
+
+# Rule to compile .c to .o
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+# Phony target to run the transition table maker
+.PHONY: run_ttm
+run_ttm:
+	./$(TTM_EXECUTABLE)
+
+# Phony target to clean up
+.PHONY: clean
+clean:
+	rm -f $(EXECUTABLE) $(TTM_EXECUTABLE) $(OBJECTS)

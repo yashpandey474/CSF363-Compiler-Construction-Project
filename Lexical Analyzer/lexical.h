@@ -6,7 +6,7 @@
 #define HASH_MAP_SIZE 91
 #define MAX_ID_SIZE 20
 #define MAX_FUNID_SIZE 30
-#define NUM_STATES 40
+#define NUM_STATES 88 // 59 accept states number of states including accept states
 
 extern int numStates;
 // LEXICAL ANALYSER

@@ -1,6 +1,5 @@
 // 4 ARRAYS: DEFAULT, BASE, CHECK, NEXT
 #include "lexical.h"
-#define NUM_STATES 40
 
 
 
