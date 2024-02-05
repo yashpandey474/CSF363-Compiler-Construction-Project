@@ -4,6 +4,7 @@
 #define INPUT_SECOND_DIMENSION 32 // number of character types
 #define NUM_NON_ACCEPT_STATES 29
 #define STATE_ARRAY_SIZE 600
+#define NUM_STATES 88 // 59 accept states number of states including accept states
 
 void initialisetooneNumber(int **input, int rownumber, int val)
 {
@@ -155,6 +156,7 @@ void initializeCharacterTypeMap()
 }
 int main()
 {
+    printf("Hello, World!\n");
     initializeCharacterTypeMap();
 
     for (int i = 0; i < 128; ++i)
