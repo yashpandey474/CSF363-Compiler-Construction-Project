@@ -3,13 +3,26 @@
 #include "lexical.h"
 #define INPUT_SECOND_DIMENSION 32 // number of character types
 #define NUM_NON_ACCEPT_STATES 29
-#define STATE_ARRAY_SIZE 505
-#define NUM_STATES 88 // 59 accept states number of states including accept states
-int nextState[STATE_ARRAY_SIZE] = {14, 3, 10, 13, -1, 3, 23, 20, 26, 27, 19, 60, 61, 62, 63, 77, 80, 68, 69, 70, 71, 15, 2, 16, 2, 24, 17, 67, 66, 64, 65, 25, 2, 86, 2, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 83, 3, 83, 83, 83, 3, 83, 83, 83, 83, 83, 83, 83, 83, 4, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 5, 83, 83, 83, 5, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 6, 72, 18, 73, 6, 84, 84, 84, 84, 7, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 84, 8, 55, 8, 29, 8, 55, 8, 21, -1, 21, 21, 21, -1, -1, -1, 30, 9, 9, 14, 11, 14, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 82, 13, 12, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 13, 12, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 21, 22, 21, 21, 21, 22, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 22, 85, 85, 85, 22, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 87, 87, 87, 87, 87, 87, 23, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 24, 24, 24, 24, 24, 24, 31, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 79, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 78, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 76, 75, 75, 75, 75, 75, 75, 75, 28, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 29, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, -1, -1};
-int checkState[STATE_ARRAY_SIZE] = {0, 0, 0, 13, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 25, 0, 0, 0, 0, 0, 1, 15, 1, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 16, 17, 18, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 8, 9, 29, 7, 8, 9, 20, -1, 20, 20, 20, -1, -1, -1, 29, 7, 7, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, -1, -1};
-int defaultArray[NUM_STATES] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 79, 76, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-int offset[NUM_STATES] = {0, 22, 32, 64, 96, 127, 133, 164, 165, 166, 183, 215, 247, 2, 0, 2, 108, 104, 105, 5, 172, 279, 311, 343, 375, 6, 407, 439, 471, 162, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+#define STATE_ARRAY_SIZE 120 // optimised after default state inclusion
+#define NUM_STATES 88        // 59 accept states number of states including accept states
+int nextState[120] = {14, 3, 10, 13, 7, 3, 23, 20, 26, 27, 19, 60, 61, 62, 63, 13, 12, 68, 69, 70, 71, 15, 2, 16, 2, 24, 17, 67, 66, 64, 65, 25, 2, 3, 2, 5, 6, 3, 8, 5, 6, 55, 8, 8, 72, 55, 4, 8, 14, 11, 14, 13, 12, 18, 9, 9, 73, 77, 21, 23, 21, 21, 21, 21, 22, 21, 21, 21, 22, 22, 31, 80, 79, 22, 76, 29, 29, -1, -1, -1, -1, -1, 28, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+int checkState[120] = {0, 0, 0, 13, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 0, 0, 0, 0, 0, 1, 15, 1, 0, 0, 0, 0, 0, 0, 0, 2, 3, 2, 4, 5, 3, 7, 4, 5, 8, 7, 9, 16, 8, 3, 9, 10, 10, 10, 12, 12, 17, 7, 7, 18, 19, 20, 23, 20, 20, 20, 21, 21, 21, 21, 21, 21, 22, 24, 25, 26, 22, 27, 28, 29, -1, -1, -1, -1, -1, 27, -1, -1, -1, -1, -1, 29, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+int defaultArray[88] = {-1, -1, 86, 83, 83, -1, 84, -1, -1, -1, 81, 82, 82, -1, -1, -1, -1, -1, -1, -1, -1, 85, 85, 87, 24, -1, 78, 75, 76, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+int offset[88] = {0, 22, 32, 32, 34, 35, 0, 37, 40, 42, 48, 14, 50, 2, 0, 2, 23, 27, 30, 47, 58, 63, 68, 53, 64, 61, 62, 64, 57, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 CharacterType characterTypeMap[128] = {7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 31, 7, 7, 7, 25, 21, 7, 29, 30, 19, 17, 11, 18, 14, 20, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 13, 12, 9, 10, 8, 7, 26, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 27, 7, 28, 7, 7, 7, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 22, 7, 32, 7};
+void printArray(const char *name, int *array, int size, const char *type)
+{
+    printf("%s %s[%d] = {", type, name, size);
+    for (int i = 0; i < size; ++i)
+    {
+        printf("%d", array[i]);
+        if (i < size - 1)
+        {
+            printf(",");
+        }
+    }
+    printf("};\n");
+}
 
 void initialisetooneNumber(int **input, int rownumber, int val)
 {
@@ -158,15 +171,30 @@ void initializeCharacterTypeMap()
         }
     }
 }
+
+int findMaxOccurrence(int **input, int row, int rowCount)
+{
+    int maxElement = -1;
+    int maxCount = 0;
+    int count[NUM_STATES] = {0};
+
+    // Count occurrences of each element in the specified row
+    for (int i = 0; i < INPUT_SECOND_DIMENSION; i++)
+    {
+        count[input[row][i]]++;
+        if (count[input[row][i]] > maxCount)
+        {
+            maxCount = count[input[row][i]];
+            maxElement = input[row][i];
+        }
+    }
+    return maxElement;
+}
+
 int reinitialiseArrays()
 {
     printf("Started with the execution !!!\n");
     initializeCharacterTypeMap();
-    printf("Character type map \n");
-    for (int i = 0; i < 128; ++i)
-    {
-        printf("%d,", characterTypeMap[i]);
-    }
     // the length of ans and the number of columns of input are randomly chosen
 
     int s = NUM_NON_ACCEPT_STATES;
@@ -176,10 +204,10 @@ int reinitialiseArrays()
         offset[i] = 0;
         defaultArray[i] = -1;
     }
-
-    // SET DEFAULT STATE FOR SIGMA - TO DESTINATION
-    defaultArray[26] = s + TK_GE;
-    defaultArray[27] = s + TK_LE;
+    // TODO:why??
+    //  // SET DEFAULT STATE FOR SIGMA - TO DESTINATION
+    //  defaultArray[26] = s + TK_GE;
+    //  defaultArray[27] = s + TK_LE;
 
     for (int i = 0; i < STATE_ARRAY_SIZE; i++)
     {
@@ -308,29 +336,10 @@ int reinitialiseArrays()
     initialisetooneNumber(input, 24, 24);
     input[24][characterTypeMap['\n']] = s + TK_COMMENT;
     input[19][characterTypeMap['=']] = s + TK_EQ;
-    // printf("\n\nINPUT ARRAY: \n");
-    // for (int t = 0; t < NUM_STATES; t += 1)
-    // {
-    //     printf("\n\nState : %d\n", t);
-    //     for (int j = 0; j < INPUT_SECOND_DIMENSION; j += 1)
-    //     {
-    //         printf("%d, ", input[t][j]);
-    //     }
-    //     printf("\n");
-    // }
-
-    // this is the loop to find the base(offset), next and check arrays
     for (int row = 0; row < NUM_STATES; row++)
     {
-
-        // printf("%d ROW", row);
-
-        // printf("Check State array:\n");
-        // for (int i = 0; i < sizeof(checkState) / sizeof(checkState[0]); ++i)
-        // {
-        //     printf("%d ", checkState[i]);
-        // }
-        // printf("\n");
+        int maxoccurencenextstate = findMaxOccurrence(input, row, NUM_STATES);
+        defaultArray[row] = maxoccurencenextstate;
 
         int j = 0;
         while (j + INPUT_SECOND_DIMENSION < STATE_ARRAY_SIZE)
@@ -340,7 +349,7 @@ int reinitialiseArrays()
             for (int k = 0; k < INPUT_SECOND_DIMENSION; k++)
             {
                 // checker loop
-                if (nextState[j + k] != -1 && input[row][k] != -1)
+                if (nextState[j + k] != -1 && input[row][k] != maxoccurencenextstate)
                 {
                     flag = 1;
                     j++;
@@ -352,7 +361,7 @@ int reinitialiseArrays()
                 for (int k = 0; k < INPUT_SECOND_DIMENSION; k++)
                 {
                     // write into the ans array
-                    if (input[row][k] != -1)
+                    if (input[row][k] != maxoccurencenextstate)
                     {
                         nextState[j + k] = input[row][k];
                         checkState[j + k] = row;
@@ -364,37 +373,29 @@ int reinitialiseArrays()
         offset[row] = j;
     }
 
-    printf("\nOffset array:\n");
-    for (int i = 0; i < sizeof(offset) / sizeof(offset[0]); ++i)
-    {
-        printf("%d,", offset[i]);
-    }
-    printf("\n\nNext State array:\n");
-    for (int i = 0; i < sizeof(nextState) / sizeof(nextState[0]); ++i)
-    {
-        printf("%d,", nextState[i]);
-    }
-    printf("\n");
+    printArray("nextState", nextState, sizeof(nextState) / sizeof(nextState[0]), "int");
+    printArray("checkState", checkState, sizeof(checkState) / sizeof(checkState[0]), "int");
+    printArray("defaultArray", defaultArray, sizeof(defaultArray) / sizeof(defaultArray[0]), "int");
+    printArray("offset", offset, sizeof(offset) / sizeof(offset[0]), "int");
 
-    printf("Check State array:\n");
-    for (int i = 0; i < sizeof(checkState) / sizeof(checkState[0]); ++i)
+    printf("CharacterType characterTypeMap [%d] = {", sizeof(characterTypeMap) / sizeof(CharacterType));
+    for (int i = 0; i < sizeof(characterTypeMap) / sizeof(CharacterType); ++i)
     {
-        printf("%d,", checkState[i]);
+        printf("%d", characterTypeMap[i]);
+        if (i < sizeof(characterTypeMap) / sizeof(CharacterType) - 1)
+        {
+            printf(",");
+        }
     }
-    printf("\n");
-
-    printf("Default array:\n");
-    for (int i = 0; i < sizeof(defaultArray) / sizeof(defaultArray[0]); ++i)
-    {
-        printf("%d,", defaultArray[i]);
-    }
-    printf("\n");
+    printf("};\n");
 
     return 0;
 }
 
 int main()
 {
+    // Run reinitialiseArrays() to get the arrays in copy paste format if any changes are made.
+    // reinitialiseArrays();
     char testString[] = "_main@";
     printf("String: %s\n", testString);
     printf("Character type map: \n");
@@ -411,14 +412,18 @@ int main()
         if (checkState[actualOffset] == startstate)
         {
             startstate = nextState[actualOffset];
-            printf("Going to %d \n", startstate);
-            i++; // Move to the next character
         }
         else
         {
-            printf("Error\n");
+            startstate = defaultArray[startstate];
+        }
+        if (startstate == -1)
+        {
+            printf("Invalid token\n");
             break;
         }
+        printf("Going to %d \n", startstate);
+        i++; // Move to the next character
     }
     return 0;
 }
