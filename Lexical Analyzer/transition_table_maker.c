@@ -24,12 +24,9 @@ void printArray(const char *name, int *array, int size, const char *type)
     printf("};\n");
 }
 
-void initialisetooneNumber(int **input, int rownumber, int val)
+void initialisetooneNumber(int **input, int rownumber, int val, int* defaultArray)
 {
-    for (int i = 0; i < INPUT_SECOND_DIMENSION; i++)
-    {
-        input[rownumber][i] = val;
-    }
+    defaultArray[rownumber] = val;
 }
 void initialiseforDigit(int **input, int rownumber, int nextState)
 {
@@ -172,31 +169,11 @@ void initializeCharacterTypeMap()
     }
 }
 
-int findMaxOccurrence(int **input, int row, int rowCount)
-{
-    int maxElement = -1;
-    int maxCount = 0;
-    int count[NUM_STATES] = {0};
-
-    // Count occurrences of each element in the specified row
-    for (int i = 0; i < INPUT_SECOND_DIMENSION; i++)
-    {
-        count[input[row][i]]++;
-        if (count[input[row][i]] > maxCount)
-        {
-            maxCount = count[input[row][i]];
-            maxElement = input[row][i];
-        }
-    }
-    return maxElement;
-}
 
 int reinitialiseArrays()
 {
     printf("Started with the execution !!!\n");
     initializeCharacterTypeMap();
-    // the length of ans and the number of columns of input are randomly chosen
-
     int s = NUM_NON_ACCEPT_STATES;
 
     for (int i = 0; i < NUM_STATES; i += 1)
@@ -204,10 +181,6 @@ int reinitialiseArrays()
         offset[i] = 0;
         defaultArray[i] = -1;
     }
-    // TODO:why??
-    //  // SET DEFAULT STATE FOR SIGMA - TO DESTINATION
-    //  defaultArray[26] = s + TK_GE;
-    //  defaultArray[27] = s + TK_LE;
 
     for (int i = 0; i < STATE_ARRAY_SIZE; i++)
     {
@@ -248,7 +221,7 @@ int reinitialiseArrays()
 
     input[0][characterTypeMap[' ']] = 23;
     input[0][characterTypeMap['\t']] = 23;
-    initialisetooneNumber(input, 23, s + DELIMITER);
+    initialisetooneNumber(input, 23, s + DELIMITER, defaultArray);
     input[23][characterTypeMap[' ']] = 23;
     input[23][characterTypeMap['\t']] = 23;
 
@@ -257,7 +230,7 @@ int reinitialiseArrays()
 
     input[0][characterTypeMap['#']] = 1;
     initialiseforLowerLetter(input, 1, 2);
-    initialisetooneNumber(input, 2, s + TK_RUID);
+    initialisetooneNumber(input, 2, s + TK_RUID, defaultArray);
     initialiseforLowerLetter(input, 2, 2);
 
     input[0][characterTypeMap['_']] = 20;
@@ -266,22 +239,22 @@ int reinitialiseArrays()
     initialiseforLetter(input, 20, 21);
 
     // TK_FUNID
-    initialisetooneNumber(input, 21, s + TK_FUNID);
+    initialisetooneNumber(input, 21, s + TK_FUNID, defaultArray);
     initialiseforLetter(input, 21, 21);
     initialiseforDigit(input, 21, 22);
-    initialisetooneNumber(input, 22, s + TK_FUNID);
+    initialisetooneNumber(input, 22, s + TK_FUNID, defaultArray);
     initialiseforDigit(input, 22, 22);
 
     // NUMBERS TK_NUM & TK_RNUM
     initialiseforDigit(input, 0, 3);
-    initialisetooneNumber(input, 3, s + TK_NUM);
+    initialisetooneNumber(input, 3, s + TK_NUM, defaultArray);
     initialiseforDigit(input, 3, 3);
     input[3][characterTypeMap['.']] = 4;
-    initialisetooneNumber(input, 4, s + TK_NUM);
+    initialisetooneNumber(input, 4, s + TK_NUM, defaultArray);
     initialiseforDigit(input, 4, 5);
     initialiseforDigit(input, 5, 6);
 
-    initialisetooneNumber(input, 6, s + TK_RNUM);
+    initialisetooneNumber(input, 6, s + TK_RNUM, defaultArray);
     input[6][characterTypeMap['E']] = 7;
 
     initialiseforDigit(input, 7, 8);
@@ -294,12 +267,12 @@ int reinitialiseArrays()
     // COMPARATIVE OPERATORS
     input[0][characterTypeMap['>']] = 26;
     input[0][characterTypeMap['<']] = 27;
-    initialisetooneNumber(input, 26, s + TK_GT);
+    initialisetooneNumber(input, 26, s + TK_GT, defaultArray);
     input[26][characterTypeMap['=']] = s + TK_GE;
-    initialisetooneNumber(input, 27, s + TK_LT);
+    initialisetooneNumber(input, 27, s + TK_LT, defaultArray);
     input[27][characterTypeMap['=']] = s + TK_LE;
     input[27][characterTypeMap['-']] = 28;
-    initialisetooneNumber(input, 28, s + TK_LE);
+    initialisetooneNumber(input, 28, s + TK_LE, defaultArray);
     input[28][characterTypeMap['-']] = 29;
     input[29][characterTypeMap['-']] = s + TK_ASSIGNOP;
 
@@ -317,30 +290,30 @@ int reinitialiseArrays()
     input[0][characterTypeMap['a']] = 14;
     initialiseforIdLetter(input, 0, 10);
 
-    initialisetooneNumber(input, 10, s + TK_FIELDID);
+    initialisetooneNumber(input, 10, s + TK_FIELDID, defaultArray);
     initialiseforLowerLetter(input, 10, 14);
 
     initialiseforIdDigit(input, 10, 11);
 
-    initialisetooneNumber(input, 11, s + TK_ID);
+    initialisetooneNumber(input, 11, s + TK_ID, defaultArray);
     initialiseforIdLetter(input, 11, 12);
     initialiseforIdDigit(input, 11, 13);
     initialiseforIdDigit(input, 13, 13);
-    initialisetooneNumber(input, 12, s + TK_ID);
+    initialisetooneNumber(input, 12, s + TK_ID, defaultArray);
     initialiseforIdLetter(input, 12, 12);
     initialiseforIdDigit(input, 12, 13);
 
     input[26][characterTypeMap['=']] = s + TK_GE;
 
     input[0][characterTypeMap['%']] = 24;
-    initialisetooneNumber(input, 24, 24);
+    initialisetooneNumber(input, 24, 24, defaultArray);
     input[24][characterTypeMap['\n']] = s + TK_COMMENT;
     input[19][characterTypeMap['=']] = s + TK_EQ;
+    
+    
     for (int row = 0; row < NUM_STATES; row++)
     {
-        int maxoccurencenextstate = findMaxOccurrence(input, row, NUM_STATES);
-        defaultArray[row] = maxoccurencenextstate;
-
+    
         int j = 0;
         while (j + INPUT_SECOND_DIMENSION < STATE_ARRAY_SIZE)
         { // if there is a collision then we make the flag 1 and increment the value of j
@@ -349,7 +322,7 @@ int reinitialiseArrays()
             for (int k = 0; k < INPUT_SECOND_DIMENSION; k++)
             {
                 // checker loop
-                if (nextState[j + k] != -1 && input[row][k] != maxoccurencenextstate)
+                if (nextState[j + k] != -1 && input[row][k] !=- 1)
                 {
                     flag = 1;
                     j++;
@@ -361,7 +334,7 @@ int reinitialiseArrays()
                 for (int k = 0; k < INPUT_SECOND_DIMENSION; k++)
                 {
                     // write into the ans array
-                    if (input[row][k] != maxoccurencenextstate)
+                    if (input[row][k] != -1)
                     {
                         nextState[j + k] = input[row][k];
                         checkState[j + k] = row;
