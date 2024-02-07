@@ -368,7 +368,7 @@ int reinitialiseArrays()
 int main()
 {
     // Run reinitialiseArrays() to get the arrays in copy paste format if any changes are made.
-    // reinitialiseArrays();
+    reinitialiseArrays();
     char testString[] = "_main@";
     printf("String: %s\n", testString);
     printf("Character type map: \n");
