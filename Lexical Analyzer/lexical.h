@@ -19,6 +19,11 @@ struct LexicalAnalyzer
 
 // DECLARATIONS AND GLOBAL VARIABLES
 extern struct SymbolTableNode *symbolTable[HASH_MAP_SIZE];
+
+void changeForward(struct LexicalAnalyzer *LA, int flag);
+
+int getNextState(int currentState, char character);
+
 struct SymbolTableNode
 {
     struct SymbolTableEntry *entry;
@@ -147,4 +152,5 @@ typedef enum CharacterType
 
 const char* CharacterTypeToString(enum CharacterType type);
 
+int getNextState(int currentState, char character);
 #endif

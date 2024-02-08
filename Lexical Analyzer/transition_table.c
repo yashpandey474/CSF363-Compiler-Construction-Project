@@ -115,53 +115,70 @@ const char* TokenToString(enum Tokentype token) {
     }
 }
 
+typedef struct {
+    char input[40]; // Input string for the test case
+    char stopreadingAt[40]; // Expected lexeme output (simplified for illustration)
+    enum Tokentype t; // Expected token type output (simplified for illustration)
+} TestCase;
+
+TestCase testCases[] = {
+    {"_main@", "_main@", TK_FIELDID},
+    // Add more test cases as needed
+};
+
+
+int getNextState(int currentState, char character){
+    int actualOffset = offset[currentState] + characterTypeMap[character];
+    int state;
+    if (actualOffset >= STATE_ARRAY_SIZE)
+    {
+        state = defaultArray[currentState];
+    }
+
+    if (checkState[actualOffset] == currentState)
+    {
+        state = nextState[actualOffset];
+    }
+    else
+    {
+        state = defaultArray[currentState];
+    }
+
+    return state;
+}
 // tester
-int main()
-{
-    // Run reinitialiseArrays() to get the arrays in copy paste format if any changes are made.
-    // reinitialiseArrays();
-    char testString[40];
-    printf("give me input to test : ");
-    scanf("%s", testString);
+int main() {
+    int numberOfTestCases = sizeof(testCases) / sizeof(TestCase);
 
-    printf("String: %s\n", testString);
-    printf("Character type map: \n");
-    for (int i = 0; i < strlen(testString); i++)
-    {
-        printf("(%c) %d : %d %s\n", testString[i], testString[i], characterTypeMap[testString[i]], CharacterTypeToString(characterTypeMap[testString[i]]));
-    }
-    printf("\n");
+    for (int testCaseIndex = 0; testCaseIndex < numberOfTestCases; ++testCaseIndex) {
+        char* testString = testCases[testCaseIndex].input;
+        int currentState = 0;
+        int charIndex = 0;
 
-    int startstate = 0;
-    int i = 0;
-    while (startstate <= NUM_NON_ACCEPT_STATES && i < strlen(testString) && startstate >= 0)
-    {
-        printf("Reading (%c), Currently at %d. Going to -->", testString[i], startstate);
+        printf("Test Case %d: \"%s\"\n", testCaseIndex + 1, testString);
 
-        int actualOffset = offset[startstate] + characterTypeMap[testString[i]];
-        if (actualOffset >= STATE_ARRAY_SIZE)
-        {
-            printf("%d %s\n", defaultArray[startstate], TokenToString(defaultArray[startstate]-NUM_NON_ACCEPT_STATES-1));
-            startstate = defaultArray[startstate];
-            break;
+        while (currentState <= NUM_NON_ACCEPT_STATES && charIndex < strlen(testString)) {
+            currentState = getNextState(currentState, testString[charIndex]);
+            if (currentState < 0)
+            {
+                printf("Error\n");
+            }; // Error state
+            charIndex++; // Move to the next character
         }
-        
-        if (checkState[actualOffset] == startstate)
-        {
-            startstate = nextState[actualOffset];
-        }
-        else
-        {
+
+        testString[charIndex] = '\0';
+        if (strcmp(testString, testCases[testCaseIndex].stopreadingAt) == 0 && currentState > NUM_NON_ACCEPT_STATES) {
+            printf("PASS: Reached expected state and lexeme\n");
+        } else {
+            printf("FAIL: Did not reach expected state or lexeme\n");
+            printf("%s",testCases[testCaseIndex].stopreadingAt);
             
-            startstate = defaultArray[startstate];
         }
-        printf("%d %s\n", startstate, TokenToString(startstate-NUM_NON_ACCEPT_STATES-1));
-        i++; // Move to the next character
     }
-    printf("Done\n");
 
     return 0;
 }
+
 
 // struct TransitionTableEntry{
 //     int checkState;
