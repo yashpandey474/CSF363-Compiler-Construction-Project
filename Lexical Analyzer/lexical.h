@@ -132,7 +132,10 @@ typedef enum CharacterType
     CT_ROUND_OPEN,
     CT_ROUND_CLOSE, // Changed from CT_SQUARE_CLOSE to CT_ROUND_CLOSE
     CT_EXCLAMATION,
-    CT_TILDE
+    CT_TILDE,
+    CT_UNDERSCORE
 } CharacterType;
+
+const char* CharacterTypeToString(enum CharacterType type);
 
 #endif

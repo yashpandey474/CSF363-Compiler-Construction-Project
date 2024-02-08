@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INPUT_SECOND_DIMENSION 32 // number of character types
+#define INPUT_SECOND_DIMENSION 34 // number of character types
 #define STATE_ARRAY_SIZE_TEMP_GEN 200
 int nextStateTemp[STATE_ARRAY_SIZE_TEMP_GEN];
 int checkStateTemp[STATE_ARRAY_SIZE_TEMP_GEN];
@@ -107,6 +107,9 @@ void initializeCharacterTypeMap()
             case '\n':
                 characterTypeMapTemp[i] = CT_DELIMITER;
                 break;
+            case '_':
+                characterTypeMapTemp[i] = CT_UNDERSCORE;
+                break;
             case '>':
                 characterTypeMapTemp[i] = CT_GREATER;
                 break;
@@ -185,7 +188,7 @@ int reinitialiseArrays()
     initializeCharacterTypeMap();
     // the length of ans and the number of columns of input are randomly chosen
 
-    int s = NUM_NON_ACCEPT_STATES;
+    int s = NUM_NON_ACCEPT_STATES+1;
 
     for (int i = 0; i < NUM_STATES; i += 1)
     {
@@ -277,7 +280,7 @@ int reinitialiseArrays()
     input[7][characterTypeMapTemp['+']] = 9;
 
     initialiseforDigit(input, 9, 8);
-    initialiseforDigit(input, 8, TK_RNUM);
+    initialiseforDigit(input, 8, s + TK_RNUM);
 
     // COMPARATIVE OPERATORS
     input[0][characterTypeMapTemp['>']] = 26;
@@ -307,6 +310,10 @@ int reinitialiseArrays()
 
     initialisetooneNumber(input, 10, s + TK_FIELDID);
     initialiseforLowerLetter(input, 10, 14);
+    initialisetooneNumber(input, 14, s + TK_FIELDID);
+    initialiseforLowerLetter(input, 14, 14);
+
+
 
     initialiseforIdDigit(input, 10, 11);
 
@@ -381,7 +388,7 @@ int reinitialiseArrays()
     printArray("defaultArray", defaultArrayTemp, sizeof(defaultArrayTemp) / sizeof(defaultArrayTemp[0]), "int", "NUM_STATES");
     printArray("offset", offsetArrayTemp, sizeof(offsetArrayTemp) / sizeof(offsetArrayTemp[0]), "int", "NUM_STATES");
     file = fopen(outputFileName, "a");
-    fprintf(file, "CharacterType characterTypeMap [%d] = {", sizeof(characterTypeMapTemp) / sizeof(CharacterType));
+    fprintf(file, "CharacterType characterTypeMap [%lu] = {", sizeof(characterTypeMapTemp) / sizeof(CharacterType));
     for (int i = 0; i < sizeof(characterTypeMapTemp) / sizeof(CharacterType); ++i)
     {
         fprintf(file, "%d", characterTypeMapTemp[i]);
