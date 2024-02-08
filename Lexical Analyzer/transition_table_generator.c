@@ -265,14 +265,14 @@ int reinitialiseArrays()
 
     // NUMBERS TK_NUM & TK_RNUM
     initialiseforDigit(input, 0, 3);
-    initialisetooneNumber(input, 3, s + TK_NUM);
+    initialisetooneNumber(input, 3, s + TK_NUM1);
     initialiseforDigit(input, 3, 3);
     input[3][characterTypeMapTemp['.']] = 4;
-    initialisetooneNumber(input, 4, s + TK_NUM);
+    initialisetooneNumber(input, 4, s + TK_NUM2);
     initialiseforDigit(input, 4, 5);
     initialiseforDigit(input, 5, 6);
 
-    initialisetooneNumber(input, 6, s + TK_RNUM);
+    initialisetooneNumber(input, 6, s + TK_RNUM2);
     input[6][characterTypeMapTemp['E']] = 7;
 
     initialiseforDigit(input, 7, 8);
@@ -280,17 +280,17 @@ int reinitialiseArrays()
     input[7][characterTypeMapTemp['+']] = 9;
 
     initialiseforDigit(input, 9, 8);
-    initialiseforDigit(input, 8, s + TK_RNUM);
+    initialiseforDigit(input, 8, s + TK_RNUM1);
 
     // COMPARATIVE OPERATORS
     input[0][characterTypeMapTemp['>']] = 26;
     input[0][characterTypeMapTemp['<']] = 27;
     initialisetooneNumber(input, 26, s + TK_GT);
     input[26][characterTypeMapTemp['=']] = s + TK_GE;
-    initialisetooneNumber(input, 27, s + TK_LT);
+    initialisetooneNumber(input, 27, s + TK_LT1);
     input[27][characterTypeMapTemp['=']] = s + TK_LE;
     input[27][characterTypeMapTemp['-']] = 28;
-    initialisetooneNumber(input, 28, s + TK_LE);
+    initialisetooneNumber(input, 28, s + TK_LT2);
     input[28][characterTypeMapTemp['-']] = 29;
     input[29][characterTypeMapTemp['-']] = s + TK_ASSIGNOP;
 

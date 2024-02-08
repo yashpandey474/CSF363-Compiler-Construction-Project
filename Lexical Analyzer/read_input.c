@@ -9,7 +9,7 @@
 
 // PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
 #define BUFFER_SIZE 256
-#define FINAL_STATE_OFFSET 40
+#define FINAL_STATE_OFFSET 30 // this is same as NON ACCEPT STATES + 1
 // TYPICALLY 256 BYTES
 
 // EOF CHARACTERS AT END OF BOTH BUFFERS ALWAYS
@@ -95,6 +95,11 @@ struct TwinBuffer initialiseTwinBuffer()
     return twinBuffer;
 }
 
+void returnToStart(struct LexicalAnalyzer *LA)
+{
+    LA->state = 0;
+}
+
 char *lexicalError(struct SymbolTableEntry *token)
 {
     if (token->tokenType == TK_ID)
@@ -124,40 +129,69 @@ char *lexicalError(struct SymbolTableEntry *token)
 void equivalentNumber(struct LexicalAnalyzer *lex, int flag, struct SymbolTableEntry *token)
 {
     char *buffer = computeNumber(lex);
-    if (flag == 0)
+    if (flag == TK_NUM1 || flag == TK_NUM2)
     {
         // INTEGER
         token->intValue = atoi(buffer);
-        token->tokenType = TK_NUM;
     }
     else
     {
         // DOUBLE
         token->doubleValue = atof(buffer);
-        token->tokenType = TK_RNUM;
     }
 }
 
 //TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
-void takeActions(struct LexicalAnalyzer* LA, int state, struct SymbolTableEntry* token){
+void takeActions(struct LexicalAnalyzer* LA, struct SymbolTableEntry* token){
 
     //NON FINAL STATE
+    int state = LA->state;
     if (state < FINAL_STATE_OFFSET){
         return NULL;
     }
-
    
     state -= FINAL_STATE_OFFSET;
+
+    //SET TOKEN TYPE
     token->tokenType = state;
 
-    if (state == TK_RNUM || state == TK_NUM){
-        //COMPUTE NUMBER
-        equivalentNumber(LA, 1,  token);
-    }
+    // SET LEXEME
+    strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
 
+    //EQUIVALENT NUMBER
+    if (state == TK_RNUM1 || state == TK_RNUM2 || state == TK_NUM1 || state == TK_NUM2){
+        //COMPUTE NUMBER
+        equivalentNumber(LA, state,  token);
+    }
+    
+    //GET TOKEN
     if (state == TK_FIELDID){
         token->tokenType = getToken(token);
-        token->lexeme = installId();
+    }
+
+    //GET POINTER TO SYMBOL TABLE ENTRY
+    if (state == TK_FIELDID || state == TK_RUID || state == TK_ID || state == TK_FUNID){
+        token = installId(token->lexeme);
+    }
+
+    if (state == TK_COMMENT || state == CARRIAGE_RETURN){
+        incrementLineNo(LA);
+    }
+
+
+    if (state == CARRIAGE_RETURN || state == DELIMITER){
+        returnToStart(LA);
+    }
+
+    //DOUBLE STAR STATES
+    if (state == TK_NUM2 || state == TK_LE){
+        changeForward(LA, -1);
+    }
+
+    //FINAL STATE WITHOUT ANY OTHER ACTIONS
+    else{
+        //INCREMENT FORWARD
+        changeForward(LA, +1);
     }
 
 
@@ -187,7 +221,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
 
     struct SymbolTableEntry *token;
     token = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry *));
-    int state = 0;
+    LA->state = 0;
     while (1)
     {
         // GET CHARACTER CURRENTLY BEING READ
@@ -212,7 +246,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
 
         // END OF PROGRAM ?
 
-        switch (state)
+        switch (LA->state)
         {
         // START STATE
         case 0:
@@ -222,13 +256,13 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
                 // IDENTIFIER
                 if (character >= 'b' && character <= 'd')
                 {
-                    state = 10;
+                    LA->state = 10;
                 }
 
                 // FIELD ID
                 else
                 {
-                    state = 14;
+                    LA->state = 14;
                 }
 
                 break;
@@ -237,18 +271,18 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
             // DIGIT
             if (isdigit(character))
             {
-                state = 3;
+                LA->state = 3;
                 break;
             }
 
             switch (character)
             {
             case '#':
-                state = 1;
+                LA->state = 1;
                 break;
 
             case '_':
-                state = 20;
+                LA->state = 20;
                 break;
             }
 
@@ -256,11 +290,11 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
         case 3:
             if (character == '.')
             {
-                state = 4;
+                LA->state = 4;
             }
             else if (~isdigit(character))
             {
-                token->tokenType = TK_NUM;
+                token->tokenType = TK_NUM1;
             }
             break;
         }

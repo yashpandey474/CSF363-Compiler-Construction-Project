@@ -8,12 +8,12 @@
 #define MAX_ID_SIZE 20
 #define MAX_FUNID_SIZE 30
 #define NUM_NON_ACCEPT_STATES 29
-#define NUM_STATES 88 // 59 accept states number of states including accept states
-extern int numStates;
+#define NUM_STATES 91 // 62 accept states, number of states including accept states
+// extern int numStates;
 // LEXICAL ANALYSER
 struct LexicalAnalyzer
 {
-    int lineNo, begin, forward;
+    int lineNo, begin, forward, state;
     struct TwinBuffer *twinBuffer;
 };
 
@@ -76,7 +76,9 @@ typedef enum Tokentype
     TK_AND,
     TK_OR,
     TK_NOT,
-    TK_LT,
+    TK_LT1,
+    TK_LT2,
+    // TK_LE,
     TK_LE,
     TK_EQ,
     TK_GT,
@@ -84,20 +86,27 @@ typedef enum Tokentype
     TK_NE,
     TK_FIELDID,
     TK_ID,
-    TK_NUM,
-    TK_RNUM,
+    // TK_NUM,
+    TK_NUM1,
+    TK_NUM2,
+    // TK_RNUM,
+    TK_RNUM1,
+    TK_RNUM2,
     TK_FUNID,
     TK_RUID,
     DELIMITER
 } Tokentype;
+
 struct SymbolTableEntry
 {
     char *lexeme;
-    int intValue;
+    //INTVALUE -> NUM
+    int intValue, lineNo;
+    //DOUBLEVALUE -> RNUM
     double doubleValue;
-    int lineNo;
     enum Tokentype tokenType;
 };
+
 typedef enum CharacterType
 {
     CT_LETTER_LOWER_EXCEPT_ID_LETTER,

@@ -129,9 +129,6 @@ void printSymbolTable()
 
 void insertAllKeywords()
 {
-
-    insertTester("=", TK_ASSIGNOP);
-    insertTester("%f%%", TK_COMMENT);
     insertTester("with", TK_WITH);
     insertTester("parameters", TK_PARAMETERS);
     insertTester("end", TK_END);
@@ -160,25 +157,6 @@ void insertAllKeywords()
     insertTester("record", TK_RECORD);
     insertTester("endrecord", TK_ENDRECORD);
     insertTester("else", TK_ELSE);
-    insertTester(",", TK_COMMA);
-    insertTester(";", TK_SEM);
-    insertTester(":", TK_COLON);
-    insertTester(".", TK_DOT);
-    insertTester("(", TK_OP);
-    insertTester(")", TK_CL);
-    insertTester("+", TK_PLUS);
-    insertTester("-", TK_MINUS);
-    insertTester("*", TK_MUL);
-    insertTester("/", TK_DIV);
-    insertTester("&&&", TK_AND);
-    insertTester("@@@", TK_OR);
-    insertTester("~", TK_NOT);
-    insertTester("<", TK_LT);
-    insertTester("<=", TK_LE);
-    insertTester("==", TK_EQ);
-    insertTester(">", TK_GT);
-    insertTester(">=", TK_GE);
-    insertTester("!=", TK_NE);
 }
 
 // TEST SYMBOL TABLE
