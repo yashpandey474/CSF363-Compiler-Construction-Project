@@ -9,6 +9,7 @@
 
 // PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
 #define BUFFER_SIZE 256
+#define FINAL_STATE_OFFSET 40
 // TYPICALLY 256 BYTES
 
 // EOF CHARACTERS AT END OF BOTH BUFFERS ALWAYS
@@ -138,12 +139,43 @@ void equivalentNumber(struct LexicalAnalyzer *lex, int flag, struct SymbolTableE
 }
 
 //TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
-struct SymbolTableEntry* takeActions(struct LexicalAnalyzer* LA, int state){
+void takeActions(struct LexicalAnalyzer* LA, int state, struct SymbolTableEntry* token){
+
+    //NON FINAL STATE
+    if (state < FINAL_STATE_OFFSET){
+        return NULL;
+    }
+
+   
+    state -= FINAL_STATE_OFFSET;
+    token->tokenType = state;
+
+    if (state == TK_RNUM || state == TK_NUM){
+        //COMPUTE NUMBER
+        equivalentNumber(LA, 1,  token);
+    }
+
+    if (state == TK_FIELDID){
+        token->tokenType = getToken(token);
+        token->lexeme = installId();
+    }
+
 
     
 
-    
+}
 
+struct SymbolTableEntry* initialiseToken(){
+    struct SymbolTableEntry *token;
+    token = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry *));
+
+    token->lexeme = NULL;
+    token->intValue = 0;
+    token->doubleValue = 0;
+    token->lineNo = 0;
+    token->tokenType = NULL;
+
+    return token;
 }
 void changeForward(struct LexicalAnalyzer *LA, int flag)
 {
