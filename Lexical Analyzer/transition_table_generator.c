@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INPUT_SECOND_DIMENSION 32 // number of character types
+#define INPUT_SECOND_DIMENSION 34 // number of character types
 #define STATE_ARRAY_SIZE_TEMP_GEN 200
 int nextStateTemp[STATE_ARRAY_SIZE_TEMP_GEN];
 int checkStateTemp[STATE_ARRAY_SIZE_TEMP_GEN];
@@ -107,6 +107,9 @@ void initializeCharacterTypeMap()
             case '\n':
                 characterTypeMapTemp[i] = CT_DELIMITER;
                 break;
+            case '_':
+                characterTypeMapTemp[i] = CT_UNDERSCORE;
+                break;
             case '>':
                 characterTypeMapTemp[i] = CT_GREATER;
                 break;
@@ -185,7 +188,7 @@ int reinitialiseArrays()
     initializeCharacterTypeMap();
     // the length of ans and the number of columns of input are randomly chosen
 
-    int s = NUM_NON_ACCEPT_STATES;
+    int s = NUM_NON_ACCEPT_STATES+1;
 
     for (int i = 0; i < NUM_STATES; i += 1)
     {
@@ -258,14 +261,14 @@ int reinitialiseArrays()
 
     // NUMBERS TK_NUM & TK_RNUM
     initialiseforDigit(input, 0, 3);
-    initialisetooneNumber(input, 3, s + TK_NUM);
+    initialisetooneNumber(input, 3, s + TK_NUM1);
     initialiseforDigit(input, 3, 3);
     input[3][characterTypeMapTemp['.']] = 4;
-    initialisetooneNumber(input, 4, s + TK_NUM);
+    initialisetooneNumber(input, 4, s + TK_NUM2);
     initialiseforDigit(input, 4, 5);
     initialiseforDigit(input, 5, 6);
 
-    initialisetooneNumber(input, 6, s + TK_RNUM);
+    initialisetooneNumber(input, 6, s + TK_RNUM2);
     input[6][characterTypeMapTemp['E']] = 7;
 
     initialiseforDigit(input, 7, 8);
@@ -273,17 +276,17 @@ int reinitialiseArrays()
     input[7][characterTypeMapTemp['+']] = 9;
 
     initialiseforDigit(input, 9, 8);
-    initialiseforDigit(input, 8, TK_RNUM);
+    initialiseforDigit(input, 8, s + TK_RNUM1);
 
     // COMPARATIVE OPERATORS
     input[0][characterTypeMapTemp['>']] = 26;
     input[0][characterTypeMapTemp['<']] = 27;
     initialisetooneNumber(input, 26, s + TK_GT);
     input[26][characterTypeMapTemp['=']] = s + TK_GE;
-    initialisetooneNumber(input, 27, s + TK_LT);
+    initialisetooneNumber(input, 27, s + TK_LT1);
     input[27][characterTypeMapTemp['=']] = s + TK_LE;
     input[27][characterTypeMapTemp['-']] = 28;
-    initialisetooneNumber(input, 28, s + TK_LE);
+    initialisetooneNumber(input, 28, s + TK_LT2);
     input[28][characterTypeMapTemp['-']] = 29;
     input[29][characterTypeMapTemp['-']] = s + TK_ASSIGNOP;
 
@@ -303,6 +306,10 @@ int reinitialiseArrays()
 
     initialisetooneNumber(input, 10, s + TK_FIELDID);
     initialiseforLowerLetter(input, 10, 14);
+    initialisetooneNumber(input, 14, s + TK_FIELDID);
+    initialiseforLowerLetter(input, 14, 14);
+
+
 
     initialiseforIdDigit(input, 10, 11);
 
@@ -377,7 +384,7 @@ int reinitialiseArrays()
     printArray("defaultArray", defaultArrayTemp, sizeof(defaultArrayTemp) / sizeof(defaultArrayTemp[0]), "int", "NUM_STATES");
     printArray("offset", offsetArrayTemp, sizeof(offsetArrayTemp) / sizeof(offsetArrayTemp[0]), "int", "NUM_STATES");
     file = fopen(outputFileName, "a");
-    fprintf(file, "CharacterType characterTypeMap [%d] = {", sizeof(characterTypeMapTemp) / sizeof(CharacterType));
+    fprintf(file, "CharacterType characterTypeMap [%lu] = {", sizeof(characterTypeMapTemp) / sizeof(CharacterType));
     for (int i = 0; i < sizeof(characterTypeMapTemp) / sizeof(CharacterType); ++i)
     {
         fprintf(file, "%d", characterTypeMapTemp[i]);

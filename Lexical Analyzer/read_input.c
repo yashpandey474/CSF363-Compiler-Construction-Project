@@ -9,6 +9,7 @@
 
 // PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
 #define BUFFER_SIZE 256
+#define FINAL_STATE_OFFSET 30 // this is same as NON ACCEPT STATES + 1
 // TYPICALLY 256 BYTES
 
 // EOF CHARACTERS AT END OF BOTH BUFFERS ALWAYS
@@ -20,6 +21,7 @@ struct TwinBuffer
 {
     // 0 -> READING SECOND BUFFER, 1 -> READING FIRST BUFFER
     int readingFirst;
+    FILE* file;
     char buffer[BUFFER_SIZE * 2 + 2];
 };
 
@@ -29,7 +31,7 @@ char *computeNumber(struct LexicalAnalyzer *lex)
     char *buffer = lex->twinBuffer->buffer;
 
     // STORE THE STRING
-    strncpy(buffer, lex->twinBuffer + lex->begin, lex->forward);
+    strncpy(buffer, lex->twinBuffer->buffer + lex->begin, lex->forward - lex->begin+1);
     buffer[lex->forward] = '\0';
 
     // RETURN COPIED STRING
@@ -39,7 +41,7 @@ char *computeNumber(struct LexicalAnalyzer *lex)
 void incrementLineNo(struct LexicalAnalyzer *LA)
 {
     LA->lineNo += 1;
-    return LA->lineNo;
+    return;
 }
 
 FILE *readTestFile(char *file_path)
@@ -55,7 +57,7 @@ FILE *readTestFile(char *file_path)
 
     return file;
 }
-int readIntoBuffer(struct TwinBuffer *twinBuffer, FILE *file)
+int readIntoBuffer(struct TwinBuffer *twinBuffer)
 {
     char *buffer;
     if (twinBuffer->readingFirst)
@@ -68,7 +70,7 @@ int readIntoBuffer(struct TwinBuffer *twinBuffer, FILE *file)
     }
     // READING ALTERNATE BUFFER
     twinBuffer->readingFirst = 1 - twinBuffer->readingFirst;
-    size_t read_bytes = fread(buffer, sizeof(char), BUFFER_SIZE, file);
+    size_t read_bytes = fread(buffer, sizeof(char), BUFFER_SIZE, twinBuffer->file);
 
     // MARK END OF INPUT
     if (read_bytes < BUFFER_SIZE)
@@ -82,16 +84,22 @@ int readIntoBuffer(struct TwinBuffer *twinBuffer, FILE *file)
 }
 
 // CREATE THE BUFFER AND RETURN IT
-struct TwinBuffer initialiseTwinBuffer()
+struct TwinBuffer* initialiseTwinBuffer(FILE* file)
 {
     // INITIALISE BUFFER
-    struct TwinBuffer twinBuffer;
+    struct TwinBuffer* twinBuffer = (struct TwinBuffer*) malloc(sizeof(struct  TwinBuffer*));
 
-    twinBuffer.readingFirst = 1;
-    twinBuffer.buffer[BUFFER_SIZE] = '\0';
-    twinBuffer.buffer[2 * BUFFER_SIZE + 1] = '\0';
+    twinBuffer->readingFirst = 1;
+    twinBuffer->buffer[BUFFER_SIZE] = EOF;
+    twinBuffer->buffer[2 * BUFFER_SIZE + 1] = EOF;
+    twinBuffer->file = file;
 
     return twinBuffer;
+}
+
+void returnToStart(struct LexicalAnalyzer *LA)
+{
+    LA->state = 0;
 }
 
 char *lexicalError(struct SymbolTableEntry *token)
@@ -123,165 +131,174 @@ char *lexicalError(struct SymbolTableEntry *token)
 void equivalentNumber(struct LexicalAnalyzer *lex, int flag, struct SymbolTableEntry *token)
 {
     char *buffer = computeNumber(lex);
-    if (flag == 0)
+    if (flag == TK_NUM1 || flag == TK_NUM2)
     {
         // INTEGER
         token->intValue = atoi(buffer);
-        token->tokenType = TK_NUM;
     }
     else
     {
         // DOUBLE
         token->doubleValue = atof(buffer);
-        token->tokenType = TK_RNUM;
     }
-}
-
-//TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
-struct SymbolTableEntry* takeActions(struct LexicalAnalyzer* LA, int state){
-
-    
-
-    
-
 }
 void changeForward(struct LexicalAnalyzer *LA, int flag)
 {
-    //FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
+    // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
     LA->forward = (LA->forward + flag) % (BUFFER_SIZE * 2 + 2);
 }
-struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA, FILE *file)
-{
+//TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
+void takeActions(struct LexicalAnalyzer* LA, struct SymbolTableEntry* token){
 
+    //NON FINAL STATE
+    int state = LA->state;
+    if (state < FINAL_STATE_OFFSET){
+        return;
+    }
+   
+    state -= FINAL_STATE_OFFSET;
+
+    //INCREMENT LINE NO
+    if (state == TK_COMMENT || state == CARRIAGE_RETURN)
+    {
+        incrementLineNo(LA);
+    }
+
+    //DONT SET TOKEN WHEN DELIMITER
+    if (state == CARRIAGE_RETURN || state == DELIMITER)
+    {
+        returnToStart(LA);
+        return;
+    }
+
+    //SET TOKEN TYPE
+    token->tokenType = state;
+
+    // SET LEXEME
+    strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin + 1);
+
+    //EQUIVALENT NUMBER
+    if (state == TK_RNUM1 || state == TK_RNUM2 || state == TK_NUM1 || state == TK_NUM2){
+        //COMPUTE NUMBER
+        equivalentNumber(LA, state, token);
+    }
+    
+    //GET THE SYMBOL TABLE ENTRY
+    if (state == TK_FIELDID || state == TK_RUID || state == TK_ID || state == TK_FUNID){
+        token = getToken(token);
+    }
+
+    //DOUBLE STAR STATES
+    if (state == TK_NUM2 || state == TK_LE){
+        changeForward(LA, -1);
+    }
+
+    //FINAL STATE WITHOUT ANY OTHER ACTIONS
+    else{
+        //INCREMENT FORWARD
+        changeForward(LA, +1);
+    }
+}
+
+struct SymbolTableEntry* initialiseToken(){
     struct SymbolTableEntry *token;
     token = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry *));
-    int state = 0;
+
+    token->lexeme = NULL;
+    token->intValue = 0;
+    token->doubleValue = 0;
+    token->lineNo = 0;
+    token->tokenType = -1;
+
+    return token;
+}
+
+struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
+{
+
+    //INITIALSE TOKEN
+    struct SymbolTableEntry *token = initialiseToken();
+    
+    //RESET TO START STATE
+    LA->state = 0;
+
+    //KEEP ITERATING
     while (1)
     {
         // GET CHARACTER CURRENTLY BEING READ
         char character = LA->twinBuffer->buffer[LA->forward];
-
-        // INCREMENT FORWARD
-        incrementForward(LA);
-
-        // TODO: GENERALISE FOR ALL DELIMITERS;
-
-        // CARRIAGE RETURN
-        if (character == '\n')
-        {
-            incrementLineNo(LA);
-        }
 
         // DELIMITER
         if (character == '\t' || character == ' ')
         {
             continue;
         }
-
-        // END OF PROGRAM ?
-
-        switch (state)
-        {
-        // START STATE
-        case 0:
-            // LOWERCASE LETTER
-            if (character >= 'a' && character <= 'z')
-            {
-                // IDENTIFIER
-                if (character >= 'b' && character <= 'd')
-                {
-                    state = 10;
-                }
-
-                // FIELD ID
-                else
-                {
-                    state = 14;
-                }
-
-                break;
-            }
-
-            // DIGIT
-            if (isdigit(character))
-            {
-                state = 3;
-                break;
-            }
-
-            switch (character)
-            {
-            case '#':
-                state = 1;
-                break;
-
-            case '_':
-                state = 20;
-                break;
-            }
-
-        // RECOGNISE T_NUM OR T_RNUM
-        case 3:
-            if (character == '.')
-            {
-                state = 4;
-            }
-            else if (~isdigit(character))
-            {
-                token->tokenType = TK_NUM;
-            }
-            break;
-        }
-
-        // CHECK AGAINST DFA - TO BE DONE LATER
-
-        // EOF ENCOUNTERED
+        
         // TODO: DIFFERENTIATE BETWEEN END OF INPUT AND END OF BUFFER
-        if (character == '\0')
+        if (character == EOF)
         {
             // RELOAD OTHER BUFER
-            int res = readIntoBuffer(LA->twinBuffer, file);
+            int res = readIntoBuffer(LA->twinBuffer);
 
             // ALL INPUT READ AND PROCESSED
             if (res == 0)
             {
-                break;
+                return NULL;
             }
         }
 
-        // GOT THE TOKEN
-        break;
+        // CHANGE STATE
+        LA->state = getNextState(LA->state, character);
+
+        // TAKE ACTIONS FOR THE STATE
+        takeActions(LA, token);
+
+        // HAVE TO RETURN
+        if (token->tokenType != -1)
+        {
+            return token;
+        }
+
+        // INCREMENT FORWARD
+        changeForward(LA, 1);
     }
-    // GET THE LEXEME
-    strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
-    token->lineNo = LA->lineNo;
-
-    // GET FINAL TOKEN
-    token = getToken(token);
-    // TODO: call dfa to get token type in case of id, num, rnum, funid, fieldid
-
-    // ADVANCE BEGIN FOR NEXT TOKEN
-    LA->begin = LA->forward;
-
-    // RETURN TOKEN
-    return token;
 }
 
+struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer)
+{
+    struct LexicalAnalyzer * LA;
+    LA = (struct LexicalAnalyzer *) malloc(sizeof(struct LexicalAnalyzer));
+    
+    LA->lineNo = 0;
+    LA->begin = 0;
+    LA->forward = 0;
+    LA->state = 0;
+    LA->twinBuffer = twinBuffer;
+    return LA;
+
+}
+    
 int main()
 {
     // TEST THE TWIN BUFFER
     FILE *file = readTestFile("test_program.txt");
 
     // INITIALISE A TWIN BUFFER
-    struct TwinBuffer twinBuffer = initialiseTwinBuffer();
+    struct TwinBuffer* twinBuffer = initialiseTwinBuffer(file);
 
-    // READ INTO THE BUFFER
-    readIntoBuffer(&twinBuffer, file);
-    readIntoBuffer(&twinBuffer, file);
+    // INITIALISE LA
+    struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
 
-    // CHECK
-    for (int i = 0; i < BUFFER_SIZE * 2 + 2; i += 1)
-    {
-        printf("%c", twinBuffer.buffer[i]);
+    //START SCANNING
+    readIntoBuffer(twinBuffer);
+
+    // THE TOKEN
+    struct SymbolTableEntry *token;
+
+    //KEEP GETTING TOKEN UNTIL INPUT CONSUMED 
+    while (token){
+        token = scanToken(LA);
+        printf("%d ", token->tokenType);
+        
     }
 }
