@@ -21,6 +21,7 @@ struct LexicalAnalyzer
 extern struct SymbolTableNode *symbolTable[HASH_MAP_SIZE];
 
 void insertAllKeywords();
+void printSymbolTable();
 
 void changeForward(struct LexicalAnalyzer *LA, int flag);
 

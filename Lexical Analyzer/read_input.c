@@ -25,19 +25,6 @@ struct TwinBuffer
     char buffer[BUFFER_SIZE * 2 + 2];
 };
 
-char *computeNumber(struct LexicalAnalyzer *lex)
-{
-    // BUFFER OF LEXICAL ANALYSER
-    char *buffer = lex->twinBuffer->buffer;
-
-    // STORE THE STRING
-    strncpy(buffer, lex->twinBuffer->buffer + lex->begin, lex->forward - lex->begin + 1);
-    buffer[lex->forward] = EOF;
-
-    // RETURN COPIED STRING
-    return buffer;
-}
-
 void incrementLineNo(struct LexicalAnalyzer *LA)
 {
     LA->lineNo += 1;
@@ -96,10 +83,15 @@ struct TwinBuffer *initialiseTwinBuffer(FILE *file)
 
     return twinBuffer;
 }
+void resetBegin(struct LexicalAnalyzer *LA)
+{
+    LA->begin = LA->forward;
+}
 
 void returnToStart(struct LexicalAnalyzer *LA)
 {
     LA->state = 0;
+    resetBegin(LA);
 }
 
 char *lexicalError(struct SymbolTableEntry *token)
@@ -132,16 +124,16 @@ char *lexicalError(struct SymbolTableEntry *token)
 // FUNCTION TO GET CORRESPONDING NUMBER
 void equivalentNumber(struct LexicalAnalyzer *lex, int flag, struct SymbolTableEntry *token)
 {
-    char *buffer = computeNumber(lex);
+    printf("EQV NUMS %s\n", token->lexeme);
     if (flag == TK_NUM1 || flag == TK_NUM2)
     {
         // INTEGER
-        token->intValue = atoi(buffer);
+        token->intValue = atoi(token->lexeme);
     }
     else
     {
         // DOUBLE
-        token->doubleValue = atof(buffer);
+        token->doubleValue = atof(token->lexeme);
     }
 }
 void changeForward(struct LexicalAnalyzer *LA, int flag)
@@ -149,14 +141,15 @@ void changeForward(struct LexicalAnalyzer *LA, int flag)
     // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
     LA->forward = (LA->forward + flag) % (BUFFER_SIZE * 2 + 2);
 }
+
 // TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
-void takeActions(struct LexicalAnalyzer *LA, struct SymbolTableEntry *token)
+struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTableEntry *token)
 {
-    // NON FINAL STATE
+    // NON FINAL STATE32
     int state = LA->state;
     if (state < FINAL_STATE_OFFSET)
     {
-        return;
+        return token;
     }
 
     state -= FINAL_STATE_OFFSET;
@@ -171,15 +164,22 @@ void takeActions(struct LexicalAnalyzer *LA, struct SymbolTableEntry *token)
     if (state == CARRIAGE_RETURN || state == DELIMITER)
     {
         returnToStart(LA);
-        return;
+        changeForward(LA, -1);
+
+        return token;
     }
 
     // SET TOKEN TYPE
     token->tokenType = state;
 
-    // SET LEXEME
+    // DOUBLE STAR STATES
+    if (state == TK_NUM2 || state == TK_LT2)
+    {
+        changeForward(LA, -1);
+    }
 
-    strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin + 1);
+    // SET LEXEME
+    strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
 
     // EQUIVALENT NUMBER
     if (state == TK_RNUM1 || state == TK_RNUM2 || state == TK_NUM1 || state == TK_NUM2)
@@ -194,18 +194,17 @@ void takeActions(struct LexicalAnalyzer *LA, struct SymbolTableEntry *token)
         token = getToken(token);
     }
 
-    // DOUBLE STAR STATES
-    if (state == TK_NUM2 || state == TK_LE)
-    {
-        changeForward(LA, -1);
-    }
-
     // FINAL STATE WITHOUT ANY OTHER ACTIONS
-    else
+    else if (state != TK_LT2 && state != TK_NUM2)
     {
         // INCREMENT FORWARD
         changeForward(LA, +1);
+
+        // SET LEXEME
+        strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
     }
+
+    return token;
 }
 
 struct SymbolTableEntry *initialiseToken()
@@ -221,10 +220,6 @@ struct SymbolTableEntry *initialiseToken()
     return token;
 }
 
-void resetBegin(struct LexicalAnalyzer *LA)
-{
-    LA->begin = LA->forward;
-}
 struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 {
     // INITIALSE TOKEN
@@ -241,6 +236,19 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // GET CHARACTER CURRENTLY BEING READ
 
         character = LA->twinBuffer->buffer[LA->forward];
+
+        // LINE FEED: LITE (AFTER \N)
+        if ((int)character == 10)
+        {
+            // INCREMENT FORWARD
+            changeForward(LA, 1);
+
+            // RESET
+            resetBegin(LA);
+            
+            continue;
+        }
+
 
         printf("\nSTATE %d CHARACTER %d (%c)\n", LA->state, character, character);
 
@@ -261,7 +269,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         LA->state = getNextState(LA->state, character);
 
         // TAKE ACTIONS FOR THE STATE
-        takeActions(LA, token);
+        token = takeActions(LA, token);
 
         // HAVE TO RETURN
         if (token->tokenType != 0)
@@ -293,6 +301,7 @@ int main()
     printf("ENTERED MAIN\n");
     // INITIALISE THE SYMBOL TABLE
     insertAllKeywords();
+    printSymbolTable();
 
     printf("KEYWORDS\n");
 

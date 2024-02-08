@@ -229,7 +229,6 @@ int reinitialiseArrays()
     input[0][characterTypeMapTemp['(']] = s + TK_OP;
     input[0][characterTypeMapTemp['[']] = s + TK_SQL;
     input[0][characterTypeMapTemp[']']] = s + TK_SQR;
-
     input[0][characterTypeMapTemp['\n']] = s + CARRIAGE_RETURN;
     input[s + CARRIAGE_RETURN][characterTypeMapTemp['\n']] = s + CARRIAGE_RETURN;
 
