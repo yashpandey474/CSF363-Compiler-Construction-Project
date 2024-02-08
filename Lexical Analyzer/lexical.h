@@ -20,6 +20,8 @@ struct LexicalAnalyzer
 // DECLARATIONS AND GLOBAL VARIABLES
 extern struct SymbolTableNode *symbolTable[HASH_MAP_SIZE];
 
+void insertAllKeywords();
+
 void changeForward(struct LexicalAnalyzer *LA, int flag);
 
 int getNextState(int currentState, char character);
@@ -32,6 +34,7 @@ struct SymbolTableNode
 
 // FUNCTION DECLARATIONS
 struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry);
+int getNextState(int currentState, char character);
 
 typedef enum Tokentype
 {
@@ -99,15 +102,16 @@ typedef enum Tokentype
     TK_RNUM2,
     TK_FUNID,
     TK_RUID,
-    DELIMITER
+    DELIMITER,
 } Tokentype;
 
 struct SymbolTableEntry
 {
     char *lexeme;
-    //INTVALUE -> NUM
-    int intValue, lineNo;
-    //DOUBLEVALUE -> RNUM
+    // INTVALUE -> NUM
+    int intValue;
+    int lineNo;
+    // DOUBLEVALUE -> RNUM
     double doubleValue;
     enum Tokentype tokenType;
 };
@@ -150,7 +154,7 @@ typedef enum CharacterType
     CT_UNDERSCORE
 } CharacterType;
 
-const char* CharacterTypeToString(enum CharacterType type);
+const char *CharacterTypeToString(enum CharacterType type);
+const char *TokenToString(enum Tokentype token);
 
-int getNextState(int currentState, char character);
 #endif

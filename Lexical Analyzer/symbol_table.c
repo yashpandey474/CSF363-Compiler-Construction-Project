@@ -22,11 +22,6 @@ int hash(const char *lexeme)
     return hash % HASH_MAP_SIZE;
 }
 
-struct SymbolTableEntry *installId(const char *lexeme)
-{
-    return lookup(lexeme);
-}
-
 struct SymbolTableEntry *lookup(const char *lexeme)
 {
     // GET THE INDEX
@@ -56,6 +51,11 @@ struct SymbolTableEntry *lookup(const char *lexeme)
     }
 }
 
+struct SymbolTableEntry *installId(const char *lexeme)
+{
+    return lookup(lexeme);
+}
+
 struct SymbolTableNode *createNode(struct SymbolTableEntry *symbolTableEntry, struct SymbolTableNode *next)
 {
     struct SymbolTableNode *newNode = (struct SymbolTableNode *)malloc(sizeof(struct SymbolTableNode));
@@ -76,7 +76,6 @@ struct SymbolTableEntry *insertTester(char *lexeme, enum Tokentype token)
 struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
 {
     char *lexeme = symbolTableEntry->lexeme;
-    enum Tokentype token = symbolTableEntry->tokenType;
     struct SymbolTableEntry *exists = lookup(lexeme);
     if (exists == NULL)
     {
@@ -159,12 +158,12 @@ void insertAllKeywords()
     insertTester("else", TK_ELSE);
 }
 
-// TEST SYMBOL TABLE
-int main()
-{
+// // TEST SYMBOL TABLE
+// int main()
+// {
 
-    // INSERT ALL KEYWORDS
-    insertAllKeywords();
-    insertTester("!=", TK_NE);
-    printSymbolTable();
-}
+//     // INSERT ALL KEYWORDS
+//     insertAllKeywords();
+//     insertTester("!=", TK_NE);
+//     printSymbolTable();
+// }

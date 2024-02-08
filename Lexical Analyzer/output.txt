@@ -1,0 +1,1328 @@
+Compiling symbol_table.c transition_table.c read_input.c into myProgram...
+Compilation successful. Running myProgram...
+ENTERED MAIN
+KEYWORDS
+LA INITIALISED
+READ INPUT
+STARTING SCANNING
+
+STATE 0 CHARACTER 95 (_)
+state: 20, non accept state
+
+STATE 20 CHARACTER 114 (r)
+state: 21, non accept state
+
+STATE 21 CHARACTER 101 (e)
+state: 21, non accept state
+
+STATE 21 CHARACTER 99 (c)
+state: 21, non accept state
+
+STATE 21 CHARACTER 111 (o)
+state: 21, non accept state
+
+STATE 21 CHARACTER 114 (r)
+state: 21, non accept state
+
+STATE 21 CHARACTER 100 (d)
+state: 21, non accept state
+
+STATE 21 CHARACTER 68 (D)
+state: 21, non accept state
+
+STATE 21 CHARACTER 101 (e)
+state: 21, non accept state
+
+STATE 21 CHARACTER 109 (m)
+state: 21, non accept state
+
+STATE 21 CHARACTER 111 (o)
+state: 21, non accept state
+
+STATE 21 CHARACTER 49 (1)
+state: 22, non accept state
+
+STATE 22 CHARACTER 32 ( )
+state: 89, TK_FUNID
+TK_FUNID _recordDemo1  
+STATE 0 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 110 (n)
+state: 14, non accept state
+
+STATE 14 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 117 (u)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID input  
+STATE 0 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 97 (a)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 97 (a)
+state: 14, non accept state
+
+STATE 14 CHARACTER 109 (m)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID parameter  
+STATE 0 CHARACTER 108 (l)
+state: 14, non accept state
+
+STATE 14 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 115 (s)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID list  
+STATE 0 CHARACTER 91 ([)
+state: 68, TK_SQL
+TK_SQL [ 
+STATE 0 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID record  
+STATE 0 CHARACTER 35 (#)
+state: 1, non accept state
+
+STATE 1 CHARACTER 98 (b)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 107 (k)
+state: 2, non accept state
+
+STATE 2 CHARACTER 32 ( )
+state: 90, TK_RUID
+TK_RUID #book  
+STATE 0 CHARACTER 100 (d)
+state: 10, non accept state
+
+STATE 10 CHARACTER 53 (5)
+state: 11, non accept state
+
+STATE 11 CHARACTER 99 (c)
+state: 12, non accept state
+
+STATE 12 CHARACTER 99 (c)
+state: 12, non accept state
+
+STATE 12 CHARACTER 51 (3)
+state: 13, non accept state
+
+STATE 13 CHARACTER 52 (4)
+state: 13, non accept state
+
+STATE 13 CHARACTER 44 (,)
+state: -1, non accept state
+
+STATE -1 CHARACTER 32 ( )
+state: 0, non accept state
+
+STATE 0 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID d5cc34, record  
+STATE 0 CHARACTER 35 (#)
+state: 1, non accept state
+
+STATE 1 CHARACTER 98 (b)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 107 (k)
+state: 2, non accept state
+
+STATE 2 CHARACTER 32 ( )
+state: 90, TK_RUID
+Lexeme #book  already exists in the symbol tableTK_RUID #book  
+STATE 0 CHARACTER 100 (d)
+state: 10, non accept state
+
+STATE 10 CHARACTER 50 (2)
+state: 11, non accept state
+
+STATE 11 CHARACTER 99 (c)
+state: 12, non accept state
+
+STATE 12 CHARACTER 100 (d)
+state: 12, non accept state
+
+STATE 12 CHARACTER 93 (])
+state: 84, TK_ID
+TK_ID d2cd] 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 111 (o)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 117 (u)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 117 (u)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID  output  
+STATE 0 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 97 (a)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 97 (a)
+state: 14, non accept state
+
+STATE 14 CHARACTER 109 (m)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme parameter  already exists in the symbol tableTK_FIELDID parameter  
+STATE 0 CHARACTER 108 (l)
+state: 14, non accept state
+
+STATE 14 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 115 (s)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 91 ([)
+state: 83, TK_FIELDID
+TK_FIELDID list[ 
+STATE 0 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme record  already exists in the symbol tableTK_FIELDID record  
+STATE 0 CHARACTER 35 (#)
+state: 1, non accept state
+
+STATE 1 CHARACTER 98 (b)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 107 (k)
+state: 2, non accept state
+
+STATE 2 CHARACTER 32 ( )
+state: 90, TK_RUID
+Lexeme #book  already exists in the symbol tableTK_RUID #book  
+STATE 0 CHARACTER 100 (d)
+state: 10, non accept state
+
+STATE 10 CHARACTER 51 (3)
+state: 11, non accept state
+
+STATE 11 CHARACTER 93 (])
+state: 84, TK_ID
+TK_ID d3] 
+STATE 0 CHARACTER 59 (;)
+state: 62, TK_SEM
+TK_SEM ; 
+STATE 0 CHARACTER 13 ()
+state: 1, non accept state
+
+STATE 1 CHARACTER 10 (
+)
+state: -1, non accept state
+
+STATE -1 CHARACTER 114 (r)
+state: 0, non accept state
+
+STATE 0 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID 
+record  
+STATE 0 CHARACTER 35 (#)
+state: 1, non accept state
+
+STATE 1 CHARACTER 110 (n)
+state: 2, non accept state
+
+STATE 2 CHARACTER 101 (e)
+state: 2, non accept state
+
+STATE 2 CHARACTER 119 (w)
+state: 2, non accept state
+
+STATE 2 CHARACTER 13 ()
+state: 90, TK_RUID
+TK_RUID #new 
+STATE 0 CHARACTER 10 (
+)
+state: 23, non accept state
+
+STATE 23 CHARACTER 116 (t)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 121 (y)
+state: 14, non accept state
+
+STATE 14 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID 
+type  
+STATE 0 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 110 (n)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID int  
+STATE 0 CHARACTER 58 (:)
+state: 63, TK_COLON
+TK_COLON : 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 118 (v)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 97 (a)
+state: 14, non accept state
+
+STATE 14 CHARACTER 108 (l)
+state: 14, non accept state
+
+STATE 14 CHARACTER 117 (u)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 59 (;)
+state: 83, TK_FIELDID
+TK_FIELDID  value; 
+STATE 0 CHARACTER 13 ()
+state: 1, non accept state
+
+STATE 1 CHARACTER 10 (
+)
+state: -1, non accept state
+
+STATE -1 CHARACTER 116 (t)
+state: 0, non accept state
+
+STATE 0 CHARACTER 121 (y)
+state: 14, non accept state
+
+STATE 14 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID 
+type  
+STATE 0 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 97 (a)
+state: 14, non accept state
+
+STATE 14 CHARACTER 108 (l)
+state: 14, non accept state
+
+STATE 14 CHARACTER 58 (:)
+state: 83, TK_FIELDID
+TK_FIELDID real: 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 99 (c)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 115 (s)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 59 (;)
+state: 83, TK_FIELDID
+TK_FIELDID  cost; 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 101 (e)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 110 (n)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 59 (;)
+state: 83, TK_FIELDID
+TK_FIELDID  endrecord; 
+STATE 0 CHARACTER 13 ()
+state: 1, non accept state
+
+STATE 1 CHARACTER 10 (
+)
+state: -1, non accept state
+
+STATE -1 CHARACTER 100 (d)
+state: 0, non accept state
+
+STATE 0 CHARACTER 51 (3)
+state: 3, non accept state
+
+STATE 3 CHARACTER 60 (<)
+state: 85, TK_NUM1
+TK_NUM1 
+d3< 
+STATE 0 CHARACTER 45 (-)
+state: 70, TK_MINUS
+TK_MINUS - 
+STATE 0 CHARACTER 45 (-)
+state: 70, TK_MINUS
+TK_MINUS - 
+STATE 0 CHARACTER 45 (-)
+state: 70, TK_MINUS
+TK_MINUS - 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 100 (d)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 53 (5)
+state: 3, non accept state
+
+STATE 3 CHARACTER 99 (c)
+state: 85, TK_NUM1
+TK_NUM1  d5c 
+STATE 0 CHARACTER 99 (c)
+state: 10, non accept state
+
+STATE 10 CHARACTER 51 (3)
+state: 11, non accept state
+
+STATE 11 CHARACTER 52 (4)
+state: 13, non accept state
+
+STATE 13 CHARACTER 32 ( )
+state: -1, non accept state
+
+STATE -1 CHARACTER 43 (+)
+state: 0, non accept state
+
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 100 (d)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 50 (2)
+state: 3, non accept state
+
+STATE 3 CHARACTER 99 (c)
+state: 85, TK_NUM1
+TK_NUM1 c34 + d2c 
+STATE 0 CHARACTER 100 (d)
+state: 10, non accept state
+
+STATE 10 CHARACTER 59 (;)
+state: 83, TK_FIELDID
+TK_FIELDID d; 
+STATE 0 CHARACTER 13 ()
+state: 1, non accept state
+
+STATE 1 CHARACTER 10 (
+)
+state: -1, non accept state
+
+STATE -1 CHARACTER 114 (r)
+state: 0, non accept state
+
+STATE 0 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 117 (u)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 110 (n)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID 
+return  
+STATE 0 CHARACTER 91 ([)
+state: 68, TK_SQL
+TK_SQL [ 
+STATE 0 CHARACTER 100 (d)
+state: 10, non accept state
+
+STATE 10 CHARACTER 51 (3)
+state: 11, non accept state
+
+STATE 11 CHARACTER 93 (])
+state: 84, TK_ID
+Lexeme d3] already exists in the symbol tableTK_ID d3] 
+STATE 0 CHARACTER 59 (;)
+state: 62, TK_SEM
+TK_SEM ; 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 101 (e)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 110 (n)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 13 ()
+state: 83, TK_FIELDID
+TK_FIELDID  end 
+STATE 0 CHARACTER 10 (
+)
+state: 23, non accept state
+
+STATE 23 CHARACTER 95 (_)
+
+STATE 0 CHARACTER 109 (m)
+state: 14, non accept state
+
+STATE 14 CHARACTER 97 (a)
+state: 14, non accept state
+
+STATE 14 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 110 (n)
+state: 14, non accept state
+
+STATE 14 CHARACTER 13 ()
+state: 83, TK_FIELDID
+TK_FIELDID 
+_main 
+STATE 0 CHARACTER 10 (
+)
+state: 23, non accept state
+
+STATE 23 CHARACTER 114 (r)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID 
+record  
+STATE 0 CHARACTER 35 (#)
+state: 1, non accept state
+
+STATE 1 CHARACTER 98 (b)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 107 (k)
+state: 2, non accept state
+
+STATE 2 CHARACTER 13 ()
+state: 90, TK_RUID
+TK_RUID #book 
+STATE 0 CHARACTER 10 (
+)
+state: 23, non accept state
+
+STATE 23 CHARACTER 116 (t)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 121 (y)
+state: 14, non accept state
+
+STATE 14 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme 
+type  already exists in the symbol tableTK_FIELDID 
+type  
+STATE 0 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 110 (n)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme int  already exists in the symbol tableTK_FIELDID int  
+STATE 0 CHARACTER 58 (:)
+state: 63, TK_COLON
+TK_COLON : 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 101 (e)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 100 (d)
+state: 10, non accept state
+
+STATE 10 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER -1 (ÿ)
+state: 14, non accept state
+
+STATE 14 CHARACTER 110 (n)
+state: 14, non accept state
+
+STATE 14 CHARACTER 59 (;)
+state: 83, TK_FIELDID
+TK_FIELDID  editioÿn; 
+STATE 0 CHARACTER 13 ()
+state: 1, non accept state
+
+STATE 1 CHARACTER 10 (
+)
+state: -1, non accept state
+
+STATE -1 CHARACTER 116 (t)
+state: 0, non accept state
+
+STATE 0 CHARACTER 121 (y)
+state: 14, non accept state
+
+STATE 14 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme 
+type  already exists in the symbol tableTK_FIELDID 
+type  
+STATE 0 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 97 (a)
+state: 14, non accept state
+
+STATE 14 CHARACTER 108 (l)
+state: 14, non accept state
+
+STATE 14 CHARACTER 58 (:)
+state: 83, TK_FIELDID
+Lexeme real: already exists in the symbol tableTK_FIELDID real: 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 112 (p)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 59 (;)
+state: 83, TK_FIELDID
+TK_FIELDID  price; 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 101 (e)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 110 (n)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 59 (;)
+state: 83, TK_FIELDID
+Lexeme  endrecord; already exists in the symbol tableTK_FIELDID  endrecord; 
+STATE 0 CHARACTER 13 ()
+state: 1, non accept state
+
+STATE 1 CHARACTER 10 (
+)
+state: -1, non accept state
+
+STATE -1 CHARACTER 116 (t)
+state: 0, non accept state
+
+STATE 0 CHARACTER 121 (y)
+state: 14, non accept state
+
+STATE 14 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme 
+type  already exists in the symbol tableTK_FIELDID 
+type  
+STATE 0 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme record  already exists in the symbol tableTK_FIELDID record  
+STATE 0 CHARACTER 35 (#)
+state: 1, non accept state
+
+STATE 1 CHARACTER 98 (b)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 107 (k)
+state: 2, non accept state
+
+STATE 2 CHARACTER 32 ( )
+state: 90, TK_RUID
+Lexeme #book  already exists in the symbol tableTK_RUID #book  
+STATE 0 CHARACTER 98 (b)
+state: 10, non accept state
+
+STATE 10 CHARACTER 50 (2)
+state: 11, non accept state
+
+STATE 11 CHARACTER 59 (;)
+state: 84, TK_ID
+TK_ID b2; 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 116 (t)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 121 (y)
+state: 14, non accept state
+
+STATE 14 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID  type  
+STATE 0 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme record  already exists in the symbol tableTK_FIELDID record  
+STATE 0 CHARACTER 35 (#)
+state: 1, non accept state
+
+STATE 1 CHARACTER 98 (b)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 107 (k)
+state: 2, non accept state
+
+STATE 2 CHARACTER 32 ( )
+state: 90, TK_RUID
+Lexeme #book  already exists in the symbol tableTK_RUID #book  
+STATE 0 CHARACTER 99 (c)
+state: 10, non accept state
+
+STATE 10 CHARACTER 50 (2)
+state: 11, non accept state
+
+STATE 11 CHARACTER 59 (;)
+state: 84, TK_ID
+TK_ID c2; 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 116 (t)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 121 (y)
+state: 14, non accept state
+
+STATE 14 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme  type  already exists in the symbol tableTK_FIELDID  type  
+STATE 0 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme record  already exists in the symbol tableTK_FIELDID record  
+STATE 0 CHARACTER 35 (#)
+state: 1, non accept state
+
+STATE 1 CHARACTER 98 (b)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 111 (o)
+state: 2, non accept state
+
+STATE 2 CHARACTER 107 (k)
+state: 2, non accept state
+
+STATE 2 CHARACTER 32 ( )
+state: 90, TK_RUID
+Lexeme #book  already exists in the symbol tableTK_RUID #book  
+STATE 0 CHARACTER 100 (d)
+state: 10, non accept state
+
+STATE 10 CHARACTER 50 (2)
+state: 11, non accept state
+
+STATE 11 CHARACTER 59 (;)
+state: 84, TK_ID
+TK_ID d2; 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 116 (t)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 121 (y)
+state: 14, non accept state
+
+STATE 14 CHARACTER 112 (p)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme  type  already exists in the symbol tableTK_FIELDID  type  
+STATE 0 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+Lexeme record  already exists in the symbol tableTK_FIELDID record  
+STATE 0 CHARACTER 35 (#)
+state: 1, non accept state
+
+STATE 1 CHARACTER 110 (n)
+state: 2, non accept state
+
+STATE 2 CHARACTER 101 (e)
+state: 2, non accept state
+
+STATE 2 CHARACTER 119 (w)
+state: 2, non accept state
+
+STATE 2 CHARACTER 32 ( )
+state: 90, TK_RUID
+TK_RUID #new  
+STATE 0 CHARACTER 98 (b)
+state: 10, non accept state
+
+STATE 10 CHARACTER 55 (7)
+state: 11, non accept state
+
+STATE 11 CHARACTER 98 (b)
+state: 12, non accept state
+
+STATE 12 CHARACTER 99 (c)
+state: 12, non accept state
+
+STATE 12 CHARACTER 51 (3)
+state: 13, non accept state
+
+STATE 13 CHARACTER 52 (4)
+state: 13, non accept state
+
+STATE 13 CHARACTER 59 (;)
+state: -1, non accept state
+
+STATE -1 CHARACTER 32 ( )
+state: 0, non accept state
+
+STATE 0 CHARACTER 98 (b)
+state: 10, non accept state
+
+STATE 10 CHARACTER 50 (2)
+state: 11, non accept state
+
+STATE 11 CHARACTER 46 (.)
+state: 84, TK_ID
+TK_ID b7bc34; b2. 
+STATE 0 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 100 (d)
+state: 14, non accept state
+
+STATE 14 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 116 (t)
+state: 14, non accept state
+
+STATE 14 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 111 (o)
+state: 14, non accept state
+
+STATE 14 CHARACTER 110 (n)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID edition  
+STATE 0 CHARACTER 60 (<)
+state: 27, non accept state
+
+STATE 27 CHARACTER 45 (-)
+state: 28, non accept state
+
+STATE 28 CHARACTER 45 (-)
+state: 29, non accept state
+
+STATE 29 CHARACTER 45 (-)
+state: 31, TK_ASSIGNOP
+TK_ASSIGNOP <--- 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 51 (3)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 59 (;)
+state: 62, TK_SEM
+TK_SEM  3; 
+STATE 0 CHARACTER 13 ()
+state: 1, non accept state
+
+STATE 1 CHARACTER 10 (
+)
+state: -1, non accept state
+
+STATE -1 CHARACTER 98 (b)
+state: 0, non accept state
+
+STATE 0 CHARACTER 50 (2)
+state: 3, non accept state
+
+STATE 3 CHARACTER 46 (.)
+state: 4, non accept state
+
+STATE 4 CHARACTER 112 (p)
+state: 86, TK_NUM2
+TK_NUM2 
+b2.p 
+STATE 0 CHARACTER 46 (.)
+state: 64, TK_DOT
+TK_DOT . 
+STATE 0 CHARACTER -1 (ÿ)
+state: 14, non accept state
+
+STATE 14 CHARACTER 114 (r)
+state: 14, non accept state
+
+STATE 14 CHARACTER 105 (i)
+state: 14, non accept state
+
+STATE 14 CHARACTER 99 (c)
+state: 14, non accept state
+
+STATE 14 CHARACTER 101 (e)
+state: 14, non accept state
+
+STATE 14 CHARACTER 32 ( )
+state: 83, TK_FIELDID
+TK_FIELDID ÿrice  
+STATE 0 CHARACTER 60 (<)
+state: 27, non accept state
+
+STATE 27 CHARACTER 45 (-)
+state: 28, non accept state
+
+STATE 28 CHARACTER 45 (-)
+state: 29, non accept state
+
+STATE 29 CHARACTER 45 (-)
+state: 31, TK_ASSIGNOP
+TK_ASSIGNOP <--- 
+STATE 0 CHARACTER 32 ( )
+state: 23, non accept state
+
+STATE 23 CHARACTER 50 (2)
+state: 91, DELIMITER
+
+STATE 0 CHARACTER 52 (4)
+state: 3, non accept state
+
+STATE 3 CHARACTER 46 (.)
+state: 4, non accept state
+
+STATE 4 CHARACTER 57 (9)
+state: 5, non accept state
+
+STATE 5 CHARACTER 53 (5)
+state: 6, non accept state
+
+STATE 6 CHARACTER 59 (;)
+state: 88, TK_RNUM2
+TK_RNUM2  24.95; 
+STATE 0 CHARACTER 13 ()
+state: 1, non accept state
+
+STATE 1 CHARACTER 10 (
+)
+state: -1, non accept state
+
+STATE -1 CHARACTER 99 (c)
+state: 0, non accept state
+
+STATE 0 CHARACTER 50 (2)
+state: 3, non accept state
+
+STATE 3 CHARACTER 46 (.)
+state: 4, non accept state
+
+STATE 4 CHARACTER 101 (e)
+state: 86, TK_NUM2
+TK_NUM2 
+c2.e 
+STATE 0 CHARACTER 46 (.)
+state: 64, TK_DOT
+TK_DOT . 
+STATE 0 CHARACTER -1 (ÿ)
