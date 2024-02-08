@@ -158,6 +158,11 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     if (state == TK_COMMENT || state == CARRIAGE_RETURN)
     {
         incrementLineNo(LA);
+        // SET TOKEN TYPE
+        token->tokenType = state;
+        
+        strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
+        return token;
     }
 
     // DONT SET TOKEN WHEN DELIMITER
@@ -184,6 +189,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     // EQUIVALENT NUMBER
     if (state == TK_RNUM1 || state == TK_RNUM2 || state == TK_NUM1 || state == TK_NUM2)
     {
+
         // COMPUTE NUMBER
         equivalentNumber(LA, state, token);
     }
@@ -195,13 +201,15 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     }
 
     // FINAL STATE WITHOUT ANY OTHER ACTIONS
-    else if (state != TK_LT2 && state != TK_NUM2)
+    else if (state != TK_COMMENT && state != TK_LT2 && state != TK_NUM2)
     {
         // INCREMENT FORWARD
         changeForward(LA, +1);
 
-        // SET LEXEME
+                // SET LEXEME
         strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
+
+        printf("BC STATE %s\n", token->lexeme);
     }
 
     return token;
@@ -245,10 +253,9 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 
             // RESET
             resetBegin(LA);
-            
+
             continue;
         }
-
 
         printf("\nSTATE %d CHARACTER %d (%c)\n", LA->state, character, character);
 

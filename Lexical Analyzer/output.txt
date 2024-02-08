@@ -281,7 +281,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting input
 LOOKING input at Index: 14
->> input 0x55bf5feb96c0
+>> input 0x558607fb86c0
 Lexeme input already exists
 MAXVERSTAPPENDUM DUM16
 TK_INPUT input 
@@ -322,7 +322,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting parameter
 LOOKING parameter at Index: 40
->> parameter 0x55bf5feb9620
+>> parameter 0x558607fb8620
 Lexeme parameter already exists
 MAXVERSTAPPENDUM DUM14
 TK_PARAMETER parameter 
@@ -348,7 +348,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting list
 LOOKING list at Index: 59
->> list 0x55bf5feb9670
+>> list 0x558607fb8670
 Lexeme list already exists
 MAXVERSTAPPENDUM DUM15
 TK_LIST list 
@@ -360,6 +360,7 @@ state: 91, DELIMITER
 
 STATE 0 CHARACTER 91 ([)
 state: 68, TK_SQL
+BC STATE [
 TK_SQL [ 
 STATE 0 CHARACTER 114 (r)
 state: 14, non accept state
@@ -383,7 +384,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting record
 LOOKING record at Index: 20
->> record 0x55bf5feb9a80
+>> record 0x558607fb8a80
 Lexeme record already exists
 MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
@@ -495,7 +496,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting #book
 LOOKING #book at Index: 18
->> #book 0x55bf5febb380
+>> #book 0x558607fba380
 Lexeme #book already exists
 MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
@@ -526,6 +527,7 @@ Lexeme d2cd not found
 TK_ID d2cd 
 STATE 0 CHARACTER 93 (])
 state: 67, TK_SQR
+BC STATE ]
 TK_SQR ] 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -555,7 +557,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting output
 LOOKING output at Index: 44
->> output 0x55bf5feb9710
+>> output 0x558607fb8710
 Lexeme output already exists
 MAXVERSTAPPENDUM DUM17
 TK_OUTPUT output 
@@ -596,7 +598,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting parameter
 LOOKING parameter at Index: 40
->> parameter 0x55bf5feb9620
+>> parameter 0x558607fb8620
 Lexeme parameter already exists
 MAXVERSTAPPENDUM DUM14
 TK_PARAMETER parameter 
@@ -622,12 +624,13 @@ STATE 14 CHARACTER 91 ([)
 state: 83, TK_FIELDID
 Inserting list
 LOOKING list at Index: 59
->> list 0x55bf5feb9670
+>> list 0x558607fb8670
 Lexeme list already exists
 MAXVERSTAPPENDUM DUM15
 TK_LIST list 
 STATE 0 CHARACTER 91 ([)
 state: 68, TK_SQL
+BC STATE [
 TK_SQL [ 
 STATE 0 CHARACTER 114 (r)
 state: 14, non accept state
@@ -651,7 +654,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting record
 LOOKING record at Index: 20
->> record 0x55bf5feb9a80
+>> record 0x558607fb8a80
 Lexeme record already exists
 MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
@@ -680,7 +683,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting #book
 LOOKING #book at Index: 18
->> #book 0x55bf5febb380
+>> #book 0x558607fba380
 Lexeme #book already exists
 MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
@@ -705,9 +708,11 @@ Lexeme d3 not found
 TK_ID d3 
 STATE 0 CHARACTER 93 (])
 state: 67, TK_SQR
+BC STATE ]
 TK_SQR ] 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
 state: 1, non accept state
@@ -734,7 +739,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting record
 LOOKING record at Index: 20
->> record 0x55bf5feb9a80
+>> record 0x558607fb8a80
 Lexeme record already exists
 MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
@@ -781,7 +786,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting type
 LOOKING type at Index: 38
->> type 0x55bf5feb9530
+>> type 0x558607fb8530
 Lexeme type already exists
 MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
@@ -804,7 +809,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting int
 LOOKING int at Index: 54
->> int 0x55bf5feb9760
+>> int 0x558607fb8760
 Lexeme int already exists
 MAXVERSTAPPENDUM DUM18
 TK_INT int 
@@ -816,6 +821,7 @@ state: 91, DELIMITER
 
 STATE 0 CHARACTER 58 (:)
 state: 63, TK_COLON
+BC STATE :
 TK_COLON : 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -847,6 +853,7 @@ Lexeme value not found
 TK_FIELDID value 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
 state: 1, non accept state
@@ -867,7 +874,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting type
 LOOKING type at Index: 38
->> type 0x55bf5feb9530
+>> type 0x558607fb8530
 Lexeme type already exists
 MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
@@ -893,12 +900,13 @@ STATE 14 CHARACTER 58 (:)
 state: 83, TK_FIELDID
 Inserting real
 LOOKING real at Index: 39
->> real 0x55bf5feb97b0
+>> real 0x558607fb87b0
 Lexeme real already exists
 MAXVERSTAPPENDUM DUM19
 TK_REAL real 
 STATE 0 CHARACTER 58 (:)
 state: 63, TK_COLON
+BC STATE :
 TK_COLON : 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -926,6 +934,7 @@ LOOKING cost at Index: 59
 TK_FIELDID cost 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -964,12 +973,13 @@ STATE 14 CHARACTER 59 (;)
 state: 83, TK_FIELDID
 Inserting endrecord
 LOOKING endrecord at Index: 43
->> endrecord 0x55bf5feb9ad0
+>> endrecord 0x558607fb8ad0
 Lexeme endrecord already exists
 MAXVERSTAPPENDUM DUM29
 TK_ENDRECORD endrecord 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
 state: 1, non accept state
@@ -990,15 +1000,19 @@ state: 3, non accept state
 STATE 3 CHARACTER 60 (<)
 state: 85, TK_NUM1
 EQV NUMS 3
+BC STATE 3<
 TK_NUM1 3< 
 STATE 0 CHARACTER 45 (-)
 state: 70, TK_MINUS
+BC STATE -
 TK_MINUS - 
 STATE 0 CHARACTER 45 (-)
 state: 70, TK_MINUS
+BC STATE -
 TK_MINUS - 
 STATE 0 CHARACTER 45 (-)
 state: 70, TK_MINUS
+BC STATE -
 TK_MINUS - 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -1052,12 +1066,13 @@ STATE 12 CHARACTER 59 (;)
 state: 84, TK_ID
 Inserting d2cd
 LOOKING d2cd at Index: 19
->> d2cd 0x55bf5febb5a0
+>> d2cd 0x558607fba5a0
 Lexeme d2cd already exists
 MAXVERSTAPPENDUM DUM54
 TK_ID d2cd 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
 state: 1, non accept state
@@ -1084,7 +1099,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting return
 LOOKING return at Index: 4
->> return 0x55bf5feb99e0
+>> return 0x558607fb89e0
 Lexeme return already exists
 MAXVERSTAPPENDUM DUM26
 TK_RETURN return 
@@ -1096,6 +1111,7 @@ state: 91, DELIMITER
 
 STATE 0 CHARACTER 91 ([)
 state: 68, TK_SQL
+BC STATE [
 TK_SQL [ 
 STATE 0 CHARACTER 100 (d)
 state: 10, non accept state
@@ -1107,15 +1123,17 @@ STATE 11 CHARACTER 93 (])
 state: 84, TK_ID
 Inserting d3
 LOOKING d3 at Index: 57
->> d3 0x55bf5febbac0
+>> d3 0x558607fbaac0
 Lexeme d3 already exists
 MAXVERSTAPPENDUM DUM54
 TK_ID d3 
 STATE 0 CHARACTER 93 (])
 state: 67, TK_SQR
+BC STATE ]
 TK_SQR ] 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -1136,7 +1154,7 @@ STATE 14 CHARACTER 13 ()
 state: 83, TK_FIELDID
 Inserting end
 LOOKING end at Index: 16
->> end 0x55bf5feb9350
+>> end 0x558607fb8350
 Lexeme end already exists
 MAXVERSTAPPENDUM DUM5
 TK_END end 
@@ -1162,7 +1180,7 @@ STATE 14 CHARACTER 13 ()
 state: 83, TK_FIELDID
 Inserting _main
 LOOKING _main at Index: 36
->> _main 0x55bf5feb9580
+>> _main 0x558607fb8580
 Lexeme _main already exists
 MAXVERSTAPPENDUM DUM12
 TK_MAIN _main 
@@ -1191,7 +1209,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting record
 LOOKING record at Index: 20
->> record 0x55bf5feb9a80
+>> record 0x558607fb8a80
 Lexeme record already exists
 MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
@@ -1220,7 +1238,7 @@ STATE 2 CHARACTER 13 ()
 state: 90, TK_RUID
 Inserting #book
 LOOKING #book at Index: 18
->> #book 0x55bf5febb380
+>> #book 0x558607fba380
 Lexeme #book already exists
 MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
@@ -1243,7 +1261,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting type
 LOOKING type at Index: 38
->> type 0x55bf5feb9530
+>> type 0x558607fb8530
 Lexeme type already exists
 MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
@@ -1266,7 +1284,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting int
 LOOKING int at Index: 54
->> int 0x55bf5feb9760
+>> int 0x558607fb8760
 Lexeme int already exists
 MAXVERSTAPPENDUM DUM18
 TK_INT int 
@@ -1278,6 +1296,7 @@ state: 91, DELIMITER
 
 STATE 0 CHARACTER 58 (:)
 state: 63, TK_COLON
+BC STATE :
 TK_COLON : 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -1317,6 +1336,7 @@ LOOKING editioÿn at Index: 90
 TK_FIELDID editioÿn 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
 state: 1, non accept state
@@ -1337,7 +1357,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting type
 LOOKING type at Index: 38
->> type 0x55bf5feb9530
+>> type 0x558607fb8530
 Lexeme type already exists
 MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
@@ -1363,12 +1383,13 @@ STATE 14 CHARACTER 58 (:)
 state: 83, TK_FIELDID
 Inserting real
 LOOKING real at Index: 39
->> real 0x55bf5feb97b0
+>> real 0x558607fb87b0
 Lexeme real already exists
 MAXVERSTAPPENDUM DUM19
 TK_REAL real 
 STATE 0 CHARACTER 58 (:)
 state: 63, TK_COLON
+BC STATE :
 TK_COLON : 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -1400,6 +1421,7 @@ Lexeme price not found
 TK_FIELDID price 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -1438,12 +1460,13 @@ STATE 14 CHARACTER 59 (;)
 state: 83, TK_FIELDID
 Inserting endrecord
 LOOKING endrecord at Index: 43
->> endrecord 0x55bf5feb9ad0
+>> endrecord 0x558607fb8ad0
 Lexeme endrecord already exists
 MAXVERSTAPPENDUM DUM29
 TK_ENDRECORD endrecord 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
 state: 1, non accept state
@@ -1464,7 +1487,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting type
 LOOKING type at Index: 38
->> type 0x55bf5feb9530
+>> type 0x558607fb8530
 Lexeme type already exists
 MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
@@ -1496,7 +1519,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting record
 LOOKING record at Index: 20
->> record 0x55bf5feb9a80
+>> record 0x558607fb8a80
 Lexeme record already exists
 MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
@@ -1525,7 +1548,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting #book
 LOOKING #book at Index: 18
->> #book 0x55bf5febb380
+>> #book 0x558607fba380
 Lexeme #book already exists
 MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
@@ -1550,6 +1573,7 @@ Lexeme b2 not found
 TK_ID b2 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -1573,7 +1597,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting type
 LOOKING type at Index: 38
->> type 0x55bf5feb9530
+>> type 0x558607fb8530
 Lexeme type already exists
 MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
@@ -1605,7 +1629,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting record
 LOOKING record at Index: 20
->> record 0x55bf5feb9a80
+>> record 0x558607fb8a80
 Lexeme record already exists
 MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
@@ -1634,7 +1658,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting #book
 LOOKING #book at Index: 18
->> #book 0x55bf5febb380
+>> #book 0x558607fba380
 Lexeme #book already exists
 MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
@@ -1659,6 +1683,7 @@ Lexeme c2 not found
 TK_ID c2 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -1682,7 +1707,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting type
 LOOKING type at Index: 38
->> type 0x55bf5feb9530
+>> type 0x558607fb8530
 Lexeme type already exists
 MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
@@ -1714,7 +1739,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting record
 LOOKING record at Index: 20
->> record 0x55bf5feb9a80
+>> record 0x558607fb8a80
 Lexeme record already exists
 MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
@@ -1743,7 +1768,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting #book
 LOOKING #book at Index: 18
->> #book 0x55bf5febb380
+>> #book 0x558607fba380
 Lexeme #book already exists
 MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
@@ -1768,6 +1793,7 @@ Lexeme d2 not found
 TK_ID d2 
 STATE 0 CHARACTER 59 (;)
 state: 62, TK_SEM
+BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -1791,7 +1817,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting type
 LOOKING type at Index: 38
->> type 0x55bf5feb9530
+>> type 0x558607fb8530
 Lexeme type already exists
 MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
@@ -1823,7 +1849,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting record
 LOOKING record at Index: 20
->> record 0x55bf5feb9a80
+>> record 0x558607fb8a80
 Lexeme record already exists
 MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
@@ -1849,7 +1875,7 @@ STATE 2 CHARACTER 32 ( )
 state: 90, TK_RUID
 Inserting #new
 LOOKING #new at Index: 40
->> #new 0x55bf5febbd60
+>> #new 0x558607fbad60
 Lexeme #new already exists
 MAXVERSTAPPENDUM DUM60
 TK_RUID #new 
@@ -1897,6 +1923,7 @@ LOOKING b7bc34; b2 at Index: 34
 TK_ID b7bc34; b2 
 STATE 0 CHARACTER 46 (.)
 state: 64, TK_DOT
+BC STATE .
 TK_DOT . 
 STATE 0 CHARACTER 101 (e)
 state: 14, non accept state
@@ -1942,6 +1969,7 @@ state: 29, non accept state
 
 STATE 29 CHARACTER 45 (-)
 state: 31, TK_ASSIGNOP
+BC STATE <---
 TK_ASSIGNOP <--- 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -1955,6 +1983,7 @@ state: 3, non accept state
 STATE 3 CHARACTER 59 (;)
 state: 85, TK_NUM1
 EQV NUMS 3
+BC STATE 3;
 TK_NUM1 3; 
 STATE 0 CHARACTER 13 ()
 state: 1, non accept state
@@ -1981,6 +2010,7 @@ EQV NUMS 2
 TK_NUM2 2 
 STATE 0 CHARACTER 46 (.)
 state: 64, TK_DOT
+BC STATE .
 TK_DOT . 
 STATE 0 CHARACTER 112 (p)
 state: 14, non accept state
@@ -2001,7 +2031,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting price
 LOOKING price at Index: 46
->> price 0x55bf5febd520
+>> price 0x558607fbc520
 Lexeme price already exists
 MAXVERSTAPPENDUM DUM53
 TK_FIELDID price 
@@ -2022,6 +2052,7 @@ state: 29, non accept state
 
 STATE 29 CHARACTER 45 (-)
 state: 31, TK_ASSIGNOP
+BC STATE <---
 TK_ASSIGNOP <--- 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -2047,6 +2078,7 @@ state: 6, non accept state
 STATE 6 CHARACTER 59 (;)
 state: 88, TK_RNUM2
 EQV NUMS 24.95
+BC STATE 24.95;
 TK_RNUM2 24.95; 
 STATE 0 CHARACTER 13 ()
 state: 1, non accept state
@@ -2073,6 +2105,7 @@ EQV NUMS 2
 TK_NUM2 2 
 STATE 0 CHARACTER 46 (.)
 state: 64, TK_DOT
+BC STATE .
 TK_DOT . 
 STATE 0 CHARACTER 101 (e)
 state: 14, non accept state
@@ -2099,7 +2132,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting edition
 LOOKING edition at Index: 81
->> edition 0x55bf5febe4c0
+>> edition 0x558607fbd4c0
 Lexeme edition already exists
 MAXVERSTAPPENDUM DUM53
 TK_FIELDID edition 
@@ -2120,6 +2153,7 @@ state: 29, non accept state
 
 STATE 29 CHARACTER 45 (-)
 state: 31, TK_ASSIGNOP
+BC STATE <---
 TK_ASSIGNOP <--- 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -2133,6 +2167,7 @@ state: 3, non accept state
 STATE 3 CHARACTER 59 (;)
 state: 85, TK_NUM1
 EQV NUMS 2
+BC STATE 2;
 TK_NUM1 2; 
 STATE 0 CHARACTER 13 ()
 state: 1, non accept state
@@ -2144,7 +2179,7 @@ STATE 2 CHARACTER 50 (2)
 state: 90, TK_RUID
 Inserting c
 LOOKING c at Index: 8
->> c 0x55bf5febeaa0
+>> c 0x558607fbdaa0
 Lexeme c already exists
 MAXVERSTAPPENDUM DUM60
 TK_RUID c 
@@ -2160,6 +2195,7 @@ EQV NUMS 2
 TK_NUM2 2 
 STATE 0 CHARACTER 46 (.)
 state: 64, TK_DOT
+BC STATE .
 TK_DOT . 
 STATE 0 CHARACTER 112 (p)
 state: 14, non accept state
@@ -2180,7 +2216,7 @@ STATE 14 CHARACTER 32 ( )
 state: 83, TK_FIELDID
 Inserting price
 LOOKING price at Index: 46
->> price 0x55bf5febd520
+>> price 0x558607fbc520
 Lexeme price already exists
 MAXVERSTAPPENDUM DUM53
 TK_FIELDID price 
@@ -2201,6 +2237,7 @@ state: 29, non accept state
 
 STATE 29 CHARACTER 45 (-)
 state: 31, TK_ASSIGNOP
+BC STATE <---
 TK_ASSIGNOP <--- 
 STATE 0 CHARACTER 32 ( )
 state: 23, non accept state
@@ -2226,6 +2263,7 @@ state: 6, non accept state
 STATE 6 CHARACTER 59 (;)
 state: 88, TK_RNUM2
 EQV NUMS 98.80
+BC STATE 98.80;
 TK_RNUM2 98.80; 
 STATE 0 CHARACTER 13 ()
 state: 1, non accept state
@@ -2338,28 +2376,4 @@ state: 23, non accept state
 STATE 23 CHARACTER 115 (s)
 state: 91, DELIMITER
 
-STATE 0 CHARACTER 115 (s)
-state: 14, non accept state
-
-STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
-
-STATE 14 CHARACTER 97 (a)
-state: 14, non accept state
-
-STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
-
-STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
-
-STATE 14 CHARACTER 109 (m)
-state: 14, non accept state
-
-STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
-
-STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
-
-STATE 14 CHARACTER 
+STATE 0 CHARACTER 115 
