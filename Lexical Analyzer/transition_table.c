@@ -11,8 +11,6 @@ CharacterType characterTypeMap[128] = {7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 7, 7, 7,
 // tester
 int main()
 {
-    // Run reinitialiseArrays() to get the arrays in copy paste format if any changes are made.
-    // reinitialiseArrays();
     char testString[] = "_main@";
     printf("String: %s\n", testString);
     printf("Character type map: \n");

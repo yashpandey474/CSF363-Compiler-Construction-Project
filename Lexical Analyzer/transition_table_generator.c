@@ -192,10 +192,6 @@ int reinitialiseArrays()
         offsetArrayTemp[i] = 0;
         defaultArrayTemp[i] = -1;
     }
-    // TODO:why??
-    //  // SET DEFAULT STATE FOR SIGMA - TO DESTINATION
-    //  defaultArray[26] = s + TK_GE;
-    //  defaultArray[27] = s + TK_LE;
 
     for (int i = 0; i < STATE_ARRAY_SIZE_TEMP_GEN; i++)
     {
