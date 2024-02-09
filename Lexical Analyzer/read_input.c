@@ -257,12 +257,15 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         character = LA->twinBuffer->buffer[LA->forward];
 
         // LINE FEED: LITE (AFTER \N)
-        if ((int)character == 10)
+        if ((int)character == 13)
         {
+
+            printf("LINE FEED\n");
+            
             // INCREMENT FORWARD
             changeForward(LA, 1);
 
-            // RESET
+            // RESET START OF LEXEME
             resetBegin(LA);
 
             continue;

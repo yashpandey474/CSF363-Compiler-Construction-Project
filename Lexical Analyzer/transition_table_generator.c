@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define INPUT_SECOND_DIMENSION 37 // number of character types
 #define STATE_ARRAY_SIZE_TEMP_GEN 200
@@ -107,8 +108,8 @@ void initializeCharacterTypeMap()
             case ' ':
                 characterTypeMapTemp[i] = CT_DELIMITER;
                 break;
+            case '\r':
             case '\n':
-            case 13:
                 characterTypeMapTemp[i] = CT_CARRIAGE_RETURN;
                 break;
             case '_':
@@ -178,8 +179,9 @@ void initializeCharacterTypeMap()
                 characterTypeMapTemp[i] = CT_AT_THE_RATE;
                 break;
             case '#':
+                printf("MAX VERSTAPPEN TU TU HELLO %d %d", i, CT_HASH);
                 characterTypeMapTemp[i] = CT_HASH;
-            // Any other character is considered invalid
+                break;
             default:
                 characterTypeMapTemp[i] = CT_INVALID;
             }
@@ -403,8 +405,22 @@ int reinitialiseArrays()
     return 0;
 }
 
+void printCurrentTime()
+{
+    // Get the current time
+    time_t currentTime;
+    time(&currentTime);
+
+    // Convert the current time to a string
+    char *timeString = ctime(&currentTime);
+
+    // Print the current time
+    printf("Current Time: %s", timeString);
+}
+
 int main()
 {
+    printCurrentTime();
     reinitialiseArrays();
     return 0;
 }
