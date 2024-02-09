@@ -25,7 +25,6 @@ void printSymbolTable();
 
 void changeForward(struct LexicalAnalyzer *LA, int flag);
 
-int getNextState(int currentState, char character);
 
 struct SymbolTableNode
 {
@@ -35,7 +34,7 @@ struct SymbolTableNode
 
 // FUNCTION DECLARATIONS
 struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry);
-int getNextState(int currentState, char character);
+int getNextState(int currentState, int character);
 
 typedef enum Tokentype
 {
@@ -104,6 +103,7 @@ typedef enum Tokentype
     TK_FUNID,
     TK_RUID,
     DELIMITER,
+    
 } Tokentype;
 
 struct SymbolTableEntry
@@ -154,7 +154,8 @@ typedef enum CharacterType
     CT_TILDE,
     CT_UNDERSCORE,
     CT_CARRIAGE_RETURN,
-    CT_EOF
+    CT_EOF,
+    CT_HASH
 } CharacterType;
 
 const char *CharacterTypeToString(enum CharacterType type);

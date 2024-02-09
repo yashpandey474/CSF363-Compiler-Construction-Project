@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INPUT_SECOND_DIMENSION 36 // number of character types
+#define INPUT_SECOND_DIMENSION 37 // number of character types
 #define STATE_ARRAY_SIZE_TEMP_GEN 200
 int nextStateTemp[STATE_ARRAY_SIZE_TEMP_GEN];
 int checkStateTemp[STATE_ARRAY_SIZE_TEMP_GEN];
@@ -108,6 +108,7 @@ void initializeCharacterTypeMap()
                 characterTypeMapTemp[i] = CT_DELIMITER;
                 break;
             case '\n':
+            case 13:
                 characterTypeMapTemp[i] = CT_CARRIAGE_RETURN;
                 break;
             case '_':
@@ -176,6 +177,8 @@ void initializeCharacterTypeMap()
             case '@':
                 characterTypeMapTemp[i] = CT_AT_THE_RATE;
                 break;
+            case '#':
+                characterTypeMapTemp[i] = CT_HASH;
             // Any other character is considered invalid
             default:
                 characterTypeMapTemp[i] = CT_INVALID;

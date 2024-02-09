@@ -271,15 +271,17 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         printf("\nSTATE %d CHARACTER %d (%c)\n", LA->state, character, character);
 
         // TODO: DIFFERENTIATE BETWEEN END OF INPUT AND END OF BUFFER
-        if (character == EOF){
+        if (character == EOF)
+        {
 
             // END OF BUFFER
             if (LA->forward == BUFFER_SIZE || LA->forward == (2 * BUFFER_SIZE + 1))
             {
 
                 // RELOAD OTHER BUFER
-                int res = readIntoBuffer(LA->twinBuffer);
+                readIntoBuffer(LA->twinBuffer);
 
+                // DONT NEED TO CHECK FOR INPUT END [FORWARD WOULD BE SOMETHING ELSE]
                 printf("RELOADED BUFFER\n");
             }
 
@@ -295,23 +297,19 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 // HAVE TO RETURN
                 if (token->tokenType != 0)
                 {
-                    //RESET BEGIN
+                    // RESET BEGIN
                     resetBegin(LA);
                     return token;
                 }
-
-
+                printf("TOKENTYPE %d\n", token->tokenType);
                 // ALL INPUT READ AND PROCESSED
                 printf("END OF INPUT. FINISHING SCANNING\n");
                 return NULL;
             }
-
-            
         }
 
         // CHANGE STATE
         LA->state = getNextState(LA->state, (int)character);
-        
 
         // TAKE ACTIONS FOR THE STATE
         token = takeActions(LA, token);
@@ -373,7 +371,7 @@ int main()
 
     printf("STARTING SCANNING\n");
 
-    while (token = scanToken(LA))
+    while ((token = scanToken(LA)))
     {
         printf("%s %s ", TokenToString(token->tokenType), token->lexeme);
     }
