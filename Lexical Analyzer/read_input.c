@@ -199,7 +199,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
         changeForward(LA, -1);
     }
 
-    token->lexeme = (char *)realloc(token->lexeme, sizeof(char) * (LA->forward - LA->begin + 1));
+    token->lexeme = (char *)malloc( sizeof(char) * (LA->forward - LA->begin + 1));
 
     if (token->lexeme == NULL)
     {
@@ -241,8 +241,7 @@ struct SymbolTableEntry *initialiseToken()
 {
 
     struct SymbolTableEntry *token = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry));
-
-    token->lexeme = (char *)malloc(sizeof(char) * 20);
+    //lexeme is initialised later for efficiency
     token->intValue = 0;
     token->doubleValue = 0;
     token->lineNo = 0;
