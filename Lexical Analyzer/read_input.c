@@ -6,6 +6,7 @@
 #include "lexical.h"
 #include <stdlib.h>
 #include <ctype.h>
+#include <time.h>
 
 // PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
 #define BUFFER_SIZE 256
@@ -15,6 +16,18 @@
 // EOF CHARACTERS AT END OF BOTH BUFFERS ALWAYS
 
 // FUNCTIONS TO READ "RELOAD" INTO BUFFER FROM A FILE
+void printCurrentTime()
+{
+    // Get the current time
+    time_t currentTime;
+    time(&currentTime);
+
+    // Convert the current time to a string
+    char *timeString = ctime(&currentTime);
+
+    // Print the current time
+    printf("Current Time: %s", timeString);
+}
 
 // CODE TO READ FROM THE BUFFERS CHARACTER BY CHARACTER
 struct TwinBuffer
@@ -158,30 +171,31 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     if (state == TK_COMMENT || state == CARRIAGE_RETURN)
     {
         incrementLineNo(LA);
-        // SET TOKEN TYPE
-        token->tokenType = state;
-        
-        strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
-        return token;
     }
 
     // DONT SET TOKEN WHEN DELIMITER
     if (state == CARRIAGE_RETURN || state == DELIMITER)
     {
+        //RETURN TO START STATE
         returnToStart(LA);
+
+        //DECREMEMNT FORWARD SO THAT THE INCREMENT IN NORMAL LOOP DOESN'T AFFECT
         changeForward(LA, -1);
 
+        //DONT SET STATE OR LEXEME AND RETURN
         return token;
     }
 
-    // SET TOKEN TYPE
+    // SET TOKEN TYPE [SET FOR TOKEN, NOT SET FOR CARRIAGE_RETURN OR DELIMITER]
     token->tokenType = state;
 
     // DOUBLE STAR STATES
     if (state == TK_NUM2 || state == TK_LT2)
     {
+        //DECREMENT FORWARD POINTER
         changeForward(LA, -1);
     }
+
 
     // SET LEXEME
     strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
@@ -195,7 +209,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     }
 
     // GET THE SYMBOL TABLE ENTRY
-    if (state == TK_FIELDID || state == TK_RUID || state == TK_ID || state == TK_FUNID)
+    else if (state == TK_FIELDID || state == TK_RUID || state == TK_ID || state == TK_FUNID)
     {
         token = getToken(token);
     }
@@ -206,7 +220,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
         // INCREMENT FORWARD
         changeForward(LA, +1);
 
-                // SET LEXEME
+        // SET LEXEME
         strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
 
         printf("BC STATE %s\n", token->lexeme);
@@ -305,6 +319,9 @@ struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer)
 
 int main()
 {
+    printCurrentTime();
+
+
     printf("ENTERED MAIN\n");
     // INITIALISE THE SYMBOL TABLE
     insertAllKeywords();
