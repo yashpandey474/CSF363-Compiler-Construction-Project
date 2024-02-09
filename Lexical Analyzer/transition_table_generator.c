@@ -3,13 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define INPUT_SECOND_DIMENSION 34 // number of character types
+#define INPUT_SECOND_DIMENSION 36 // number of character types
 #define STATE_ARRAY_SIZE_TEMP_GEN 200
 int nextStateTemp[STATE_ARRAY_SIZE_TEMP_GEN];
 int checkStateTemp[STATE_ARRAY_SIZE_TEMP_GEN];
 int defaultArrayTemp[NUM_STATES];
 int offsetArrayTemp[NUM_STATES];
-CharacterType characterTypeMapTemp[128];
+CharacterType characterTypeMapTemp[129];
 
 char outputFileName[] = "output_transition_table_generator.txt";
 void printArray(const char *name, int *array, int size, const char *type, const char *constantName)
@@ -64,6 +64,7 @@ void initialiseforIdDigit(int **input, int rownumber, int next)
 
 void initializeCharacterTypeMap()
 {
+    characterTypeMapTemp[128]=CT_EOF;
     for (int i = 0; i < 128; ++i)
 
     {

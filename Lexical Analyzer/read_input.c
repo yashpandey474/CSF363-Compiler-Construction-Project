@@ -271,8 +271,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         printf("\nSTATE %d CHARACTER %d (%c)\n", LA->state, character, character);
 
         // TODO: DIFFERENTIATE BETWEEN END OF INPUT AND END OF BUFFER
-        if (character == EOF)
-        {
+        if (character == EOF){
 
             // END OF BUFFER
             if (LA->forward == BUFFER_SIZE || LA->forward == (2 * BUFFER_SIZE + 1))
@@ -281,84 +280,101 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 // RELOAD OTHER BUFER
                 int res = readIntoBuffer(LA->twinBuffer);
 
-                printf("RELOADED BUFFER");
+                printf("RELOADED BUFFER\n");
             }
 
             // END OF INPUT
             else
             {
-                // ALL INPUT READ AND PROCESSED
-                if (res == 0)
+                // CHANGE STATE
+                LA->state = getNextState(LA->state, 128); // 128 for end of file
+
+                // TAKE ACTIONS FOR THE STATE
+                token = takeActions(LA, token);
+
+                // HAVE TO RETURN
+                if (token->tokenType != 0)
                 {
-                    return NULL;
+                    //RESET BEGIN
+                    resetBegin(LA);
+                    return token;
                 }
+
+
+                // ALL INPUT READ AND PROCESSED
+                printf("END OF INPUT. FINISHING SCANNING\n");
+                return NULL;
             }
 
-            // CHANGE STATE
-            LA->state = getNextState(LA->state, character);
-
-            // TAKE ACTIONS FOR THE STATE
-            token = takeActions(LA, token);
-
-            // HAVE TO RETURN
-            if (token->tokenType != 0)
-            {
-                resetBegin(LA);
-                return token;
-            }
-
-            // INCREMENT FORWARD
-            changeForward(LA, 1);
+            
         }
-    }
 
-    struct LexicalAnalyzer *initialiseLA(struct TwinBuffer * twinBuffer)
-    {
-        struct LexicalAnalyzer *LA;
-        LA = (struct LexicalAnalyzer *)malloc(sizeof(struct LexicalAnalyzer));
+        // CHANGE STATE
+        LA->state = getNextState(LA->state, (int)character);
+        
 
-        LA->lineNo = 0;
-        LA->begin = 0;
-        LA->forward = 0;
-        LA->state = 0;
-        LA->twinBuffer = twinBuffer;
-        return LA;
-    }
+        // TAKE ACTIONS FOR THE STATE
+        token = takeActions(LA, token);
 
-    int main()
-    {
-        printCurrentTime();
-
-        printf("ENTERED MAIN\n");
-        // INITIALISE THE SYMBOL TABLE
-        insertAllKeywords();
-        printSymbolTable();
-
-        printf("KEYWORDS\n");
-
-        // TEST THE TWIN BUFFER
-        FILE *file = readTestFile("test_program.txt");
-
-        // INITIALISE A TWIN BUFFER
-        struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
-
-        // INITIALISE LA
-        struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
-
-        printf("LA INITIALISED\n");
-
-        // START SCANNING
-        readIntoBuffer(twinBuffer);
-
-        printf("READ INPUT\n");
-
-        // THE TOKEN
-        struct SymbolTableEntry *token;
-
-        printf("STARTING SCANNING\n");
-
-        while (token = scanToken(LA))
+        // HAVE TO RETURN
+        if (token->tokenType != 0)
         {
-            printf("%s %s ", TokenToString(token->tokenType), token->lexeme);
+            resetBegin(LA);
+            return token;
         }
+
+        // INCREMENT FORWARD
+        changeForward(LA, 1);
     }
+}
+
+struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer)
+{
+    struct LexicalAnalyzer *LA;
+    LA = (struct LexicalAnalyzer *)malloc(sizeof(struct LexicalAnalyzer));
+
+    LA->lineNo = 0;
+    LA->begin = 0;
+    LA->forward = 0;
+    LA->state = 0;
+    LA->twinBuffer = twinBuffer;
+    return LA;
+}
+
+int main()
+{
+    printCurrentTime();
+
+    printf("ENTERED MAIN\n");
+    // INITIALISE THE SYMBOL TABLE
+    insertAllKeywords();
+    printSymbolTable();
+
+    printf("KEYWORDS\n");
+
+    // TEST THE TWIN BUFFER
+    FILE *file = readTestFile("test_program.txt");
+
+    // INITIALISE A TWIN BUFFER
+    struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
+
+    // INITIALISE LA
+    struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
+
+    printf("LA INITIALISED\n");
+
+    // START SCANNING
+    readIntoBuffer(twinBuffer);
+
+    printf("READ INPUT\n");
+
+    // THE TOKEN
+    struct SymbolTableEntry *token;
+
+    printf("STARTING SCANNING\n");
+
+    while (token = scanToken(LA))
+    {
+        printf("%s %s ", TokenToString(token->tokenType), token->lexeme);
+    }
+}
