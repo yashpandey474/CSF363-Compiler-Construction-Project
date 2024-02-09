@@ -117,7 +117,7 @@ char *lexicalError(struct SymbolTableEntry *token)
         {
             // char errorMessage[100];
 
-            sprintf(errorMessage, "Lexical Error: Identifier %s of length %zu greater than maximum size", token->lexeme, strlen(token->lexeme));
+            sprintf(errorMessage, "Lexical Error: Identifier %s greater than maximum size", token->lexeme);
             return errorMessage;
             // return "Lexical Error: Identifier %s of length %d greater than maximum size";
         }
@@ -255,13 +255,12 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // GET CHARACTER CURRENTLY BEING READ
 
         character = LA->twinBuffer->buffer[LA->forward];
-
+        // \r:13 \n:10 in windows its \r\n in linux its \n
         // LINE FEED: LITE (AFTER \N)
         if ((int)character == 13)
         {
-
             printf("LINE FEED\n");
-            
+
             // INCREMENT FORWARD
             changeForward(LA, 1);
 
