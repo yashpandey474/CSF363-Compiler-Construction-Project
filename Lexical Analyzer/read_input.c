@@ -17,7 +17,6 @@
 
 // FUNCTIONS TO READ "RELOAD" INTO BUFFER FROM A FILE
 
-
 // CODE TO READ FROM THE BUFFERS CHARACTER BY CHARACTER
 struct TwinBuffer
 {
@@ -170,18 +169,20 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
         returnToStart(LA);
 
         // DONT SET STATE OR LEXEME AND RETURN
-        
-        if (state == CARRIAGE_RETURN){
+
+        if (state == CARRIAGE_RETURN)
+        {
             incrementLineNo(LA);
 
-            //RESET BEGIN AND INCREMENT FORWARD
+            // RESET BEGIN AND INCREMENT FORWARD
             changeBegin(LA, 1);
         }
 
-        if (state == DELIMITER){
+        if (state == DELIMITER)
+        {
             changeForward(LA, -1);
         }
-        
+
         // printf("TOOK ACTIONS");
         return token;
     }
@@ -196,6 +197,14 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     {
         // DECREMENT FORWARD POINTER
         changeForward(LA, -1);
+    }
+
+    token->lexeme = (char *)realloc(token->lexeme, sizeof(char) * (LA->forward - LA->begin + 1));
+
+    if (token->lexeme == NULL)
+    {
+        printf("Memory allocation failed for token lexeme\n");
+        exit(1);
     }
 
     // SET LEXEME
@@ -233,7 +242,7 @@ struct SymbolTableEntry *initialiseToken()
 
     struct SymbolTableEntry *token = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry));
 
-    token->lexeme = (char *)malloc(sizeof(char) * 100);
+    token->lexeme = (char *)malloc(sizeof(char) * 20);
     token->intValue = 0;
     token->doubleValue = 0;
     token->lineNo = 0;
@@ -251,13 +260,12 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 
     char character;
 
-
-    //while(1)
-    while(1){
+    // while(1)
+    while (1)
+    {
         // GET CHARACTER CURRENTLY BEING READ
 
         character = LA->twinBuffer->buffer[LA->forward];
-
 
         // TODO: DIFFERENTIATE BETWEEN END OF INPUT AND END OF BUFFER
         if (character == EOF)
@@ -337,7 +345,7 @@ int main()
 {
 
     // printf("ENTERED MAIN\n");
-    
+
     // INITIALISE THE SYMBOL TABLE
     insertAllKeywords();
 
@@ -366,7 +374,7 @@ int main()
 
     while ((token = scanToken(LA)))
     {
-        printf("(%s) %s  ", TokenToString(token->tokenType), token->lexeme);
+        printf("(%s : %s) ", TokenToString(token->tokenType), token->lexeme);
     }
 
     printSymbolTable();
