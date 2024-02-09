@@ -229,19 +229,23 @@ TestCase testCases[] = {
 
 int getNextState(int currentState, char character)
 {
+    printf("SPACE%d CARRIAGE RETURN %d\n", characterTypeMap[' '], characterTypeMap['\n']);
     int actualOffset = offset[currentState] + characterTypeMap[(int)(character)];
     int state;
     if (actualOffset >= STATE_ARRAY_SIZE)
     {
+        printf("INVALID INPUT\n");
         state = defaultArray[currentState];
         return state;
     }
     if (checkState[actualOffset] == currentState)
     {
+        printf("VALID INPUT; NEXT RETURNED\n");
         state = nextState[actualOffset];
     }
     else
     {
+        printf("DEFAULT RETURNED\n");
         state = defaultArray[currentState];
     }
     printf("state: %d, %s\n", state, TokenToString(state - 30));

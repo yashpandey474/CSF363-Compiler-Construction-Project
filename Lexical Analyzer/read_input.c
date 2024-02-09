@@ -223,7 +223,6 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
         // SET LEXEME
         strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
 
-        printf("BC STATE %s\n", token->lexeme);
     }
 
     return token;
