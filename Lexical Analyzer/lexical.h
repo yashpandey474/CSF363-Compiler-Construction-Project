@@ -153,7 +153,8 @@ typedef enum CharacterType
     CT_EXCLAMATION,
     CT_TILDE,
     CT_UNDERSCORE,
-    CT_CARRIAGE_RETURN
+    CT_CARRIAGE_RETURN,
+    CT_EOF
 } CharacterType;
 
 const char *CharacterTypeToString(enum CharacterType type);

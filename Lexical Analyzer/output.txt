@@ -1,117 +1,7 @@
 Compiling symbol_table.c transition_table.c read_input.c into myProgram...
 Compilation successful. Running myProgram...
+Current Time: Fri Feb  9 23:16:36 2024
 ENTERED MAIN
-Inserting with
-LOOKING with at Index: 88
-Lexeme with not found
->> with (nil)
-Inserting parameters
-LOOKING parameters at Index: 81
-Lexeme parameters not found
->> parameters (nil)
-Inserting end
-LOOKING end at Index: 16
-Lexeme end not found
->> end (nil)
-Inserting while
-LOOKING while at Index: 83
-Lexeme while not found
->> while (nil)
-Inserting union
-LOOKING union at Index: 10
-Lexeme union not found
->> union (nil)
-Inserting endunion
-LOOKING endunion at Index: 90
-Lexeme endunion not found
->> endunion (nil)
-Inserting definetype
-LOOKING definetype at Index: 77
-Lexeme definetype not found
->> definetype (nil)
-Inserting as
-LOOKING as at Index: 28
-Lexeme as not found
->> as (nil)
-Inserting type
-LOOKING type at Index: 38
-Lexeme type not found
->> type (nil)
-Inserting _main
-LOOKING _main at Index: 36
-Lexeme _main not found
->> _main (nil)
-Inserting global
-LOOKING global at Index: 17
-Lexeme global not found
->> global (nil)
-Inserting parameter
-LOOKING parameter at Index: 40
-Lexeme parameter not found
->> parameter (nil)
-Inserting list
-LOOKING list at Index: 59
-Lexeme list not found
->> list (nil)
-Inserting input
-LOOKING input at Index: 14
-Lexeme input not found
->> input (nil)
-Inserting output
-LOOKING output at Index: 44
-Lexeme output not found
->> output (nil)
-Inserting int
-LOOKING int at Index: 54
-Lexeme int not found
->> int (nil)
-Inserting real
-LOOKING real at Index: 39
-Lexeme real not found
->> real (nil)
-Inserting endwhile
-LOOKING endwhile at Index: 72
-Lexeme endwhile not found
->> endwhile (nil)
-Inserting if
-LOOKING if at Index: 81
->> if (nil)
-Inserting then
-LOOKING then at Index: 22
-Lexeme then not found
->> then (nil)
-Inserting endif
-LOOKING endif at Index: 78
-Lexeme endif not found
->> endif (nil)
-Inserting read
-LOOKING read at Index: 31
-Lexeme read not found
->> read (nil)
-Inserting write
-LOOKING write at Index: 34
-Lexeme write not found
->> write (nil)
-Inserting return
-LOOKING return at Index: 4
-Lexeme return not found
->> return (nil)
-Inserting call
-LOOKING call at Index: 30
-Lexeme call not found
->> call (nil)
-Inserting record
-LOOKING record at Index: 20
-Lexeme record not found
->> record (nil)
-Inserting endrecord
-LOOKING endrecord at Index: 43
-Lexeme endrecord not found
->> endrecord (nil)
-Inserting else
-LOOKING else at Index: 50
-Lexeme else not found
->> else (nil)
 
 Printing symbol table
 0 --->NULL
@@ -214,2166 +104,1251 @@ READ INPUT
 STARTING SCANNING
 
 STATE 0 CHARACTER 95 (_)
-state: 20, non accept state
 
 STATE 20 CHARACTER 114 (r)
-state: 21, non accept state
 
 STATE 21 CHARACTER 101 (e)
-state: 21, non accept state
 
 STATE 21 CHARACTER 99 (c)
-state: 21, non accept state
 
 STATE 21 CHARACTER 111 (o)
-state: 21, non accept state
 
 STATE 21 CHARACTER 114 (r)
-state: 21, non accept state
 
 STATE 21 CHARACTER 100 (d)
-state: 21, non accept state
 
 STATE 21 CHARACTER 68 (D)
-state: 21, non accept state
 
 STATE 21 CHARACTER 101 (e)
-state: 21, non accept state
 
 STATE 21 CHARACTER 109 (m)
-state: 21, non accept state
 
 STATE 21 CHARACTER 111 (o)
-state: 21, non accept state
 
 STATE 21 CHARACTER 49 (1)
-state: 22, non accept state
 
 STATE 22 CHARACTER 32 ( )
-state: 89, TK_FUNID
-Inserting _recordDemo1
-LOOKING _recordDemo1 at Index: 86
-Lexeme _recordDemo1 not found
->> _recordDemo1 (nil)
-TK_FUNID _recordDemo1 
+TK_FUNID _recordDemo1 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 105 (i)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 112 (p)
-state: 14, non accept state
 
 STATE 14 CHARACTER 117 (u)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting input
-LOOKING input at Index: 14
->> input 0x558607fb86c0
-Lexeme input already exists
-MAXVERSTAPPENDUM DUM16
-TK_INPUT input 
+TK_FIELDID input 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 112 (p)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 112 (p)
-state: 14, non accept state
 
 STATE 14 CHARACTER 97 (a)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 97 (a)
-state: 14, non accept state
 
 STATE 14 CHARACTER 109 (m)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting parameter
-LOOKING parameter at Index: 40
->> parameter 0x558607fb8620
-Lexeme parameter already exists
-MAXVERSTAPPENDUM DUM14
-TK_PARAMETER parameter 
+TK_FIELDID parameterKzH 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 108 (l)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 108 (l)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 115 (s)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting list
-LOOKING list at Index: 59
->> list 0x558607fb8670
-Lexeme list already exists
-MAXVERSTAPPENDUM DUM15
-TK_LIST list 
+TK_FIELDID list 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 91 ([)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 91 ([)
-state: 68, TK_SQL
-BC STATE [
-TK_SQL [ 
+TK_SQL [KzH 
 STATE 0 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting record
-LOOKING record at Index: 20
->> record 0x558607fb8a80
-Lexeme record already exists
-MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 35 (#)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 35 (#)
-state: 1, non accept state
 
 STATE 1 CHARACTER 98 (b)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 107 (k)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting #book
-LOOKING #book at Index: 18
-Lexeme #book not found
->> #book (nil)
 TK_RUID #book 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 100 (d)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 100 (d)
-state: 10, non accept state
 
 STATE 10 CHARACTER 53 (5)
-state: 11, non accept state
 
 STATE 11 CHARACTER 99 (c)
-state: 12, non accept state
 
 STATE 12 CHARACTER 99 (c)
-state: 12, non accept state
 
 STATE 12 CHARACTER 51 (3)
-state: 13, non accept state
 
 STATE 13 CHARACTER 52 (4)
-state: 13, non accept state
 
 STATE 13 CHARACTER 44 (,)
-state: -1, non accept state
 
 STATE -1 CHARACTER 32 ( )
-state: 0, non accept state
 
 STATE 0 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting d5cc34, record
-LOOKING d5cc34, record at Index: 60
-Lexeme d5cc34, record not found
->> d5cc34, record (nil)
 TK_FIELDID d5cc34, record 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 35 (#)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 35 (#)
-state: 1, non accept state
 
 STATE 1 CHARACTER 98 (b)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 107 (k)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting #book
-LOOKING #book at Index: 18
->> #book 0x558607fba380
-Lexeme #book already exists
-MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 100 (d)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 100 (d)
-state: 10, non accept state
 
 STATE 10 CHARACTER 50 (2)
-state: 11, non accept state
 
 STATE 11 CHARACTER 99 (c)
-state: 12, non accept state
 
 STATE 12 CHARACTER 100 (d)
-state: 12, non accept state
 
 STATE 12 CHARACTER 93 (])
-state: 84, TK_ID
-Inserting d2cd
-LOOKING d2cd at Index: 19
-Lexeme d2cd not found
->> d2cd (nil)
 TK_ID d2cd 
 STATE 0 CHARACTER 93 (])
-state: 67, TK_SQR
-BC STATE ]
 TK_SQR ] 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 111 (o)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 117 (u)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 112 (p)
-state: 14, non accept state
 
 STATE 14 CHARACTER 117 (u)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting output
-LOOKING output at Index: 44
->> output 0x558607fb8710
-Lexeme output already exists
-MAXVERSTAPPENDUM DUM17
 TK_OUTPUT output 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 112 (p)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 112 (p)
-state: 14, non accept state
 
 STATE 14 CHARACTER 97 (a)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 97 (a)
-state: 14, non accept state
 
 STATE 14 CHARACTER 109 (m)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting parameter
-LOOKING parameter at Index: 40
->> parameter 0x558607fb8620
-Lexeme parameter already exists
-MAXVERSTAPPENDUM DUM14
 TK_PARAMETER parameter 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 108 (l)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 108 (l)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 115 (s)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 91 ([)
-state: 83, TK_FIELDID
-Inserting list
-LOOKING list at Index: 59
->> list 0x558607fb8670
-Lexeme list already exists
-MAXVERSTAPPENDUM DUM15
 TK_LIST list 
 STATE 0 CHARACTER 91 ([)
-state: 68, TK_SQL
-BC STATE [
 TK_SQL [ 
 STATE 0 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting record
-LOOKING record at Index: 20
->> record 0x558607fb8a80
-Lexeme record already exists
-MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 35 (#)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 35 (#)
-state: 1, non accept state
 
 STATE 1 CHARACTER 98 (b)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 107 (k)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting #book
-LOOKING #book at Index: 18
->> #book 0x558607fba380
-Lexeme #book already exists
-MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 100 (d)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 100 (d)
-state: 10, non accept state
 
 STATE 10 CHARACTER 51 (3)
-state: 11, non accept state
 
 STATE 11 CHARACTER 93 (])
-state: 84, TK_ID
-Inserting d3
-LOOKING d3 at Index: 57
-Lexeme d3 not found
->> d3 (nil)
 TK_ID d3 
 STATE 0 CHARACTER 93 (])
-state: 67, TK_SQR
-BC STATE ]
 TK_SQR ] 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 114 (r)
-state: 2, non accept state
 
 STATE 2 CHARACTER 101 (e)
-state: 2, non accept state
 
 STATE 2 CHARACTER 99 (c)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 114 (r)
-state: 2, non accept state
 
 STATE 2 CHARACTER 100 (d)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting record
-LOOKING record at Index: 20
->> record 0x558607fb8a80
-Lexeme record already exists
-MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 35 (#)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 35 (#)
-state: 1, non accept state
 
 STATE 1 CHARACTER 110 (n)
-state: 2, non accept state
 
 STATE 2 CHARACTER 101 (e)
-state: 2, non accept state
 
 STATE 2 CHARACTER 119 (w)
-state: 2, non accept state
 
 STATE 2 CHARACTER 13 ()
-state: 90, TK_RUID
-Inserting #new
-LOOKING #new at Index: 40
->> #new (nil)
 TK_RUID #new 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 116 (t)
-state: 2, non accept state
 
 STATE 2 CHARACTER 121 (y)
-state: 2, non accept state
 
 STATE 2 CHARACTER 112 (p)
-state: 2, non accept state
 
 STATE 2 CHARACTER 101 (e)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting type
-LOOKING type at Index: 38
->> type 0x558607fb8530
-Lexeme type already exists
-MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 105 (i)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting int
-LOOKING int at Index: 54
->> int 0x558607fb8760
-Lexeme int already exists
-MAXVERSTAPPENDUM DUM18
 TK_INT int 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 58 (:)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 58 (:)
-state: 63, TK_COLON
-BC STATE :
 TK_COLON : 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 118 (v)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 118 (v)
-state: 14, non accept state
 
 STATE 14 CHARACTER 97 (a)
-state: 14, non accept state
 
 STATE 14 CHARACTER 108 (l)
-state: 14, non accept state
 
 STATE 14 CHARACTER 117 (u)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 59 (;)
-state: 83, TK_FIELDID
-Inserting value
-LOOKING value at Index: 42
-Lexeme value not found
->> value (nil)
 TK_FIELDID value 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 116 (t)
-state: 2, non accept state
 
 STATE 2 CHARACTER 121 (y)
-state: 2, non accept state
 
 STATE 2 CHARACTER 112 (p)
-state: 2, non accept state
 
 STATE 2 CHARACTER 101 (e)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting type
-LOOKING type at Index: 38
->> type 0x558607fb8530
-Lexeme type already exists
-MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 114 (r)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 97 (a)
-state: 14, non accept state
 
 STATE 14 CHARACTER 108 (l)
-state: 14, non accept state
 
 STATE 14 CHARACTER 58 (:)
-state: 83, TK_FIELDID
-Inserting real
-LOOKING real at Index: 39
->> real 0x558607fb87b0
-Lexeme real already exists
-MAXVERSTAPPENDUM DUM19
 TK_REAL real 
 STATE 0 CHARACTER 58 (:)
-state: 63, TK_COLON
-BC STATE :
 TK_COLON : 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 99 (c)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 99 (c)
-state: 10, non accept state
 
 STATE 10 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 115 (s)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 59 (;)
-state: 83, TK_FIELDID
-Inserting cost
-LOOKING cost at Index: 59
->> cost (nil)
 TK_FIELDID cost 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 101 (e)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 59 (;)
-state: 83, TK_FIELDID
-Inserting endrecord
-LOOKING endrecord at Index: 43
->> endrecord 0x558607fb8ad0
-Lexeme endrecord already exists
-MAXVERSTAPPENDUM DUM29
 TK_ENDRECORD endrecord 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 100 (d)
-state: 2, non accept state
 
 STATE 2 CHARACTER 51 (3)
-state: 90, TK_RUID
-Inserting d
-LOOKING d at Index: 9
-Lexeme d not found
->> d (nil)
 TK_RUID d 
 STATE 0 CHARACTER 51 (3)
-state: 3, non accept state
 
 STATE 3 CHARACTER 60 (<)
-state: 85, TK_NUM1
-EQV NUMS 3
-BC STATE 3<
-TK_NUM1 3< 
-STATE 0 CHARACTER 45 (-)
-state: 70, TK_MINUS
-BC STATE -
-TK_MINUS - 
-STATE 0 CHARACTER 45 (-)
-state: 70, TK_MINUS
-BC STATE -
-TK_MINUS - 
-STATE 0 CHARACTER 45 (-)
-state: 70, TK_MINUS
-BC STATE -
-TK_MINUS - 
+TK_NUM1 3 
+STATE 0 CHARACTER 60 (<)
+
+STATE 27 CHARACTER 45 (-)
+
+STATE 28 CHARACTER 45 (-)
+
+STATE 29 CHARACTER 45 (-)
+TK_ASSIGNOP <--- 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 100 (d)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 100 (d)
-state: 10, non accept state
 
 STATE 10 CHARACTER 53 (5)
-state: 11, non accept state
 
 STATE 11 CHARACTER 99 (c)
-state: 12, non accept state
 
 STATE 12 CHARACTER 99 (c)
-state: 12, non accept state
 
 STATE 12 CHARACTER 51 (3)
-state: 13, non accept state
 
 STATE 13 CHARACTER 52 (4)
-state: 13, non accept state
 
 STATE 13 CHARACTER 32 ( )
-state: -1, non accept state
 
 STATE -1 CHARACTER 43 (+)
-state: 0, non accept state
 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 100 (d)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 100 (d)
-state: 10, non accept state
 
 STATE 10 CHARACTER 50 (2)
-state: 11, non accept state
 
 STATE 11 CHARACTER 99 (c)
-state: 12, non accept state
 
 STATE 12 CHARACTER 100 (d)
-state: 12, non accept state
 
 STATE 12 CHARACTER 59 (;)
-state: 84, TK_ID
-Inserting d2cd
-LOOKING d2cd at Index: 19
->> d2cd 0x558607fba5a0
-Lexeme d2cd already exists
-MAXVERSTAPPENDUM DUM54
 TK_ID d2cd 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 114 (r)
-state: 2, non accept state
 
 STATE 2 CHARACTER 101 (e)
-state: 2, non accept state
 
 STATE 2 CHARACTER 116 (t)
-state: 2, non accept state
 
 STATE 2 CHARACTER 117 (u)
-state: 2, non accept state
 
 STATE 2 CHARACTER 114 (r)
-state: 2, non accept state
 
 STATE 2 CHARACTER 110 (n)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting return
-LOOKING return at Index: 4
->> return 0x558607fb89e0
-Lexeme return already exists
-MAXVERSTAPPENDUM DUM26
 TK_RETURN return 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 91 ([)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 91 ([)
-state: 68, TK_SQL
-BC STATE [
 TK_SQL [ 
 STATE 0 CHARACTER 100 (d)
-state: 10, non accept state
 
 STATE 10 CHARACTER 51 (3)
-state: 11, non accept state
 
 STATE 11 CHARACTER 93 (])
-state: 84, TK_ID
-Inserting d3
-LOOKING d3 at Index: 57
->> d3 0x558607fbaac0
-Lexeme d3 already exists
-MAXVERSTAPPENDUM DUM54
 TK_ID d3 
 STATE 0 CHARACTER 93 (])
-state: 67, TK_SQR
-BC STATE ]
 TK_SQR ] 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 101 (e)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 13 ()
-state: 83, TK_FIELDID
-Inserting end
-LOOKING end at Index: 16
->> end 0x558607fb8350
-Lexeme end already exists
-MAXVERSTAPPENDUM DUM5
 TK_END end 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 95 (_)
-state: -1, non accept state
 
 STATE -1 CHARACTER 109 (m)
-state: 0, non accept state
 
 STATE 0 CHARACTER 97 (a)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 13 ()
-state: 83, TK_FIELDID
-Inserting _main
-LOOKING _main at Index: 36
->> _main 0x558607fb8580
-Lexeme _main already exists
-MAXVERSTAPPENDUM DUM12
 TK_MAIN _main 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 114 (r)
-state: 2, non accept state
 
 STATE 2 CHARACTER 101 (e)
-state: 2, non accept state
 
 STATE 2 CHARACTER 99 (c)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 114 (r)
-state: 2, non accept state
 
 STATE 2 CHARACTER 100 (d)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting record
-LOOKING record at Index: 20
->> record 0x558607fb8a80
-Lexeme record already exists
-MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 35 (#)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 35 (#)
-state: 1, non accept state
 
 STATE 1 CHARACTER 98 (b)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 107 (k)
-state: 2, non accept state
 
 STATE 2 CHARACTER 13 ()
-state: 90, TK_RUID
-Inserting #book
-LOOKING #book at Index: 18
->> #book 0x558607fba380
-Lexeme #book already exists
-MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 116 (t)
-state: 2, non accept state
 
 STATE 2 CHARACTER 121 (y)
-state: 2, non accept state
 
 STATE 2 CHARACTER 112 (p)
-state: 2, non accept state
 
 STATE 2 CHARACTER 101 (e)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting type
-LOOKING type at Index: 38
->> type 0x558607fb8530
-Lexeme type already exists
-MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 105 (i)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting int
-LOOKING int at Index: 54
->> int 0x558607fb8760
-Lexeme int already exists
-MAXVERSTAPPENDUM DUM18
 TK_INT int 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 58 (:)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 58 (:)
-state: 63, TK_COLON
-BC STATE :
 TK_COLON : 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 101 (e)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER -1 (ÿ)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 59 (;)
-state: 83, TK_FIELDID
-Inserting editioÿn
-LOOKING editioÿn at Index: 90
->> editioÿn (nil)
 TK_FIELDID editioÿn 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 116 (t)
-state: 2, non accept state
 
 STATE 2 CHARACTER 121 (y)
-state: 2, non accept state
 
 STATE 2 CHARACTER 112 (p)
-state: 2, non accept state
 
 STATE 2 CHARACTER 101 (e)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting type
-LOOKING type at Index: 38
->> type 0x558607fb8530
-Lexeme type already exists
-MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 114 (r)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 97 (a)
-state: 14, non accept state
 
 STATE 14 CHARACTER 108 (l)
-state: 14, non accept state
 
 STATE 14 CHARACTER 58 (:)
-state: 83, TK_FIELDID
-Inserting real
-LOOKING real at Index: 39
->> real 0x558607fb87b0
-Lexeme real already exists
-MAXVERSTAPPENDUM DUM19
 TK_REAL real 
 STATE 0 CHARACTER 58 (:)
-state: 63, TK_COLON
-BC STATE :
 TK_COLON : 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 112 (p)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 112 (p)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 59 (;)
-state: 83, TK_FIELDID
-Inserting price
-LOOKING price at Index: 46
-Lexeme price not found
->> price (nil)
 TK_FIELDID price 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 101 (e)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 59 (;)
-state: 83, TK_FIELDID
-Inserting endrecord
-LOOKING endrecord at Index: 43
->> endrecord 0x558607fb8ad0
-Lexeme endrecord already exists
-MAXVERSTAPPENDUM DUM29
 TK_ENDRECORD endrecord 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 116 (t)
-state: 2, non accept state
 
 STATE 2 CHARACTER 121 (y)
-state: 2, non accept state
 
 STATE 2 CHARACTER 112 (p)
-state: 2, non accept state
 
 STATE 2 CHARACTER 101 (e)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting type
-LOOKING type at Index: 38
->> type 0x558607fb8530
-Lexeme type already exists
-MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 114 (r)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting record
-LOOKING record at Index: 20
->> record 0x558607fb8a80
-Lexeme record already exists
-MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 35 (#)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 35 (#)
-state: 1, non accept state
 
 STATE 1 CHARACTER 98 (b)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 107 (k)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting #book
-LOOKING #book at Index: 18
->> #book 0x558607fba380
-Lexeme #book already exists
-MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 98 (b)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 98 (b)
-state: 10, non accept state
 
 STATE 10 CHARACTER 50 (2)
-state: 11, non accept state
 
 STATE 11 CHARACTER 59 (;)
-state: 84, TK_ID
-Inserting b2
-LOOKING b2 at Index: 85
-Lexeme b2 not found
->> b2 (nil)
 TK_ID b2 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 116 (t)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 121 (y)
-state: 14, non accept state
 
 STATE 14 CHARACTER 112 (p)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting type
-LOOKING type at Index: 38
->> type 0x558607fb8530
-Lexeme type already exists
-MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 114 (r)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting record
-LOOKING record at Index: 20
->> record 0x558607fb8a80
-Lexeme record already exists
-MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 35 (#)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 35 (#)
-state: 1, non accept state
 
 STATE 1 CHARACTER 98 (b)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 107 (k)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting #book
-LOOKING #book at Index: 18
->> #book 0x558607fba380
-Lexeme #book already exists
-MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 99 (c)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 99 (c)
-state: 10, non accept state
 
 STATE 10 CHARACTER 50 (2)
-state: 11, non accept state
 
 STATE 11 CHARACTER 59 (;)
-state: 84, TK_ID
-Inserting c2
-LOOKING c2 at Index: 25
-Lexeme c2 not found
->> c2 (nil)
 TK_ID c2 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 116 (t)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 121 (y)
-state: 14, non accept state
 
 STATE 14 CHARACTER 112 (p)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting type
-LOOKING type at Index: 38
->> type 0x558607fb8530
-Lexeme type already exists
-MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 114 (r)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting record
-LOOKING record at Index: 20
->> record 0x558607fb8a80
-Lexeme record already exists
-MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 35 (#)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 35 (#)
-state: 1, non accept state
 
 STATE 1 CHARACTER 98 (b)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 111 (o)
-state: 2, non accept state
 
 STATE 2 CHARACTER 107 (k)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting #book
-LOOKING #book at Index: 18
->> #book 0x558607fba380
-Lexeme #book already exists
-MAXVERSTAPPENDUM DUM60
 TK_RUID #book 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 100 (d)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 100 (d)
-state: 10, non accept state
 
 STATE 10 CHARACTER 50 (2)
-state: 11, non accept state
 
 STATE 11 CHARACTER 59 (;)
-state: 84, TK_ID
-Inserting d2
-LOOKING d2 at Index: 56
-Lexeme d2 not found
->> d2 (nil)
 TK_ID d2 
 STATE 0 CHARACTER 59 (;)
-state: 62, TK_SEM
-BC STATE ;
 TK_SEM ; 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 116 (t)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 121 (y)
-state: 14, non accept state
 
 STATE 14 CHARACTER 112 (p)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting type
-LOOKING type at Index: 38
->> type 0x558607fb8530
-Lexeme type already exists
-MAXVERSTAPPENDUM DUM11
 TK_TYPE type 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 114 (r)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting record
-LOOKING record at Index: 20
->> record 0x558607fb8a80
-Lexeme record already exists
-MAXVERSTAPPENDUM DUM28
 TK_RECORD record 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 35 (#)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 35 (#)
-state: 1, non accept state
 
 STATE 1 CHARACTER 110 (n)
-state: 2, non accept state
 
 STATE 2 CHARACTER 101 (e)
-state: 2, non accept state
 
 STATE 2 CHARACTER 119 (w)
-state: 2, non accept state
 
 STATE 2 CHARACTER 32 ( )
-state: 90, TK_RUID
-Inserting #new
-LOOKING #new at Index: 40
->> #new 0x558607fbad60
-Lexeme #new already exists
-MAXVERSTAPPENDUM DUM60
 TK_RUID #new 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 98 (b)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 98 (b)
-state: 10, non accept state
 
 STATE 10 CHARACTER 55 (7)
-state: 11, non accept state
 
 STATE 11 CHARACTER 98 (b)
-state: 12, non accept state
 
 STATE 12 CHARACTER 99 (c)
-state: 12, non accept state
 
 STATE 12 CHARACTER 51 (3)
-state: 13, non accept state
 
 STATE 13 CHARACTER 52 (4)
-state: 13, non accept state
 
 STATE 13 CHARACTER 59 (;)
-state: -1, non accept state
 
 STATE -1 CHARACTER 32 ( )
-state: 0, non accept state
 
 STATE 0 CHARACTER 98 (b)
-state: 10, non accept state
 
 STATE 10 CHARACTER 50 (2)
-state: 11, non accept state
 
 STATE 11 CHARACTER 46 (.)
-state: 84, TK_ID
-Inserting b7bc34; b2
-LOOKING b7bc34; b2 at Index: 34
->> b7bc34; b2 (nil)
 TK_ID b7bc34; b2 
 STATE 0 CHARACTER 46 (.)
-state: 64, TK_DOT
-BC STATE .
 TK_DOT . 
 STATE 0 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting edition
-LOOKING edition at Index: 81
->> edition (nil)
 TK_FIELDID edition 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 60 (<)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 60 (<)
-state: 27, non accept state
 
 STATE 27 CHARACTER 45 (-)
-state: 28, non accept state
 
 STATE 28 CHARACTER 45 (-)
-state: 29, non accept state
 
 STATE 29 CHARACTER 45 (-)
-state: 31, TK_ASSIGNOP
-BC STATE <---
 TK_ASSIGNOP <--- 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 51 (3)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 51 (3)
-state: 3, non accept state
 
 STATE 3 CHARACTER 59 (;)
-state: 85, TK_NUM1
-EQV NUMS 3
-BC STATE 3;
-TK_NUM1 3; 
+TK_NUM1 3 
+STATE 0 CHARACTER 59 (;)
+TK_SEM ; 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 98 (b)
-state: 2, non accept state
 
 STATE 2 CHARACTER 50 (2)
-state: 90, TK_RUID
-Inserting b
-LOOKING b at Index: 7
-Lexeme b not found
->> b (nil)
 TK_RUID b 
 STATE 0 CHARACTER 50 (2)
-state: 3, non accept state
 
 STATE 3 CHARACTER 46 (.)
-state: 4, non accept state
 
 STATE 4 CHARACTER 112 (p)
-state: 86, TK_NUM2
-EQV NUMS 2
 TK_NUM2 2 
 STATE 0 CHARACTER 46 (.)
-state: 64, TK_DOT
-BC STATE .
 TK_DOT . 
 STATE 0 CHARACTER 112 (p)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting price
-LOOKING price at Index: 46
->> price 0x558607fbc520
-Lexeme price already exists
-MAXVERSTAPPENDUM DUM53
 TK_FIELDID price 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 60 (<)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 60 (<)
-state: 27, non accept state
 
 STATE 27 CHARACTER 45 (-)
-state: 28, non accept state
 
 STATE 28 CHARACTER 45 (-)
-state: 29, non accept state
 
 STATE 29 CHARACTER 45 (-)
-state: 31, TK_ASSIGNOP
-BC STATE <---
 TK_ASSIGNOP <--- 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 50 (2)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 50 (2)
-state: 3, non accept state
 
 STATE 3 CHARACTER 52 (4)
-state: 3, non accept state
 
 STATE 3 CHARACTER 46 (.)
-state: 4, non accept state
 
 STATE 4 CHARACTER 57 (9)
-state: 5, non accept state
 
 STATE 5 CHARACTER 53 (5)
-state: 6, non accept state
 
 STATE 6 CHARACTER 59 (;)
-state: 88, TK_RNUM2
-EQV NUMS 24.95
-BC STATE 24.95;
-TK_RNUM2 24.95; 
+TK_RNUM2 24.95 
+STATE 0 CHARACTER 59 (;)
+TK_SEM ; 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 99 (c)
-state: 2, non accept state
 
 STATE 2 CHARACTER 50 (2)
-state: 90, TK_RUID
-Inserting c
-LOOKING c at Index: 8
-Lexeme c not found
->> c (nil)
 TK_RUID c 
 STATE 0 CHARACTER 50 (2)
-state: 3, non accept state
 
 STATE 3 CHARACTER 46 (.)
-state: 4, non accept state
 
 STATE 4 CHARACTER 101 (e)
-state: 86, TK_NUM2
-EQV NUMS 2
 TK_NUM2 2 
 STATE 0 CHARACTER 46 (.)
-state: 64, TK_DOT
-BC STATE .
 TK_DOT . 
 STATE 0 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 116 (t)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting edition
-LOOKING edition at Index: 81
->> edition 0x558607fbd4c0
-Lexeme edition already exists
-MAXVERSTAPPENDUM DUM53
 TK_FIELDID edition 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 60 (<)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 60 (<)
-state: 27, non accept state
 
 STATE 27 CHARACTER 45 (-)
-state: 28, non accept state
 
 STATE 28 CHARACTER 45 (-)
-state: 29, non accept state
 
 STATE 29 CHARACTER 45 (-)
-state: 31, TK_ASSIGNOP
-BC STATE <---
 TK_ASSIGNOP <--- 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 50 (2)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 50 (2)
-state: 3, non accept state
 
 STATE 3 CHARACTER 59 (;)
-state: 85, TK_NUM1
-EQV NUMS 2
-BC STATE 2;
-TK_NUM1 2; 
+TK_NUM1 2 
+STATE 0 CHARACTER 59 (;)
+TK_SEM ; 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 99 (c)
-state: 2, non accept state
 
 STATE 2 CHARACTER 50 (2)
-state: 90, TK_RUID
-Inserting c
-LOOKING c at Index: 8
->> c 0x558607fbdaa0
-Lexeme c already exists
-MAXVERSTAPPENDUM DUM60
 TK_RUID c 
 STATE 0 CHARACTER 50 (2)
-state: 3, non accept state
 
 STATE 3 CHARACTER 46 (.)
-state: 4, non accept state
 
 STATE 4 CHARACTER 112 (p)
-state: 86, TK_NUM2
-EQV NUMS 2
 TK_NUM2 2 
 STATE 0 CHARACTER 46 (.)
-state: 64, TK_DOT
-BC STATE .
 TK_DOT . 
 STATE 0 CHARACTER 112 (p)
-state: 14, non accept state
 
 STATE 14 CHARACTER 114 (r)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 99 (c)
-state: 14, non accept state
 
 STATE 14 CHARACTER 101 (e)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting price
-LOOKING price at Index: 46
->> price 0x558607fbc520
-Lexeme price already exists
-MAXVERSTAPPENDUM DUM53
 TK_FIELDID price 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 60 (<)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 60 (<)
-state: 27, non accept state
 
 STATE 27 CHARACTER 45 (-)
-state: 28, non accept state
 
 STATE 28 CHARACTER 45 (-)
-state: 29, non accept state
 
 STATE 29 CHARACTER 45 (-)
-state: 31, TK_ASSIGNOP
-BC STATE <---
 TK_ASSIGNOP <--- 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 57 (9)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 57 (9)
-state: 3, non accept state
 
 STATE 3 CHARACTER 56 (8)
-state: 3, non accept state
 
 STATE 3 CHARACTER 46 (.)
-state: 4, non accept state
 
 STATE 4 CHARACTER 56 (8)
-state: 5, non accept state
 
 STATE 5 CHARACTER 48 (0)
-state: 6, non accept state
 
 STATE 6 CHARACTER 59 (;)
-state: 88, TK_RNUM2
-EQV NUMS 98.80
-BC STATE 98.80;
-TK_RNUM2 98.80; 
+TK_RNUM2 98.80 
+STATE 0 CHARACTER 59 (;)
+TK_SEM ; 
 STATE 0 CHARACTER 13 ()
-state: 1, non accept state
 
 STATE 1 CHARACTER 37 (%)
-state: -1, non accept state
 
 STATE -1 CHARACTER 32 ( )
-state: 0, non accept state
 
 STATE 0 CHARACTER 102 (f)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 108 (l)
-state: 14, non accept state
 
 STATE 14 CHARACTER 108 (l)
-state: 14, non accept state
 
 STATE 14 CHARACTER 111 (o)
-state: 14, non accept state
 
 STATE 14 CHARACTER 119 (w)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 110 (n)
-state: 14, non accept state
 
 STATE 14 CHARACTER 103 (g)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting % following
-LOOKING % following at Index: 36
->> % following (nil)
 TK_FIELDID % following 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 105 (i)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 115 (s)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting is
-LOOKING is at Index: 3
-Lexeme is not found
->> is (nil)
 TK_FIELDID is 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 97 (a)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 97 (a)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting a
-LOOKING a at Index: 6
-Lexeme a not found
->> a (nil)
 TK_FIELDID a 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 118 (v)
-state: 91, DELIMITER
 
 STATE 0 CHARACTER 118 (v)
-state: 14, non accept state
 
 STATE 14 CHARACTER 97 (a)
-state: 14, non accept state
 
 STATE 14 CHARACTER 108 (l)
-state: 14, non accept state
 
 STATE 14 CHARACTER 105 (i)
-state: 14, non accept state
 
 STATE 14 CHARACTER 100 (d)
-state: 14, non accept state
 
 STATE 14 CHARACTER 32 ( )
-state: 83, TK_FIELDID
-Inserting valid
-LOOKING valid at Index: 33
-Lexeme valid not found
->> valid (nil)
 TK_FIELDID valid 
 STATE 0 CHARACTER 32 ( )
-state: 23, non accept state
 
 STATE 23 CHARACTER 115 (s)
-state: 91, DELIMITER
 
-STATE 0 CHARACTER 115 
+STATE 0 CHARACTER 115 (s)
+
+STATE 14 CHARACTER 116 (t)
+
+STATE 14 CHARACTER 97 (a)
+
+STATE 14 CHARACTER 116 (t)
+
+STATE 14 CHARACTER 101 (e)
+
+STATE 14 CHARACTER 109 (m)
+
+STATE 14 CHARACTER 101 (e)
+
+STATE 14 CHARACTER 110 (n)
+
+STATE 14 CHARACTER 116 (t)
+
+STATE 14 CHARACTER 32 ( )
+TK_FIELDID statement 
+STATE 0 CHARACTER 32 ( )
+
+STATE 23 CHARACTER 97 (a)
+
+STATE 0 CHARACTER 97 (a)
+
+STATE 14 CHARACTER 115 (s)
+
+STATE 14 CHARACT
