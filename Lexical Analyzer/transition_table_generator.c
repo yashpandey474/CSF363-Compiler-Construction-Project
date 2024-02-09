@@ -104,8 +104,10 @@ void initializeCharacterTypeMap()
             {
             case '\t':
             case ' ':
-            case '\n':
                 characterTypeMapTemp[i] = CT_DELIMITER;
+                break;
+            case '\n':
+                characterTypeMapTemp[i] = CT_CARRIAGE_RETURN;
                 break;
             case '_':
                 characterTypeMapTemp[i] = CT_UNDERSCORE;

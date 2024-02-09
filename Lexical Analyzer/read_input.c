@@ -137,7 +137,7 @@ char *lexicalError(struct SymbolTableEntry *token)
 // FUNCTION TO GET CORRESPONDING NUMBER
 void equivalentNumber(struct LexicalAnalyzer *lex, int flag, struct SymbolTableEntry *token)
 {
-    printf("EQV NUMS %s\n", token->lexeme);
+    // printf("EQV NUMS %s\n", token->lexeme);
     if (flag == TK_NUM1 || flag == TK_NUM2)
     {
         // INTEGER

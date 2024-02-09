@@ -26,10 +26,10 @@ struct SymbolTableEntry *lookup(const char *lexeme)
 {
     // GET THE INDEX
     int index = hash(lexeme);
-    printf("LOOKING %s", lexeme);
+    // printf("LOOKING %s", lexeme);
 
     // GET THE NODE: SEARCH IN HASH TABLE
-    printf(" at Index: %d\n", index);
+    // printf(" at Index: %d\n", index);
 
     // for (int ii = 0; ii < HASH_MAP_SIZE; ii++)
     // {
@@ -43,7 +43,7 @@ struct SymbolTableEntry *lookup(const char *lexeme)
     // CHECK IF EXISTS
     if (nodeFound == NULL)
     {
-        printf("Lexeme %s not found\n", lexeme);
+        // printf("Lexeme %s not found\n", lexeme);
         return NULL;
     }
 
@@ -86,10 +86,10 @@ struct SymbolTableEntry *insertTester(char *lexeme, enum Tokentype token)
 
 struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
 {
-    printf("Inserting %s\n", symbolTableEntry->lexeme);
+    // printf("Inserting %s\n", symbolTableEntry->lexeme);
     char *lexeme = symbolTableEntry->lexeme;
     struct SymbolTableEntry *exists = lookup(lexeme);
-    printf(">> %s %p\n", lexeme, exists);
+    // printf(">> %s %p\n", lexeme, exists);
     if (exists == NULL)
     {
         // insert into the symbol table using the lexeme as the hash tabel
@@ -104,9 +104,9 @@ struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
         // ignore
         // return the existing symbol table entry
 
-        printf("Lexeme %s already exists\n", lexeme);
-        printf("MAXVERSTAPPEN");
-        printf("DUM DUM%d\n", exists->tokenType);
+        // printf("Lexeme %s already exists\n", lexeme);
+        // printf("MAXVERSTAPPEN");
+        // printf("DUM DUM%d\n", exists->tokenType);
         return exists;
     }
 }
