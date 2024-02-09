@@ -65,7 +65,7 @@ void initialiseforIdDigit(int **input, int rownumber, int next)
 
 void initializeCharacterTypeMap()
 {
-    characterTypeMapTemp[128]=CT_EOF;
+    characterTypeMapTemp[128] = CT_EOF;
     for (int i = 0; i < 128; ++i)
 
     {
@@ -109,7 +109,6 @@ void initializeCharacterTypeMap()
                 characterTypeMapTemp[i] = CT_DELIMITER;
                 break;
             case 10:
-            case 13:
                 characterTypeMapTemp[i] = CT_CARRIAGE_RETURN;
                 break;
             case '_':
@@ -179,7 +178,6 @@ void initializeCharacterTypeMap()
                 characterTypeMapTemp[i] = CT_AT_THE_RATE;
                 break;
             case '#':
-                printf("MAX VERSTAPPEN TU TU HELLO %d %d", i, CT_HASH);
                 characterTypeMapTemp[i] = CT_HASH;
                 break;
             default:
@@ -196,7 +194,7 @@ int reinitialiseArrays()
     initializeCharacterTypeMap();
     // the length of ans and the number of columns of input are randomly chosen
 
-    int s = NUM_NON_ACCEPT_STATES+1;
+    int s = NUM_NON_ACCEPT_STATES + 1;
 
     for (int i = 0; i < NUM_STATES; i += 1)
     {
@@ -316,13 +314,12 @@ int reinitialiseArrays()
     initialisetooneNumber(input, 14, s + TK_FIELDID);
     initialiseforLowerLetter(input, 14, 14);
 
-
-
     initialiseforIdDigit(input, 10, 11);
 
     initialisetooneNumber(input, 11, s + TK_ID);
     initialiseforIdLetter(input, 11, 12);
     initialiseforIdDigit(input, 11, 13);
+    initialisetooneNumber(input, 13, s + TK_ID);
     initialiseforIdDigit(input, 13, 13);
     initialisetooneNumber(input, 12, s + TK_ID);
     initialiseforIdLetter(input, 12, 12);

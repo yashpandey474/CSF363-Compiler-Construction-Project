@@ -9,25 +9,14 @@
 #include <time.h>
 
 // PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 2569
 #define FINAL_STATE_OFFSET NUM_NON_ACCEPT_STATES + 1 // this is same as NON ACCEPT STATES + 1
 // TYPICALLY 256 BYTES
 
 // EOF CHARACTERS AT END OF BOTH BUFFERS ALWAYS
 
 // FUNCTIONS TO READ "RELOAD" INTO BUFFER FROM A FILE
-void printCurrentTime()
-{
-    // Get the current time
-    time_t currentTime;
-    time(&currentTime);
 
-    // Convert the current time to a string
-    char *timeString = ctime(&currentTime);
-
-    // Print the current time
-    printf("Current Time: %s", timeString);
-}
 
 // CODE TO READ FROM THE BUFFERS CHARACTER BY CHARACTER
 struct TwinBuffer
@@ -41,6 +30,7 @@ struct TwinBuffer
 void incrementLineNo(struct LexicalAnalyzer *LA)
 {
     LA->lineNo += 1;
+    printf("\n >> line no : %d\n", LA->lineNo);
     return;
 }
 
@@ -155,6 +145,12 @@ void changeForward(struct LexicalAnalyzer *LA, int flag)
     LA->forward = (LA->forward + flag) % (BUFFER_SIZE * 2 + 2);
 }
 
+void changeBegin(struct LexicalAnalyzer *LA, int flag)
+{
+    // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
+    LA->begin = (LA->begin + flag) % (BUFFER_SIZE * 2 + 2);
+}
+
 // TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
 struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTableEntry *token)
 {
@@ -167,27 +163,33 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
 
     state -= FINAL_STATE_OFFSET;
 
-    // INCREMENT LINE NO
-    if (state == TK_COMMENT || state == CARRIAGE_RETURN)
-    {
-        incrementLineNo(LA);
-    }
-
     // DONT SET TOKEN WHEN DELIMITER
     if (state == CARRIAGE_RETURN || state == DELIMITER)
     {
         // RETURN TO START STATE
         returnToStart(LA);
 
-        // DECREMEMNT FORWARD SO THAT THE INCREMENT IN NORMAL LOOP DOESN'T AFFECT
-        changeForward(LA, -1);
-
         // DONT SET STATE OR LEXEME AND RETURN
+        
+        if (state == CARRIAGE_RETURN){
+            incrementLineNo(LA);
+
+            //RESET BEGIN AND INCREMENT FORWARD
+            changeBegin(LA, 1);
+        }
+
+        if (state == DELIMITER){
+            changeForward(LA, -1);
+        }
+        
+        // printf("TOOK ACTIONS");
         return token;
     }
 
     // SET TOKEN TYPE [SET FOR TOKEN, NOT SET FOR CARRIAGE_RETURN OR DELIMITER]
     token->tokenType = state;
+
+    // printf("SET STATE\n");
 
     // DOUBLE STAR STATES
     if (state == TK_NUM2 || state == TK_LT2)
@@ -249,28 +251,13 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 
     char character;
 
-    // KEEP ITERATING
-    while (1)
-    {
+
+    //while(1)
+    while(1){
         // GET CHARACTER CURRENTLY BEING READ
 
         character = LA->twinBuffer->buffer[LA->forward];
-        // \r:13 \n:10 in windows its \r\n in linux its \n
-        // LINE FEED: LITE (AFTER \N)
-        if ((int)character == 13)
-        {
-            printf("LINE FEED\n");
 
-            // INCREMENT FORWARD
-            changeForward(LA, 1);
-
-            // RESET START OF LEXEME
-            resetBegin(LA);
-
-            continue;
-        }
-
-        printf("\nSTATE %d CHARACTER %d (%c)\n", LA->state, character, character);
 
         // TODO: DIFFERENTIATE BETWEEN END OF INPUT AND END OF BUFFER
         if (character == EOF)
@@ -284,7 +271,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 readIntoBuffer(LA->twinBuffer);
 
                 // DONT NEED TO CHECK FOR INPUT END [FORWARD WOULD BE SOMETHING ELSE]
-                printf("RELOADED BUFFER\n");
+                // printf("RELOADED BUFFER\n");
             }
 
             // END OF INPUT
@@ -303,19 +290,22 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                     resetBegin(LA);
                     return token;
                 }
-                printf("TOKENTYPE %d\n", token->tokenType);
+
                 // ALL INPUT READ AND PROCESSED
-                printf("END OF INPUT. FINISHING SCANNING\n");
+                // printf("END OF INPUT. FINISHING SCANNING\n");
                 return NULL;
             }
         }
+        // printf("\nSTATE %d CHARACTER %d (%c)\n", LA->state, character, character);
 
         // CHANGE STATE
         LA->state = getNextState(LA->state, (int)character);
 
+        // printf("STATE HERE\n");
         // TAKE ACTIONS FOR THE STATE
         token = takeActions(LA, token);
 
+        // printf("TOOK ACTIONS!\n");
         // HAVE TO RETURN
         if (token->tokenType != 0)
         {
@@ -326,6 +316,8 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // INCREMENT FORWARD
         changeForward(LA, 1);
     }
+
+    return NULL;
 }
 
 struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer)
@@ -343,14 +335,13 @@ struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer)
 
 int main()
 {
-    printCurrentTime();
 
-    printf("ENTERED MAIN\n");
+    // printf("ENTERED MAIN\n");
+    
     // INITIALISE THE SYMBOL TABLE
     insertAllKeywords();
-    printSymbolTable();
 
-    printf("KEYWORDS\n");
+    // printf("KEYWORDS\n");
 
     // TEST THE TWIN BUFFER
     FILE *file = readTestFile("test_program.txt");
@@ -361,20 +352,22 @@ int main()
     // INITIALISE LA
     struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
 
-    printf("LA INITIALISED\n");
+    // printf("LA INITIALISED\n");
 
     // START SCANNING
     readIntoBuffer(twinBuffer);
 
-    printf("READ INPUT\n");
+    // printf("READ INPUT\n");
 
     // THE TOKEN
     struct SymbolTableEntry *token;
 
-    printf("STARTING SCANNING\n");
+    // printf("STARTING SCANNING\n");
 
     while ((token = scanToken(LA)))
     {
-        printf("%s %s ", TokenToString(token->tokenType), token->lexeme);
+        printf("(%s) %s  ", TokenToString(token->tokenType), token->lexeme);
     }
+
+    printSymbolTable();
 }

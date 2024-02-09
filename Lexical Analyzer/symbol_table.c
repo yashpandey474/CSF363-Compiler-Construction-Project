@@ -88,6 +88,11 @@ struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
 {
     // printf("Inserting %s\n", symbolTableEntry->lexeme);
     char *lexeme = symbolTableEntry->lexeme;
+    // printf("\nThe lexeme received in gettoken is ");
+    // for(int i=0;i<strlen(lexeme);i++)
+    // {
+    //     printf("%d ",lexeme[i]);
+    // }
     struct SymbolTableEntry *exists = lookup(lexeme);
     // printf(">> %s %p\n", lexeme, exists);
     if (exists == NULL)
@@ -118,19 +123,18 @@ void printSymbolTable()
     int entriesCount = 0;
     for (int i = 0; i < HASH_MAP_SIZE; i++)
     {
-        printf("%d --->", i);
+        printf("%d", i);
         if (symbolTable[i] != NULL)
         {
             struct SymbolTableNode *node = symbolTable[i];
             while (node)
             {
                 entriesCount++;
-                printf("%s of enum tokentype %d --->", node->entry->lexeme, node->entry->tokenType);
+                printf("---> %s (%s)", node->entry->lexeme,TokenToString( node->entry->tokenType));
                 node = node->next;
                 if (node != NULL)
                     collisionCount++;
             }
-            printf("NULL\n");
         }
         else
         {
