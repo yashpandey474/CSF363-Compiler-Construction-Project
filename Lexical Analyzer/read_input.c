@@ -160,6 +160,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
         return token;
     }
 
+    
     state -= FINAL_STATE_OFFSET;
 
     // DONT SET TOKEN WHEN DELIMITER
@@ -190,8 +191,6 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     // SET TOKEN TYPE [SET FOR TOKEN, NOT SET FOR CARRIAGE_RETURN OR DELIMITER]
     token->tokenType = state;
 
-    // printf("SET STATE\n");
-
     // DOUBLE STAR STATES
     if (state == TK_NUM2 || state == TK_LT2)
     {
@@ -213,7 +212,6 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     // EQUIVALENT NUMBER
     if (state == TK_RNUM1 || state == TK_RNUM2 || state == TK_NUM1 || state == TK_NUM2)
     {
-
         // COMPUTE NUMBER
         equivalentNumber(LA, state, token);
     }
