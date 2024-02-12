@@ -99,9 +99,12 @@ void returnToStart(struct LexicalAnalyzer *LA)
 }
 struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA, char additional, char *errorMessage)
 {
+    char *readSymbol = (char *)malloc(sizeof(char) * (LA->forward - LA->begin));
+    strncpy(readSymbol, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin - 1);
+
     token->tokenType = LEXICAL_ERROR;
-    token->lexeme = (char *)realloc(token->lexeme, strlen(errorMessage) + 15);
-    sprintf(token->lexeme, "%s %c, [Line no. %d]", errorMessage, additional, LA->lineNo);
+    token->lexeme = (char *)realloc(token->lexeme, strlen(errorMessage) + 40 + strlen(readSymbol));
+    sprintf(token->lexeme, "String %s : %s %c, [Line no. %d]", readSymbol, errorMessage, additional, LA->lineNo);
 
     resetBegin(LA);
     return token;
@@ -245,7 +248,7 @@ struct SymbolTableEntry *initialiseToken()
 {
 
     struct SymbolTableEntry *token = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry));
-    token->lexeme = (char *)malloc(sizeof(char)*MAX_LEXEME_SIZE);
+    // token->lexeme = (char *)malloc(sizeof(char)*MAX_LEXEME_SIZE);
     // lexeme is initialised later for efficiency
     token->intValue = 0;
     token->doubleValue = 0;
@@ -263,7 +266,6 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
     LA->state = 0;
 
     char character;
-
     // while(1)
     while (1)
     {
@@ -272,9 +274,8 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         character = LA->twinBuffer->buffer[LA->forward];
 
         // CHECK FOR ILLEGAL CHARACTER
-        if (characterTypeMap[(int) character] == CT_INVALID)
+        if (characterTypeMap[(int)character] == CT_INVALID && LA->state == 0)
         {
-
             setErrorMessage(token, LA, character, "INVALID CHARACTER");
             return token;
         }
@@ -293,14 +294,17 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
             // END OF INPUT
             else
             {
+                if (LA->state == 0)
+                {
+                    printf("\nEnd of input. Finished scanning");
+                    return NULL;
+                }
                 // CHANGE STATE
                 LA->state = getNextState(LA->state, END_OF_FILE_VAL); // 128 for end of file
 
-                // REACHED TRAP STATE
                 if (LA->state == -1)
                 {
-                    // REACHED TRAP STATE
-                    setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER %d ");
+                    setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
 
                     return token;
                 }
@@ -316,8 +320,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                     return token;
                 }
 
-                // REACHED TRAP STATE
-                setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER %d ");
+                setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER ");
 
                 // ALL INPUT READ AND PROCESSED
                 return token;
@@ -328,12 +331,10 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // CHANGE STATE
         LA->state = getNextState(LA->state, (int)character);
 
-        // REACHED TRAP STATE
         if (LA->state == -1)
         {
 
-            // REACHED TRAP STATE
-            setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER %d ");
+            setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
 
             return token;
         }
@@ -379,7 +380,7 @@ int main()
     // printf("KEYWORDS\n");
 
     // TEST THE TWIN BUFFER
-    FILE *file = readTestFile("test_program.txt");
+    FILE *file = readTestFile("test_program_with_errors.txt");
 
     // INITIALISE A TWIN BUFFER
     struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
@@ -401,6 +402,7 @@ int main()
 
     while ((token = scanToken(LA)))
     {
+        // printf("HU");
         printf("(%s : %s) ", TokenToString(token->tokenType), token->lexeme);
     }
 

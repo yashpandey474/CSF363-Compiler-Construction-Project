@@ -118,23 +118,26 @@ struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
 
 void printSymbolTable()
 {
-    printf("\nPrinting symbol table\n");
+    printf("\n\n\nPrinting symbol table\n");
     int collisionCount = 0;
     int entriesCount = 0;
     for (int i = 0; i < HASH_MAP_SIZE; i++)
     {
-        printf("%d", i);
+        printf("%d. ", i);
         if (symbolTable[i] != NULL)
         {
             struct SymbolTableNode *node = symbolTable[i];
             while (node)
             {
                 entriesCount++;
-                printf("---> %s (%s)", node->entry->lexeme,TokenToString( node->entry->tokenType));
+                printf("%s (%s)--->", node->entry->lexeme, TokenToString(node->entry->tokenType));
                 node = node->next;
                 if (node != NULL)
+                {
                     collisionCount++;
+                }
             }
+            printf("NULL\n");
         }
         else
         {
