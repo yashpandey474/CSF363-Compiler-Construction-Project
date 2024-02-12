@@ -25,7 +25,6 @@ void printSymbolTable();
 
 void changeForward(struct LexicalAnalyzer *LA, int flag);
 
-extern CharacterType characterTypeMap[129];
 
 struct SymbolTableNode
 {
@@ -158,6 +157,8 @@ typedef enum CharacterType
     CT_EOF,
     CT_HASH
 } CharacterType;
+
+extern CharacterType characterTypeMap[129];
 
 const char *CharacterTypeToString(enum CharacterType type);
 const char *TokenToString(enum Tokentype token);

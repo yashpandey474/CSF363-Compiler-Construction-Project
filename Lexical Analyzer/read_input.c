@@ -12,6 +12,7 @@
 #define END_OF_FILE_VAL 128
 #define BUFFER_SIZE 2569
 #define FINAL_STATE_OFFSET NUM_NON_ACCEPT_STATES + 1 // this is same as NON ACCEPT STATES + 1
+#define MAX_LEXEME_SIZE 100
 // TYPICALLY 256 BYTES
 
 // EOF CHARACTERS AT END OF BOTH BUFFERS ALWAYS
@@ -108,7 +109,6 @@ struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct 
 
 struct SymbolTableEntry *lexicalError(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA)
 {
-    const int errorMsgSize = 150;
 
     if (token->tokenType == TK_ID && strlen(token->lexeme) > MAX_ID_SIZE)
     {
@@ -245,6 +245,7 @@ struct SymbolTableEntry *initialiseToken()
 {
 
     struct SymbolTableEntry *token = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry));
+    token->lexeme = (char *)malloc(sizeof(char)*MAX_LEXEME_SIZE);
     // lexeme is initialised later for efficiency
     token->intValue = 0;
     token->doubleValue = 0;
@@ -271,7 +272,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         character = LA->twinBuffer->buffer[LA->forward];
 
         // CHECK FOR ILLEGAL CHARACTER
-        if (CharacterTypeToString(characterTypeMap[character]) == CT_INVALID)
+        if (characterTypeMap[(int) character] == CT_INVALID)
         {
 
             setErrorMessage(token, LA, character, "INVALID CHARACTER");
@@ -332,7 +333,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         {
 
             // REACHED TRAP STATE
-            setErrorMessage(token, LA, "REACHED TRAP STATE CHARACTER %d ", character);
+            setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER %d ");
 
             return token;
         }

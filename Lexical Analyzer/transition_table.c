@@ -219,7 +219,7 @@ const char *TokenToString(enum Tokentype token)
     }
 }
 
-typedef struct
+typedef struct TestCase
 {
     char input[40];         // Input string for the test case
     char stopreadingAt[40]; // Expected lexeme output (simplified for illustration)
