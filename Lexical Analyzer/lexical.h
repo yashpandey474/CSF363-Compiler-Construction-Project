@@ -104,7 +104,7 @@ typedef enum Tokentype
     TK_FUNID,
     TK_RUID,
     DELIMITER,
-    
+    LEXICAL_ERROR
 } Tokentype;
 
 struct SymbolTableEntry
