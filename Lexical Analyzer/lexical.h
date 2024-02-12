@@ -25,6 +25,7 @@ void printSymbolTable();
 
 void changeForward(struct LexicalAnalyzer *LA, int flag);
 
+extern CharacterType characterTypeMap[129];
 
 struct SymbolTableNode
 {

@@ -164,7 +164,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     state -= FINAL_STATE_OFFSET;
 
     // DONT SET TOKEN WHEN DELIMITER
-    if (state == CARRIAGE_RETURN || state == DELIMITER)
+    if (state == CARRIAGE_RETURN || state == DELIMITER || state == TK_COMMENT)
     {
         // RETURN TO START STATE
         returnToStart(LA);
@@ -264,7 +264,11 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 
         character = LA->twinBuffer->buffer[LA->forward];
 
-        // TODO: DIFFERENTIATE BETWEEN END OF INPUT AND END OF BUFFER
+        if(CharacterTypeToString(characterTypeMap[character]) == CT_INVALID){
+            printf("INVALID CHARACTER %c LINE NUMBER %d\n", character, LA->lineNo);
+        }
+
+            // TODO: DIFFERENTIATE BETWEEN END OF INPUT AND END OF BUFFER
         if (character == EOF)
         {
 
@@ -284,6 +288,11 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
             {
                 // CHANGE STATE
                 LA->state = getNextState(LA->state, 128); // 128 for end of file
+
+                //REACHED TRAP STATE
+                if (LA->state == -1){
+                    printf("REACHED TRAP STATE LINE NO %d\n", LA->lineNo);
+                }
 
                 // TAKE ACTIONS FOR THE STATE
                 token = takeActions(LA, token);
@@ -305,6 +314,15 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 
         // CHANGE STATE
         LA->state = getNextState(LA->state, (int)character);
+
+        // REACHED TRAP STATE
+        if (LA->state == -1)
+        {
+            printf("REACHED TRAP STATE ON CHARACTER %c LINE NO %d\n", character, LA->lineNo);
+
+            //TODO: DECIDE ERROR RECOVERY
+            returnToStart(LA);
+        }
 
         // printf("STATE HERE\n");
         // TAKE ACTIONS FOR THE STATE
