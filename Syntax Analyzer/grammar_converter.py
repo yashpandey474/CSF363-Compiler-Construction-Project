@@ -93,7 +93,7 @@ if __name__ == "__main__":
                         var="NT_"+nonterminals[var]
                         k = 1
                     elif var == "∈":
-                        var = "EPS"
+                        var = "NT_EPS"
                     
                     print("{"+var+","+str(k)+"}",end="")
                     if j != len(vars)-1:

@@ -9,6 +9,7 @@
 #include <time.h>
 
 // PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
+#define END_OF_FILE_VAL 128
 #define BUFFER_SIZE 2569
 #define FINAL_STATE_OFFSET NUM_NON_ACCEPT_STATES + 1 // this is same as NON ACCEPT STATES + 1
 // TYPICALLY 256 BYTES
@@ -95,6 +96,15 @@ void returnToStart(struct LexicalAnalyzer *LA)
     LA->state = 0;
     resetBegin(LA);
 }
+struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA, char additional, char *errorMessage)
+{
+    token->tokenType = LEXICAL_ERROR;
+    token->lexeme = (char *)realloc(token->lexeme, strlen(errorMessage) + 15);
+    sprintf(token->lexeme, "%s %c, [Line no. %d]", errorMessage, additional, LA->lineNo);
+
+    resetBegin(LA);
+    return token;
+}
 
 struct SymbolTableEntry *lexicalError(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA)
 {
@@ -102,17 +112,12 @@ struct SymbolTableEntry *lexicalError(struct SymbolTableEntry *token, struct Lex
 
     if (token->tokenType == TK_ID && strlen(token->lexeme) > MAX_ID_SIZE)
     {
-        token->tokenType = LEXICAL_ERROR;
-        token->lexeme = (char *)realloc(token->lexeme, errorMsgSize);
-        sprintf(token->lexeme, "Lexical Error: Identifier of greater than maximum size, Line %d", LA->lineNo);
+        setErrorMessage(token, LA, ' ', "Lexical Error: Token Identifier of greater than maximum size");
     }
     else if (token->tokenType == TK_FUNID && strlen(token->lexeme) > MAX_FUNID_SIZE)
     {
-        token->tokenType = LEXICAL_ERROR;
-        token->lexeme = (char *)realloc(token->lexeme, errorMsgSize);
-        sprintf(token->lexeme, "Lexical Error: Function Identifier of greater than maximum size, Line %d", LA->lineNo);
+        setErrorMessage(token, LA, ' ', "Lexical Error: Function Identifier of greater than maximum size");
     }
-
     return token;
 }
 
@@ -268,9 +273,8 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // CHECK FOR ILLEGAL CHARACTER
         if (CharacterTypeToString(characterTypeMap[character]) == CT_INVALID)
         {
-            token->tokenType = LEXICAL_ERROR;
-            token->lexeme = (char *)realloc(token->lexeme, errorMsgSize);
-            sprintf(token->lexeme, "INVALID CHARACTER %c LINE NUMBER %d\n", character, LA->lineNo);
+
+            setErrorMessage(token, LA, character, "INVALID CHARACTER");
             return token;
         }
 
@@ -289,17 +293,14 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
             else
             {
                 // CHANGE STATE
-                LA->state = getNextState(LA->state, 128); // 128 for end of file
+                LA->state = getNextState(LA->state, END_OF_FILE_VAL); // 128 for end of file
 
                 // REACHED TRAP STATE
                 if (LA->state == -1)
                 {
                     // REACHED TRAP STATE
-                    token->tokenType = LEXICAL_ERROR;
-                    token->lexeme = (char *)realloc(token->lexeme, errorMsgSize);
-                    sprintf(token->lexeme, "REACHED TRAP STATE CHARACTER %d LINE NO %d\n", character, LA->lineNo);
+                    setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER %d ");
 
-                    // EOF SO NO RETURN TO START STATE
                     return token;
                 }
 
@@ -314,9 +315,11 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                     return token;
                 }
 
+                // REACHED TRAP STATE
+                setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER %d ");
+
                 // ALL INPUT READ AND PROCESSED
-                // printf("END OF INPUT. FINISHING SCANNING\n");
-                return NULL;
+                return token;
             }
         }
         // printf("\nSTATE %d CHARACTER %d (%c)\n", LA->state, character, character);
@@ -327,12 +330,11 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // REACHED TRAP STATE
         if (LA->state == -1)
         {
-            printf("REACHED TRAP STATE ON CHARACTER %c LINE NO %d\n", character, LA->lineNo);
 
-            // TODO: DECIDE ERROR RECOVERY
-            returnToStart(LA);
+            // REACHED TRAP STATE
+            setErrorMessage(token, LA, "REACHED TRAP STATE CHARACTER %d ", character);
 
-            continue;
+            return token;
         }
 
         // TAKE ACTIONS FOR THE STATE
