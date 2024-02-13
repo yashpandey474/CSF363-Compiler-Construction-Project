@@ -252,6 +252,8 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
         token->lexeme=strncustomcpy(LA);
 
         // SET LEXEME
+
+        //DONT HAVE TO WORRY ABOUT THE INCREMENT FORWARD IN LOOP BECASUE TOKEN IS RETURNED BEFORE INCREMENTß
     }
 
     //MULTIPLE ACCEPT STATES FOR THE SAME TOKEN
@@ -301,7 +303,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         character = LA->twinBuffer->buffer[LA->forward% (BUFFER_SIZE * 2 + 2)];
 
         // CHECK FOR ILLEGAL CHARACTER
-        printf("CHARACTER %c %d", character, (int)character);
+        // printf("\nCHARACTER %c STATE %d\n\n", character, LA->state);
         
 
         //EOF: LAST CHARACTER OF INPUT
@@ -309,10 +311,16 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         {
 
             // END OF BUFFER
-            if (LA->forward == BUFFER_SIZE || LA->forward == (2 * BUFFER_SIZE + 1))
+            if ((LA->forward % (BUFFER_SIZE * 2 + 2)) == BUFFER_SIZE || (LA->forward % (BUFFER_SIZE * 2 + 2)) == (2 * BUFFER_SIZE + 1))
             {
                 // RELOAD OTHER BUFER
                 readIntoBuffer(LA->twinBuffer);
+                changeForward(LA, 1);
+
+                //IF BOTH ARE AT EOF: INCREMENT BEGIN TOO
+                if (LA->begin == LA->forward){
+                    changeBegin(LA, 1);
+                }
             }
 
             // END OF INPUT 
@@ -368,6 +376,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 return NULL;
             }
         }
+
         // CHANGE STATE
         if (characterTypeMap[(int)character] == CT_INVALID && LA->state == 0)
         {
@@ -376,18 +385,24 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
             //INCREMENT FORWARD BECAUSE CHARACTER IS INVALID; CANNOT RESUME TOKENISATION 
             changeForward(LA, 1);
 
+            //REINITIALISE TOKEN
+            token = initialiseToken();
+
             //CONTINUE SCANNING
             continue;
         }
 
         //GET NEXT STATE
+        // printf("\n%d FROM STATE %d\n", token->tokenType, LA->state);
         LA->state = getNextState(LA->state, (int)character);
+        // printf("\nTO STATE %d\n", LA->state);  
 
-        printf("STATE %d\n", character, LA->state);       
         //TRAP STATE
         if (LA->state == -1)
         {
             setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
+
+            token = initialiseToken();
 
             //PRINT AND RETURN NEXT TOKEN
             continue;
@@ -395,13 +410,14 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 
         // TAKE ACTIONS FOR THE STATE
         token = takeActions(LA, token);
-        printf("BEGIN CHAR %c FORWARD CHAR %c\n", LA->twinBuffer->buffer[(LA->begin) % (BUFFER_SIZE * 2 + 2)], LA->twinBuffer->buffer[(LA->forward) % (BUFFER_SIZE * 2 + 2)]);
+
+
 
         if (token->tokenType == LEXICAL_ERROR){
             token = initialiseToken();
-            
             continue;
         }
+
         // HAVE TO RETURN
         if (token->tokenType != 0)
         {
@@ -411,10 +427,9 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 
         //SIZE OF FUN_ID/TK_ID EXCEEDED
 
-
-
         // INCREMENT FORWARD
         changeForward(LA, 1);
+
     }
 
     return NULL;
@@ -444,7 +459,7 @@ int main()
     // printf("KEYWORDS\n");
 
     // TEST THE TWIN BUFFER
-    FILE *file = readTestFile("test_program.txt");
+    FILE *file = readTestFile("test_program_with_errors.txt");
 
     // INITIALISE A TWIN BUFFER
     struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
