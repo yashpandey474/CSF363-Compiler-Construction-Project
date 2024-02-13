@@ -235,6 +235,7 @@ TestCase testCases[] = {
 
 int getNextState(int currentState, int character)
 {
+
     // printf("Reading character: %c of type %s\n", character, CharacterTypeToString(characterTypeMap[character]));
     int actualOffset = offset[currentState] + characterTypeMap[character];
     int state;

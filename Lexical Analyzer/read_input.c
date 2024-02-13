@@ -99,8 +99,8 @@ void returnToStart(struct LexicalAnalyzer *LA)
 }
 struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA, char additional, char *errorMessage)
 {
-    char *readSymbol = (char *)malloc(sizeof(char) * (LA->forward - LA->begin));
-    strncpy(readSymbol, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin - 1);
+    char *readSymbol = (char *)malloc(sizeof(char) * (LA->forward - LA->begin + 1));
+    strncpy(readSymbol, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
 
     token->tokenType = LEXICAL_ERROR;
     token->lexeme = (char *)realloc(token->lexeme, strlen(errorMessage) + 40 + strlen(readSymbol));
@@ -269,16 +269,10 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
     // while(1)
     while (1)
     {
+
         // GET CHARACTER CURRENTLY BEING READ
-
         character = LA->twinBuffer->buffer[LA->forward];
-
         // CHECK FOR ILLEGAL CHARACTER
-        if (characterTypeMap[(int)character] == CT_INVALID && LA->state == 0)
-        {
-            setErrorMessage(token, LA, character, "INVALID CHARACTER");
-            return token;
-        }
 
         // TODO: DIFFERENTIATE BETWEEN END OF INPUT AND END OF BUFFER
         if (character == EOF)
@@ -329,13 +323,19 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // printf("\nSTATE %d CHARACTER %d (%c)\n", LA->state, character, character);
 
         // CHANGE STATE
+
+        if (characterTypeMap[(int)character] == CT_INVALID && LA->state == 0)
+        {
+            setErrorMessage(token, LA, character, "INVALID CHARACTER");
+            changeForward(LA, 1);
+            resetBegin(LA);
+            return token;
+        }
         LA->state = getNextState(LA->state, (int)character);
 
         if (LA->state == -1)
         {
-
             setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
-
             return token;
         }
 
@@ -348,7 +348,6 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
             resetBegin(LA);
             return token;
         }
-
         // INCREMENT FORWARD
         changeForward(LA, 1);
     }
