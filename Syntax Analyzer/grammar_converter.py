@@ -2,7 +2,7 @@
 # grammar->productions = {
 #     {   # list of tokens
 #         {{OTHER_FUNCTIONS,0}, {MAIN_FUNCTION,1}}, # list of var structs
-#     }, 
+#     },
 #     {
 #         {},
 #         {}
@@ -69,13 +69,14 @@ def read_data_from_file(file):
         data = f.readlines()
     return data
 
+
 def process_rule(rule):
     rule = rule.split(".")[-1]  # remove the number at the start of the line
     nonterm, multi_prod = rule.split("===>")
     nonterm = nonterm.strip()
     nonterm = nonterminals.get(nonterm, nonterm)
 
-    multi_prod = multi_prod.replace("\n","").split("|")
+    multi_prod = multi_prod.replace("\n", "").split("|")
     productions = []
 
     for prod in multi_prod:
@@ -89,13 +90,14 @@ def process_rule(rule):
                 var = "NT_" + nonterminals[var]
                 is_nonterminal = 1
             elif var == "ePSILON":
-                var = "NT_EPS"
+                var = "TK_EPS"
 
             production.append((var, is_nonterminal))
 
         productions.append(production)
 
     return productions
+
 
 def print_grammar(data):
     print("struct GrammarRule productions[NUM_NON_TERMINALS] = {", end="")
@@ -121,49 +123,55 @@ def print_grammar(data):
 
     print("};")
 
+
 def max_num_productions(data):
     max_num = 0
     max_rule = ""
-    
+
     for rule in data:
         productions = process_rule(rule)
         num_productions = len(productions)
-        
+
         if num_productions > max_num:
             max_num = num_productions
             max_rule = rule.strip()
-    
-    print(f"max number of productions is: {max_rule}\n\033[93m(max productions: {max_num})\033[00m")
+
+    print(
+        f"max number of productions is: {max_rule}\n\033[93m(max productions: {max_num})\033[00m")
     return max_num
+
 
 def max_vars(data):
     max_vars_count = 0
     max_rule = ""
-    
+
     for rule in data:
         productions = process_rule(rule)
-        
+
         for prod in productions:
             vars_count = len(prod)
-            
+
             if vars_count > max_vars_count:
                 max_vars_count = vars_count
                 max_rule = rule.strip()
-    
-    print(f"max number of variables is: {max_rule}\n\033[93m(max variables: {max_vars_count})\033[00m")
+
+    print(
+        f"max number of variables is: {max_rule}\n\033[93m(max variables: {max_vars_count})\033[00m")
     return max_vars_count
 
 
 def print_enum(data):
 
     non_terminals_list = []
-    
+
     for rule in data:
-        rule = rule.split(".")[-1]  # remove the number at the start of the line
+        # remove the number at the start of the line
+        rule = rule.split(".")[-1]
         nonterm, multi_prod = rule.split("===>")
         nonterm = nonterm.strip()
         if not nonterm in nonterminals:
-            raise Exception(f"non-terminal {nonterm} not found in nonterminals dict")
+            raise Exception(
+                f"non-terminal {nonterm} not found in nonterminals dict")
         non_terminals_list.append(nonterminals[nonterm])
 
     print("enum NonTerminals\n{")
@@ -172,8 +180,8 @@ def print_enum(data):
     print("  NT_EPS")
     print("};")
 
-    print(f"\033[93m(non terminals count (eXcluding epsilon): {len(non_terminals_list)})\033[00m")
-
+    print(
+        f"\033[93m(non terminals count (eXcluding epsilon): {len(non_terminals_list)})\033[00m")
 
 
 if __name__ == "__main__":

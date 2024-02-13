@@ -1,6 +1,5 @@
 #include "../Lexical Analyzer/lexical.h"
 
-
 enum NonTerminals
 {
   NT_PROGRAM,
@@ -53,5 +52,4 @@ enum NonTerminals
   NT_MORE_IDS,
   NT_DEFINETYPE_STMT,
   NT_A,
-  NT_EPS
 };
