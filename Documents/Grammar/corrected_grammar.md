@@ -11,7 +11,7 @@
 11. <remaining_list>===>TK_COMMA <parameter_list> | ePSILON
 12. <stmts>===><typeDefinitions> <declarations> <otherStmts> <returnStmt>
 13. <typeDefinitions> ===> <typeDefinition> <typeDefinitions> | <definetypestmt> <typeDefinition> | ePSILON
-14. <typeDefinition> ===>TK_RECORD TK_RUID <fieldDefinitions> TK_ENDRECORD | TK_UNION TK_RUID <fieldDefinitions> TK_ENDUNION
+14. <typeDefinition> ===> TK_RECORD TK_RUID <fieldDefinitions> TK_ENDRECORD | TK_UNION TK_RUID <fieldDefinitions> TK_ENDUNION
 16. <fieldDefinitions>===> <fieldDefinition> <fieldDefinition> <moreFields>
 17. <fieldDefinition>===> TK_TYPE <new1>
 <new1> ===> <primitiveDatatype> TK_COLON TK_FIELDID TK_SEM | TK_FIELDID TK_COLON TK_FIELDID TK_SEM

@@ -8,7 +8,7 @@
 #define MAX_ID_SIZE 20
 #define MAX_FUNID_SIZE 30
 #define NUM_NON_ACCEPT_STATES 29
-#define NUM_STATES 91 // 62 accept states, number of states including accept states
+#define NUM_STATES 95 // 66 accept states, number of states including accept states
 // extern int numStates;
 // LEXICAL ANALYSER
 struct LexicalAnalyzer
@@ -103,7 +103,10 @@ typedef enum Tokentype
     TK_FUNID,
     TK_RUID,
     DELIMITER,
-    LEXICAL_ERROR
+    LEXICAL_ERROR,
+    TK_RNUM,
+    TK_NUM,
+    TK_LT
 } Tokentype;
 
 struct SymbolTableEntry

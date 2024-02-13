@@ -15,7 +15,7 @@ c2.price <--- 98.80;
 % following is a valid statement as the types of d2, b2 and c2 are same d2<--- b2+ c2;
 % Note that d2<--- b2 + b7bc34; is not type correct as the language follows name equivalence. % Note that the types of b2 and b7bc34 are not same.
 % CRAZY
-[d2]<--- call _recordDem$$$$$ with parameters[b2,c2];
+[d2]<--- call _recordDemo1 with parameters[b2,c2];
 write(d2);
 end
 
@@ -60,11 +60,13 @@ definetype union #student as #newname; record #taggedunionexample
 type int: tagvalue;
 type newname: field; endrecord
 
+%PANDY
+
 b7bc34.tagvalue <--- 1;
 b7bc34. field.rollno <--- 23;
 write(b7bc34. field.rollno); % No type error
 write(b7bc34. field.marks); % Compiler reports the type error – dynamic type checking b7bc34.tagvalue = 2;
-b7bc34. field.marks <--- 97.5;
+b7bc34. field.marks <--- 97.51;
 b7bc34.tagvalue <--- 3;
 b7bc34. field.age <--- 21;
 

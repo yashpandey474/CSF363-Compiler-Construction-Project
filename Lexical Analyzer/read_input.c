@@ -48,6 +48,21 @@ FILE *readTestFile(char *file_path)
 
     return file;
 }
+char* strncustomcpy(int startpos, int numofchars,struct LexicalAnalyzer* LA)
+{
+    char* a=(char*) malloc((numofchars+1)*sizeof(char));
+    if(a==NULL)
+    {
+        printf("Memory allocation in strncustomcpy failed.");
+    }
+    for(int i=0;i<numofchars;i++)
+    {
+        a[i]=LA->twinBuffer->buffer[(startpos+i) %(BUFFER_SIZE * 2 + 2)];
+    }
+    a[numofchars]='\0';
+    return a;
+}
+
 int readIntoBuffer(struct TwinBuffer *twinBuffer)
 {
     char *buffer;
@@ -99,16 +114,14 @@ void returnToStart(struct LexicalAnalyzer *LA)
 }
 struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA, char additional, char *errorMessage)
 {
-    char *readSymbol = (char *)malloc(sizeof(char) * (LA->forward - LA->begin + 1));
-    strncpy(readSymbol, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
+    char* readSymbol=strncustomcpy(LA->begin,LA->forward - LA->begin,LA);
 
     //SET TO DEFAULT SO THAT IT CAN CONTINUE SCANNING WITHOUT RETURNING
-    token->tokenType = CARRIAGE_RETURN;
+    token->tokenType = LEXICAL_ERROR;
     token->lexeme = (char *)realloc(token->lexeme, strlen(errorMessage) + 40 + strlen(readSymbol));
-    sprintf(token->lexeme, "String %s : %s %c, [Line no. %d]", readSymbol, errorMessage, additional, LA->lineNo);
+    sprintf(token->lexeme, "String %s : %s %c, [Line no. %d]", readSymbol, errorMessage, additional, LA->lineNo + 1);
 
-    printf("LEXICAL ERROR: %s", token->lexeme);
-    resetBegin(LA);
+    printf("LEXICAL ERROR: %s\n", token->lexeme);
     returnToStart(LA);
     return token;
 }
@@ -145,13 +158,13 @@ void equivalentNumber(struct LexicalAnalyzer *lex, int flag, struct SymbolTableE
 void changeForward(struct LexicalAnalyzer *LA, int flag)
 {
     // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
-    LA->forward = (LA->forward + flag) % (BUFFER_SIZE * 2 + 2);
+    LA->forward = (LA->forward + flag);
 }
 
 void changeBegin(struct LexicalAnalyzer *LA, int flag)
 {
     // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
-    LA->begin = (LA->begin + flag) % (BUFFER_SIZE * 2 + 2);
+    LA->begin = (LA->begin + flag);
 }
 
 // TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
@@ -200,17 +213,9 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
         // DECREMENT FORWARD POINTER
         changeForward(LA, -1);
     }
-
-    token->lexeme = (char *)malloc(sizeof(char) * (LA->forward - LA->begin + 1));
-
-    if (token->lexeme == NULL)
-    {
-        printf("Memory allocation failed for token lexeme\n");
-        exit(1);
-    }
+    token->lexeme=strncustomcpy(LA->begin,LA->forward - LA->begin,LA);
 
     // SET LEXEME
-    strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
     // EQUIVALENT NUMBER
     if (state == TK_RNUM1 || state == TK_RNUM2 || state == TK_NUM1 || state == TK_NUM2)
     {
@@ -239,9 +244,22 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     {
         // INCREMENT FORWARD
         changeForward(LA, +1);
+        token->lexeme=strncustomcpy(LA->begin,LA->forward - LA->begin,LA);
 
         // SET LEXEME
-        strncpy(token->lexeme, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
+    }
+
+    //MULTIPLE ACCEPT STATES FOR THE SAME TOKEN
+    if (token->tokenType == TK_RNUM1 || token->tokenType == TK_RNUM2){
+        token->tokenType = TK_RNUM;
+    }
+    
+    if (token->tokenType == TK_NUM1 || token->tokenType == TK_NUM2){
+        token->tokenType = TK_NUM;
+    }
+
+    if (token->tokenType == TK_LT1 || token->tokenType == TK_LT2){
+        token->tokenType = TK_LT;
     }
 
     return token;
@@ -251,6 +269,7 @@ struct SymbolTableEntry *initialiseToken()
 {
 
     struct SymbolTableEntry *token = (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry));
+    token->lexeme=NULL;
     // token->lexeme = (char *)malloc(sizeof(char)*MAX_LEXEME_SIZE);
     // lexeme is initialised later for efficiency
     token->intValue = 0;
@@ -274,9 +293,12 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
     {
 
         // GET CHARACTER CURRENTLY BEING READ
-        character = LA->twinBuffer->buffer[LA->forward];
-        // CHECK FOR ILLEGAL CHARACTER
+        character = LA->twinBuffer->buffer[LA->forward% (BUFFER_SIZE * 2 + 2)];
+        // printf("begin %d forward %d",LA->begin,LA->forward);
+        // printf("current character: %c, %d\n", character,character);
 
+        // CHECK FOR ILLEGAL CHARACTER
+        
         if (character == EOF)
         {
 
@@ -299,10 +321,11 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 // CHANGE STATE
                 LA->state = getNextState(LA->state, END_OF_FILE_VAL); // 128 for end of file
 
+                //REACHED TRAP STATE
                 if (LA->state == -1)
                 {
                     setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
-
+                    token=initialiseToken();
                     //CONTINUE TOKENISATION FROM THIS CHARACTER
                     continue;
                 }
@@ -318,26 +341,31 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                     return token;
                 }
 
+                //NO CONTINUE IF EOF AND LEXICAL ERROR [NOTHING ELSE TO SCAN]
                 setErrorMessage(token, LA, character, "COULD NOT REACH ACCEPT STATE");
                 
-                //c
+                //CONTINUE SCANNING
                 continue;
             }
         }
-        // printf("\nSTATE %d CHARACTER %d (%c)\n", LA->state, character, character);
-
         // CHANGE STATE
-
         if (characterTypeMap[(int)character] == CT_INVALID && LA->state == 0)
         {
             setErrorMessage(token, LA, character, "INVALID CHARACTER");
 
             //INCREMENT FORWARD BECAUSE CHARACTER IS INVALID; CANNOT RESUME TOKENISATION 
             changeForward(LA, 1);
+
+            //CONTINUE SCANNING
             continue;
         }
+
+        //GET NEXT STATE
         LA->state = getNextState(LA->state, (int)character);
 
+        printf("CHARACTER %c STATE %d\n", character, LA->state);
+        
+        //TRAP STATE
         if (LA->state == -1)
         {
             setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
@@ -349,12 +377,20 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // TAKE ACTIONS FOR THE STATE
         token = takeActions(LA, token);
 
+        if (token->tokenType == LEXICAL_ERROR){
+            token = initialiseToken();
+            
+            continue;
+        }
         // HAVE TO RETURN
         if (token->tokenType != 0)
         {
             resetBegin(LA);
             return token;
         }
+
+        //SIZE OF FUN_ID/TK_ID EXCEEDED
+
 
 
         // INCREMENT FORWARD
@@ -414,5 +450,5 @@ int main()
         printf("(%s : %s) ", TokenToString(token->tokenType), token->lexeme);
     }
 
-    printSymbolTable();
+    // printSymbolTable();
 }

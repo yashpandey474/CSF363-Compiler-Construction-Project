@@ -1,7 +1,7 @@
 
 # grammar->productions = {
 #     {   # list of tokens
-#         {OTHER_FUNCTIONS, MAIN_FUNCTION}, # list of var structs
+#         {{OTHER_FUNCTIONS,0}, {MAIN_FUNCTION,1}}, # list of var structs
 #     }, 
 #     {
 #         {},
@@ -98,7 +98,7 @@ def process_rule(rule):
     return productions
 
 def print_grammar(data):
-    print("grammar->productions = {", end="")
+    print("struct GrammarRule productions[NUM_NON_TERMINALS] = {", end="")
 
     for rule_no, rule in enumerate(data):
         productions = process_rule(rule)
