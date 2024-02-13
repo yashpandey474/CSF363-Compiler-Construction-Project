@@ -330,6 +330,8 @@ int reinitialiseArrays()
     input[0][characterTypeMapTemp['%']] = 24;
     initialisetooneNumber(input, 24, 24);
     input[24][characterTypeMapTemp['\n']] = s + TK_COMMENT;
+    input[24][CT_EOF] = s + TK_COMMENT;
+
     input[19][characterTypeMapTemp['=']] = s + TK_EQ;
     for (int row = 0; row < NUM_STATES; row++)
     {

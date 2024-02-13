@@ -182,12 +182,11 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     // DONT SET TOKEN WHEN DELIMITER
     if (state == CARRIAGE_RETURN || state == DELIMITER || state == TK_COMMENT)
     {
-        // RETURN TO START STATE
-        returnToStart(LA);
+        
 
         // DONT SET STATE OR LEXEME AND RETURN
 
-        if (state == CARRIAGE_RETURN)
+        if (state == CARRIAGE_RETURN || state == TK_COMMENT)
         {
             incrementLineNo(LA);
 
@@ -199,6 +198,9 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
         {
             changeForward(LA, -1);
         }
+
+         // RETURN TO START STATE
+        returnToStart(LA);
 
         // printf("TOOK ACTIONS");
         return token;
@@ -298,7 +300,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // printf("current character: %c, %d\n", character,character);
 
         // CHECK FOR ILLEGAL CHARACTER
-        
+        printf("CHARACTER %c %d", character, (int)character);
         if (character == EOF)
         {
 
@@ -332,6 +334,11 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 
                 // TAKE ACTIONS FOR THE STATE
                 token = takeActions(LA, token);
+                printf("Token type last %d",token->tokenType);
+                if (token->tokenType == LEXICAL_ERROR)
+                {
+                    return NULL;
+                }
 
                 // HAVE TO RETURN
                 if (token->tokenType != 0)
@@ -345,7 +352,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 setErrorMessage(token, LA, character, "COULD NOT REACH ACCEPT STATE");
                 
                 //CONTINUE SCANNING
-                continue;
+                return NULL;
             }
         }
         // CHANGE STATE
@@ -363,8 +370,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         //GET NEXT STATE
         LA->state = getNextState(LA->state, (int)character);
 
-        printf("CHARACTER %c STATE %d\n", character, LA->state);
-        
+        printf("STATE %d\n", character, LA->state);       
         //TRAP STATE
         if (LA->state == -1)
         {
@@ -424,7 +430,7 @@ int main()
     // printf("KEYWORDS\n");
 
     // TEST THE TWIN BUFFER
-    FILE *file = readTestFile("test_program_with_errors.txt");
+    FILE *file = readTestFile("test_program.txt");
 
     // INITIALISE A TWIN BUFFER
     struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
