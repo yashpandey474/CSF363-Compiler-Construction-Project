@@ -73,3 +73,4 @@ b7bc34. field.age <--- 21;
 definetype union #student as #newname;
 definetype record #book as #newbook;
 % CRAZY CRAZY
+end

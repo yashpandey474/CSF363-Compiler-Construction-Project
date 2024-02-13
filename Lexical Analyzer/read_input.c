@@ -30,8 +30,8 @@ struct TwinBuffer
 
 void incrementLineNo(struct LexicalAnalyzer *LA)
 {
+    printf("\n >> line no : %d ended\n", LA->lineNo);
     LA->lineNo += 1;
-    printf("\n >> line no : %d\n", LA->lineNo);
     return;
 }
 
@@ -48,8 +48,11 @@ FILE *readTestFile(char *file_path)
 
     return file;
 }
-char* strncustomcpy(int startpos, int numofchars,struct LexicalAnalyzer* LA)
+
+char* strncustomcpy(struct LexicalAnalyzer* LA)
 {
+    int startpos = LA->begin;
+    int numofchars = LA->forward - LA->begin;
     char* a=(char*) malloc((numofchars+1)*sizeof(char));
     if(a==NULL)
     {
@@ -114,12 +117,12 @@ void returnToStart(struct LexicalAnalyzer *LA)
 }
 struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA, char additional, char *errorMessage)
 {
-    char* readSymbol=strncustomcpy(LA->begin,LA->forward - LA->begin,LA);
+    char* readSymbol=strncustomcpy(LA);
 
     //SET TO DEFAULT SO THAT IT CAN CONTINUE SCANNING WITHOUT RETURNING
     token->tokenType = LEXICAL_ERROR;
     token->lexeme = (char *)realloc(token->lexeme, strlen(errorMessage) + 40 + strlen(readSymbol));
-    sprintf(token->lexeme, "String %s : %s %c, [Line no. %d]", readSymbol, errorMessage, additional, LA->lineNo + 1);
+    sprintf(token->lexeme, "String %s : %s %c, [Line no. %d]", readSymbol, errorMessage, additional, LA->lineNo);
 
     printf("LEXICAL ERROR: %s\n", token->lexeme);
     returnToStart(LA);
@@ -182,25 +185,25 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     // DONT SET TOKEN WHEN DELIMITER
     if (state == CARRIAGE_RETURN || state == DELIMITER || state == TK_COMMENT)
     {
-        
 
         // DONT SET STATE OR LEXEME AND RETURN
+        // RETURN TO START STATE AND RESET BEGIN TO FORWARD
 
-        if (state == CARRIAGE_RETURN || state == TK_COMMENT)
+        // ALL EXCEPT CARRIAGE RETUR ARRIVE ON READING A CHARACTER THAT MUST BE READ AGAIN
+        // BEGIN MADE EQUAL TO FORWARD, BUT DECREMENT FORWARD BECASUSE IT GETS INCREMENTED IN LOOP
+
+        returnToStart(LA);
+
+        if (state == CARRIAGE_RETURN)
         {
             incrementLineNo(LA);
-
-            // RESET BEGIN AND INCREMENT FORWARD
+            //INCREMENT BOTH BEGIN AND FORWARD TO NEXT CHARACTER
             changeBegin(LA, 1);
+            //OUTER WILL INCREMENT FORWARD
         }
-
-        if (state == DELIMITER)
-        {
+        else{
             changeForward(LA, -1);
         }
-
-         // RETURN TO START STATE
-        returnToStart(LA);
 
         // printf("TOOK ACTIONS");
         return token;
@@ -215,7 +218,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
         // DECREMENT FORWARD POINTER
         changeForward(LA, -1);
     }
-    token->lexeme=strncustomcpy(LA->begin,LA->forward - LA->begin,LA);
+    token->lexeme=strncustomcpy(LA);
 
     // SET LEXEME
     // EQUIVALENT NUMBER
@@ -246,7 +249,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     {
         // INCREMENT FORWARD
         changeForward(LA, +1);
-        token->lexeme=strncustomcpy(LA->begin,LA->forward - LA->begin,LA);
+        token->lexeme=strncustomcpy(LA);
 
         // SET LEXEME
     }
@@ -296,11 +299,12 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 
         // GET CHARACTER CURRENTLY BEING READ
         character = LA->twinBuffer->buffer[LA->forward% (BUFFER_SIZE * 2 + 2)];
-        // printf("begin %d forward %d",LA->begin,LA->forward);
-        // printf("current character: %c, %d\n", character,character);
 
         // CHECK FOR ILLEGAL CHARACTER
         printf("CHARACTER %c %d", character, (int)character);
+        
+
+        //EOF: LAST CHARACTER OF INPUT
         if (character == EOF)
         {
 
@@ -314,6 +318,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
             // END OF INPUT 
             else
             {
+                // AT START STATE
                 if (LA->state == 0)
                 {
                     printf("\nEnd of input. Finished scanning");
@@ -328,13 +333,19 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 {
                     setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
                     token=initialiseToken();
-                    //CONTINUE TOKENISATION FROM THIS CHARACTER
-                    continue;
+                    return NULL;
                 }
 
                 // TAKE ACTIONS FOR THE STATE
                 token = takeActions(LA, token);
-                printf("Token type last %d",token->tokenType);
+
+                // AT START STATE
+                if (LA->state == 0)
+                {
+                    printf("\nEnd of input. Finished scanning");
+                    return NULL;
+                }
+
                 if (token->tokenType == LEXICAL_ERROR)
                 {
                     return NULL;
@@ -347,6 +358,8 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                     resetBegin(LA);
                     return token;
                 }
+
+                printf("STATE ON EOF: %d\n", LA->state);
 
                 //NO CONTINUE IF EOF AND LEXICAL ERROR [NOTHING ELSE TO SCAN]
                 setErrorMessage(token, LA, character, "COULD NOT REACH ACCEPT STATE");
@@ -382,6 +395,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
 
         // TAKE ACTIONS FOR THE STATE
         token = takeActions(LA, token);
+        printf("BEGIN CHAR %c FORWARD CHAR %c\n", LA->twinBuffer->buffer[(LA->begin) % (BUFFER_SIZE * 2 + 2)], LA->twinBuffer->buffer[(LA->forward) % (BUFFER_SIZE * 2 + 2)]);
 
         if (token->tokenType == LEXICAL_ERROR){
             token = initialiseToken();
@@ -411,7 +425,7 @@ struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer)
     struct LexicalAnalyzer *LA;
     LA = (struct LexicalAnalyzer *)malloc(sizeof(struct LexicalAnalyzer));
 
-    LA->lineNo = 0;
+    LA->lineNo = 1;
     LA->begin = 0;
     LA->forward = 0;
     LA->state = 0;
