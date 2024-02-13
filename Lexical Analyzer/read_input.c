@@ -102,11 +102,14 @@ struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct 
     char *readSymbol = (char *)malloc(sizeof(char) * (LA->forward - LA->begin + 1));
     strncpy(readSymbol, LA->twinBuffer->buffer + LA->begin, LA->forward - LA->begin);
 
-    token->tokenType = LEXICAL_ERROR;
+    //SET TO DEFAULT SO THAT IT CAN CONTINUE SCANNING WITHOUT RETURNING
+    token->tokenType = CARRIAGE_RETURN;
     token->lexeme = (char *)realloc(token->lexeme, strlen(errorMessage) + 40 + strlen(readSymbol));
     sprintf(token->lexeme, "String %s : %s %c, [Line no. %d]", readSymbol, errorMessage, additional, LA->lineNo);
 
+    printf("LEXICAL ERROR: %s", token->lexeme);
     resetBegin(LA);
+    returnToStart(LA);
     return token;
 }
 
@@ -274,7 +277,6 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         character = LA->twinBuffer->buffer[LA->forward];
         // CHECK FOR ILLEGAL CHARACTER
 
-        // TODO: DIFFERENTIATE BETWEEN END OF INPUT AND END OF BUFFER
         if (character == EOF)
         {
 
@@ -285,7 +287,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 readIntoBuffer(LA->twinBuffer);
             }
 
-            // END OF INPUT
+            // END OF INPUT 
             else
             {
                 if (LA->state == 0)
@@ -293,6 +295,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                     printf("\nEnd of input. Finished scanning");
                     return NULL;
                 }
+
                 // CHANGE STATE
                 LA->state = getNextState(LA->state, END_OF_FILE_VAL); // 128 for end of file
 
@@ -300,7 +303,8 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 {
                     setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
 
-                    return token;
+                    //CONTINUE TOKENISATION FROM THIS CHARACTER
+                    continue;
                 }
 
                 // TAKE ACTIONS FOR THE STATE
@@ -314,10 +318,10 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                     return token;
                 }
 
-                setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER ");
-
-                // ALL INPUT READ AND PROCESSED
-                return token;
+                setErrorMessage(token, LA, character, "COULD NOT REACH ACCEPT STATE");
+                
+                //c
+                continue;
             }
         }
         // printf("\nSTATE %d CHARACTER %d (%c)\n", LA->state, character, character);
@@ -327,16 +331,19 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         if (characterTypeMap[(int)character] == CT_INVALID && LA->state == 0)
         {
             setErrorMessage(token, LA, character, "INVALID CHARACTER");
+
+            //INCREMENT FORWARD BECAUSE CHARACTER IS INVALID; CANNOT RESUME TOKENISATION 
             changeForward(LA, 1);
-            resetBegin(LA);
-            return token;
+            continue;
         }
         LA->state = getNextState(LA->state, (int)character);
 
         if (LA->state == -1)
         {
             setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
-            return token;
+
+            //PRINT AND RETURN NEXT TOKEN
+            continue;
         }
 
         // TAKE ACTIONS FOR THE STATE
@@ -348,6 +355,8 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
             resetBegin(LA);
             return token;
         }
+
+
         // INCREMENT FORWARD
         changeForward(LA, 1);
     }
