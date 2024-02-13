@@ -22,9 +22,10 @@
 22. <otherStmts>===> <stmt> <otherStmts> | ∈
 23. <stmt>===> <assignmentStmt> | <iterativeStmt>|<conditionalStmt>|<ioStmt>| <funCallStmt>
 24. <assignmentStmt>===> <singleOrRecId> TK_ASSIGNOP <arithmeticExpression> TK_SEM
-25. <singleOrRecId>===> TK_ID <new2>
-<new2> ===> <recID> | ∈
-<recID> ===> TK_DOT TK_FIELDID <new2>
+25. <singleorrecid> -> TK_ID <recID>
+<recID> -> TK_DOT TK_FIELDID <recID> | ∈
+
+
 26. <funCallStmt> ===> <outputParameters> TK_CALL TK_FUNID TK_WITH TK_PARAMETERS <inputParameters> TK_SEM
 27. <outputParameters> ===> TK_SQL <idList> TK_SQR TK_ASSIGNOP | ∈
 28. <inputParameters>===> TK_SQL <idList> TK_SQR

@@ -15,7 +15,7 @@ c2.price <--- 98.80;
 % following is a valid statement as the types of d2, b2 and c2 are same d2<--- b2+ c2;
 % Note that d2<--- b2 + b7bc34; is not type correct as the language follows name equivalence. % Note that the types of b2 and b7bc34 are not same.
 % CRAZY
-[d2]<--- call _recordDemo with parameters[b2,c2];
+[d2]<--- call _recordDem$$$$$ with parameters[b2,c2];
 write(d2);
 end
 
