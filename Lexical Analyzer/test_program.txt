@@ -58,9 +58,10 @@ type int: age; endunion
 
 definetype union #student as #newname; record #taggedunionexample
 type int: tagvalue;
-type newname: field; endrecord
+type newname: field; endrecord 
 
-%PANDY
+% PANDY
+
 
 b7bc34.tagvalue <--- 1;
 b7bc34. field.rollno <--- 23;

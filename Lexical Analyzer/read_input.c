@@ -10,7 +10,7 @@
 
 // PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
 #define END_OF_FILE_VAL 128
-#define BUFFER_SIZE 2569
+#define BUFFER_SIZE 150
 #define FINAL_STATE_OFFSET NUM_NON_ACCEPT_STATES + 1 // this is same as NON ACCEPT STATES + 1
 #define MAX_LEXEME_SIZE 100
 // TYPICALLY 256 BYTES
@@ -49,20 +49,65 @@ FILE *readTestFile(char *file_path)
     return file;
 }
 
-char* strncustomcpy(struct LexicalAnalyzer* LA)
+
+char* strncustomcpy(struct LexicalAnalyzer* LA) //copy forward to begin in a string
 {
+    // as per the design, forward and begin can never be at the buffer end marker
+    // forward - begin is the size of lexemme + eofs if occured
+    
+    
+    // for (int i=0;i<2*BUFFER_SIZE+2;i++){
+    //     printf("%c", LA->twinBuffer->buffer[i]);
+    // }printf("\n");
+
     int startpos = LA->begin;
-    int numofchars = LA->forward - LA->begin;
-    char* a=(char*) malloc((numofchars+1)*sizeof(char));
-    if(a==NULL)
-    {
-        printf("Memory allocation in strncustomcpy failed.");
+        
+    int b = LA->begin, f = LA->forward;
+    int numofchars = f-b;
+    
+    b = b%(2*BUFFER_SIZE + 2);
+    f = f%(2*BUFFER_SIZE + 2);
+    
+    if (f>=b){
+        if (f>BUFFER_SIZE && BUFFER_SIZE>b){
+            numofchars--;
+        }
+    }else{ //f<b
+        // have to skip 1 or 2 
+        if (b<BUFFER_SIZE){ // b in first buffer
+            numofchars--;
+            numofchars--;
+        } else { // b in second buffer
+            if (f<BUFFER_SIZE){
+                numofchars--;
+            } else{
+                numofchars--;
+                numofchars--;
+            }
+        }
     }
+        
+    char* a=(char*) malloc((numofchars+1)*sizeof(char));
+    
+    if(a==NULL){
+        printf("Memory allocation in strncustomcpy failed.");
+        return "ERR_1010";
+    }
+    
+    // printf("%d\n",numofchars);
+    
+    int la_index = startpos-1;
     for(int i=0;i<numofchars;i++)
     {
-        a[i]=LA->twinBuffer->buffer[(startpos+i) %(BUFFER_SIZE * 2 + 2)];
+        la_index = (la_index + 1) % (BUFFER_SIZE * 2 + 2);
+        if (la_index==BUFFER_SIZE || la_index == BUFFER_SIZE*2 + 1){
+            la_index = (la_index+1)%(BUFFER_SIZE*2 + 2);
+        }
+        // printf("%d %c\n",la_index,LA->twinBuffer->buffer[la_index]);
+        a[i] = LA->twinBuffer->buffer[(la_index)];
     }
     a[numofchars]='\0';
+
     return a;
 }
 
@@ -118,13 +163,10 @@ void returnToStart(struct LexicalAnalyzer *LA)
 struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA, char additional, char *errorMessage)
 {
     char* readSymbol=strncustomcpy(LA);
-
-    //SET TO DEFAULT SO THAT IT CAN CONTINUE SCANNING WITHOUT RETURNING
+    //IDENTIFIED TOKEN FLAG: JUST PRINT AND CHANGE TOKEN BACK INSTEAD OF REINITIALISING
     token->tokenType = LEXICAL_ERROR;
-    token->lexeme = (char *)realloc(token->lexeme, strlen(errorMessage) + 40 + strlen(readSymbol));
-    sprintf(token->lexeme, "String %s : %s %c, [Line no. %d]", readSymbol, errorMessage, additional, LA->lineNo);
-
-    printf("LEXICAL ERROR: %s\n", token->lexeme);
+    printf("LEXICAL ERROR: String %s : %s %c, [Line no. %d]", readSymbol, errorMessage, additional, LA->lineNo);
+    printf("Entering error recovery mode.\n");
     returnToStart(LA);
     return token;
 }
@@ -302,9 +344,6 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // GET CHARACTER CURRENTLY BEING READ
         character = LA->twinBuffer->buffer[LA->forward% (BUFFER_SIZE * 2 + 2)];
 
-        // CHECK FOR ILLEGAL CHARACTER
-        // printf("\nCHARACTER %c STATE %d\n\n", character, LA->state);
-        
 
         //EOF: LAST CHARACTER OF INPUT
         if (character == EOF)
@@ -316,11 +355,13 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 // RELOAD OTHER BUFER
                 readIntoBuffer(LA->twinBuffer);
                 changeForward(LA, 1);
+                printf("RELOADED BUFFER\n");
 
                 //IF BOTH ARE AT EOF: INCREMENT BEGIN TOO
                 if (LA->begin == LA->forward){
                     changeBegin(LA, 1);
                 }
+                continue;
             }
 
             // END OF INPUT 
@@ -340,7 +381,6 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 if (LA->state == -1)
                 {
                     setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
-                    token=initialiseToken();
                     return NULL;
                 }
 
@@ -386,14 +426,15 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
             changeForward(LA, 1);
 
             //REINITIALISE TOKEN
-            token = initialiseToken();
+            token->tokenType = 0;
 
             //CONTINUE SCANNING
             continue;
         }
 
         //GET NEXT STATE
-        // printf("\n%d FROM STATE %d\n", token->tokenType, LA->state);
+        
+        // printf("\nCHARACTER %c %d FROM STATE %d\xn", character, token->tokenType, LA->state);
         LA->state = getNextState(LA->state, (int)character);
         // printf("\nTO STATE %d\n", LA->state);  
 
@@ -402,7 +443,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         {
             setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
 
-            token = initialiseToken();
+            token->tokenType = 0;
 
             //PRINT AND RETURN NEXT TOKEN
             continue;
@@ -411,10 +452,8 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // TAKE ACTIONS FOR THE STATE
         token = takeActions(LA, token);
 
-
-
         if (token->tokenType == LEXICAL_ERROR){
-            token = initialiseToken();
+            token->tokenType = 0;
             continue;
         }
 
@@ -482,7 +521,7 @@ int main()
     while ((token = scanToken(LA)))
     {
         // printf("HU");
-        printf("(%s : %s) ", TokenToString(token->tokenType), token->lexeme);
+        printf("(%s : %s) \n", TokenToString(token->tokenType), token->lexeme);
     }
 
     // printSymbolTable();
