@@ -1,4 +1,3 @@
-file = "../Documents/Grammar/corrected_grammar.md"
 
 # grammar->productions = {
 #     {   # list of tokens
@@ -65,46 +64,126 @@ nonterminals = {
 }
 
 
-if __name__ == "__main__":
-
+def read_data_from_file(file):
     with open(file, 'r') as f:
         data = f.readlines()
+    return data
 
-        print("grammar->productions = {", end="")
+def process_rule(rule):
+    rule = rule.split(".")[-1]  # remove the number at the start of the line
+    nonterm, multi_prod = rule.split("===>")
+    nonterm = nonterm.strip()
+    nonterm = nonterminals.get(nonterm, nonterm)
 
-        for rule_no,rule in enumerate(data):
-            rule = rule.split(".")[-1] # remove the number at the start of the line
-            nonterm, multi_prod = rule.split("===>")
-            nonterm = nonterm.strip()
-            nonterm = nonterminals.get(nonterm, nonterm)
+    multi_prod = multi_prod.replace("\n","").split("|")
+    productions = []
 
-            multi_prod = multi_prod.split("|")
+    for prod in multi_prod:
+        prod = prod.strip()
+        vars = prod.split(" ")
+        production = []
 
-            print("{"+str(len(multi_prod))+",{", end="")
+        for var in vars:
+            is_nonterminal = 0
+            if var in nonterminals:
+                var = "NT_" + nonterminals[var]
+                is_nonterminal = 1
+            elif var == "ePSILON":
+                var = "NT_EPS"
 
-            for i,prod in enumerate(multi_prod):
-                prod = prod.strip()
-                vars = prod.split(" ")
-                print("{",end="")
+            production.append((var, is_nonterminal))
 
-                for j,var in enumerate(vars):
-                    k = 0
-                    if var in nonterminals:
-                        var="NT_"+nonterminals[var]
-                        k = 1
-                    elif var == "∈":
-                        var = "NT_EPS"
-                    
-                    print("{"+var+","+str(k)+"}",end="")
-                    if j != len(vars)-1:
-                        print(",",end="")
+        productions.append(production)
 
-                print("}",end="")
-                if i != len(multi_prod)-1:
-                    print(",",end="")
+    return productions
 
-            print("}}", end="")
-            if rule_no != len(data)-1:
-                print(",",end="")
+def print_grammar(data):
+    print("grammar->productions = {", end="")
 
-        print("};")
+    for rule_no, rule in enumerate(data):
+        productions = process_rule(rule)
+
+        print("{" + str(len(productions)) + ",{", end="")
+
+        for i, prod in enumerate(productions):
+            print("{", end="")
+            for j, (var, k) in enumerate(prod):
+                print("{" + var + "," + str(k) + "}", end="")
+                if j != len(prod) - 1:
+                    print(",", end="")
+            print("}", end="")
+            if i != len(productions) - 1:
+                print(",", end="")
+
+        print("}}", end="")
+        if rule_no != len(data) - 1:
+            print(",", end="")
+
+    print("};")
+
+def max_num_productions(data):
+    max_num = 0
+    max_rule = ""
+    
+    for rule in data:
+        productions = process_rule(rule)
+        num_productions = len(productions)
+        
+        if num_productions > max_num:
+            max_num = num_productions
+            max_rule = rule.strip()
+    
+    print(f"max number of productions is: {max_rule}\n\033[93m(max productions: {max_num})\033[00m")
+    return max_num
+
+def max_vars(data):
+    max_vars_count = 0
+    max_rule = ""
+    
+    for rule in data:
+        productions = process_rule(rule)
+        
+        for prod in productions:
+            vars_count = len(prod)
+            
+            if vars_count > max_vars_count:
+                max_vars_count = vars_count
+                max_rule = rule.strip()
+    
+    print(f"max number of variables is: {max_rule}\n\033[93m(max variables: {max_vars_count})\033[00m")
+    return max_vars_count
+
+
+def print_enum(data):
+
+    non_terminals_list = []
+    
+    for rule in data:
+        rule = rule.split(".")[-1]  # remove the number at the start of the line
+        nonterm, multi_prod = rule.split("===>")
+        nonterm = nonterm.strip()
+        if not nonterm in nonterminals:
+            raise Exception(f"non-terminal {nonterm} not found in nonterminals dict")
+        non_terminals_list.append(nonterminals[nonterm])
+
+    print("enum NonTerminals\n{")
+    for non_terminal in non_terminals_list:
+        print(f"  NT_{non_terminal},")
+    print("  NT_EPS")
+    print("};")
+
+    print(f"\033[93m(non terminals count (eXcluding epsilon): {len(non_terminals_list)})\033[00m")
+
+
+
+if __name__ == "__main__":
+    file = "../Documents/Grammar/corrected_grammar.md"
+    data = read_data_from_file(file)
+
+    print_grammar(data)
+    print()
+    max_num_productions(data)
+    max_vars(data)
+    print()
+    print_enum(data)
+    print()

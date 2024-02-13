@@ -2,9 +2,10 @@
 //MAKE AN ENUM FOR NONTERMINALS#
 
 #include "syntactical.h"
-#define MAX_NUM_PRODUCTIONS 9
-#define MAX_VARS 10
-#define NUM_NON_TERMINALS 51 // num productions
+
+#define MAX_NUM_PRODUCTIONS 6
+#define MAX_VARS 9
+#define NUM_NON_TERMINALS 50 // num productions
 #define SET_SIZE 200
 //STRUCTURE FOR A GRAMMAR
 
