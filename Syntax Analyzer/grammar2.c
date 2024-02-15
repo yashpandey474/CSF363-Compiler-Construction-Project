@@ -356,6 +356,12 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
             int length = sizeof(productions[nonTerminal].rules[j]) / sizeof(productions[nonTerminal].rules[j][0]);
 
             printf("length=%d\n", length);
+            int set_index = production[index].val;
+            if (production[index].flag == 0)
+            {
+                set_index += NUM_NON_TERMINALS;
+            }
+
             while (index < length && production[index].flag == 1 && containsEPS(sets_for_all[production[index].val]->firstSets))
             {
                 
@@ -365,12 +371,11 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
                     computeFirstSetNT(productions, sets_for_all, production[index].val);
                 }
 
-                //APPEND THE SET
-                appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[production[index].val]->firstSets);
+                appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[set_index]->firstSets);
                 index++;
                 sets_for_all[nonTerminal]->firstSets[TK_EPS] = 0;
 
-                printf("INDEX %d NONTERMINAL %s %s\n", index, NonTerminalToString(nonTerminal), NonTerminalToString(index));
+                // printf("INDEX %d NONTERMINAL %s %s\n", index, NonTerminalToString(nonTerminal), NonTerminalToString(index));
             }
             // if all the productions have not had epsilon, then remove the epsilon value
             if (index != length)
@@ -379,14 +384,7 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
                 // if the flag was 0, and there was a terminal
                 // or there was a non terminal whose first set did not contain epsilon
                 // then we simply add the first set for that variable
-                appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[production[index].val]->firstSets);
-
-                if (production[index].flag == 1){
-                    printf("NT INDEX %d FINAL %s %s\n", index, NonTerminalToString(nonTerminal), NonTerminalToString(production[index].val));
-                }
-                else{
-                    printf("T INDEX %d FINAL %s %s %d\n", index, NonTerminalToString(nonTerminal), TokenToString(production[index].val));
-                }
+                appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[set_index]->firstSets);
             }
             else
             {
