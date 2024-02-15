@@ -10,7 +10,7 @@
 10. <constructedDatatype> ===> <A> TK_RUID
 11. <remaining_list>===>TK_COMMA <parameter_list> | ePSILON
 12. <stmts>===><typeDefinitions> <declarations> <otherStmts> <returnStmt>
-13. <typeDefinitions> ===> <typeDefinition> <typeDefinitions> | <definetypestmt> <typeDefinition> | ePSILON
+13. <typeDefinitions> ===> <typeDefinition> <typeDefinitions> | <definetypestmt> <typeDefinitions> | ePSILON
 14. <typeDefinition> ===> TK_RECORD TK_RUID <fieldDefinitions> TK_ENDRECORD | TK_UNION TK_RUID <fieldDefinitions> TK_ENDUNION
 16. <fieldDefinitions>===> <fieldDefinition> <fieldDefinition> <moreFields>
 17. <fieldDefinition>===> TK_TYPE <new1>
