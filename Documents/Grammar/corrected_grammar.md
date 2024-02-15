@@ -12,7 +12,7 @@
 12. <stmts>===><typeDefinitions> <declarations> <otherStmts> <returnStmt>
 13. <typeDefinitions> ===> <typeDefinition> <typeDefinitions> | <definetypestmt> <typeDefinitions> | ePSILON
 14. <typeDefinition> ===> TK_RECORD TK_RUID <fieldDefinitions> TK_ENDRECORD | TK_UNION TK_RUID <fieldDefinitions> TK_ENDUNION
-16. <fieldDefinitions>===> <fieldDefinition> <fieldDefinition> <moreFields>
+16. <fieldDefinitions>===> <fieldDefinition> <fieldDefinitions> <moreFields>
 17. <fieldDefinition>===> TK_TYPE <datatype> TK_COLON TK_FIELDID TK_SEM
 18. <moreFields>===> <fieldDefinition> <moreFields> | ePSILON
 19. <declarations> ===> <declaration> <declarations>|ePSILON
