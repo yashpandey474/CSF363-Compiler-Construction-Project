@@ -1,5 +1,32 @@
 #include "../Lexical Analyzer/lexical.h"
+#include <stdbool.h>
+#define MAX_NUM_PRODUCTIONS 6
+#define MAX_VARS 9
+#define NUM_TERMINALS 67     // including epsilon
+#define NUM_NON_TERMINALS 50 // num productions
+#define SET_SIZE 200
+#include <stdio.h>
+#include <stdlib.h>
 
+
+struct Variable
+{
+  int val;
+  int flag; // 0 FOR TERMINAL AND 1 FOR NONTERMINAL
+};
+
+struct Sets
+{
+  bool firstSets[NUM_TERMINALS];
+  bool followSets[NUM_TERMINALS];
+};
+
+struct GrammarRule
+{
+  // enum NonTerminals nonTerminal;
+  int numProductions;
+  struct Variable rules[MAX_NUM_PRODUCTIONS][MAX_VARS];
+};
 
 enum NonTerminals
 {
@@ -52,6 +79,6 @@ enum NonTerminals
   NT_ID_LIST,
   NT_MORE_IDS,
   NT_DEFINETYPE_STMT,
-  NT_A,
-  NT_EPS
+  NT_A
+  
 };

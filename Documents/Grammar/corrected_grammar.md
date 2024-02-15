@@ -7,14 +7,13 @@
 7. <parameter_list>===> <dataType> TK_ID <remaining_list>
 8. <dataType>===> <primitiveDatatype> | <constructedDatatype>
 9. <primitiveDatatype>===> TK_INT | TK_REAL
-10. <constructedDatatype> ===> <A> TK_RUID
+10. <constructedDatatype> ===> <A> TK_RUID | TK_RUID
 11. <remaining_list>===>TK_COMMA <parameter_list> | ePSILON
 12. <stmts>===><typeDefinitions> <declarations> <otherStmts> <returnStmt>
 13. <typeDefinitions> ===> <typeDefinition> <typeDefinitions> | <definetypestmt> <typeDefinitions> | ePSILON
 14. <typeDefinition> ===> TK_RECORD TK_RUID <fieldDefinitions> TK_ENDRECORD | TK_UNION TK_RUID <fieldDefinitions> TK_ENDUNION
 16. <fieldDefinitions>===> <fieldDefinition> <fieldDefinition> <moreFields>
-17. <fieldDefinition>===> TK_TYPE <new1>
-<new1> ===> <primitiveDatatype> TK_COLON TK_FIELDID TK_SEM | TK_FIELDID TK_COLON TK_FIELDID TK_SEM
+17. <fieldDefinition>===> TK_TYPE <datatype> TK_COLON TK_FIELDID TK_SEM
 18. <moreFields>===> <fieldDefinition> <moreFields> | ePSILON
 19. <declarations> ===> <declaration> <declarations>|ePSILON
 20. <declaration>===> TK_TYPE <dataType> TK_COLON TK_ID <optional_global> TK_SEM
