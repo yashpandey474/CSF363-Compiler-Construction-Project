@@ -2,35 +2,31 @@
 #include <string.h>
 #include<stdlib.h>
 #include<syntactical.h>
-//st
+
+// Struct for the array of linked lists
+struct LinkedListArray {
+    struct Node* head;
+};
+
 //structure of Linked list node
 struct Node
 {
   struct Variable data;
-  struct node *next;
+  struct Node *next;
 };
-// Function to add an elements at the beggining of the linked list
-void insert_at_beginning(struct Node** headRef, int newData) {
-    // Allocate memory for new node
+// Function to create a new node with the given data
+struct Node* createNode(struct Variable data) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    
-    // Check if memory allocation was successful
     if (newNode == NULL) {
-        printf("Memory allocation failed.\n");
-        return;
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(1);
     }
-    
-    // Assign data to the new node
-    newNode->data = newData;
-    
-    // Set the next pointer of the new node to point to the current head
-    newNode->next = *headRef;
-    
-    // Update the head to point to the new node
-    *headRef = newNode;
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
 }
 // Function to create a singly linked list with the given elements
-struct Node* createLinkedList(struct Data* elements, int size) {
+struct Node* createLinkedList(struct Variable* elements, int size) {
     struct Node* head = NULL;
     struct Node* tail = NULL;
 
@@ -52,13 +48,22 @@ struct Node* createLinkedList(struct Data* elements, int size) {
 
     return head;
 }
+// Function to insert a new node at the beginning of the linked list
+void insertAtBeginning(struct Node** headRef, struct Variable newData) {
+    // Create a new node
+    struct Node* newNode = createNode(newData);
+
+    // Set the next pointer of the new node to point to the current head
+    newNode->next = *headRef;
+
+    // Update the head to point to the new node
+    *headRef = newNode;
+}
 // Function to print all elements of the linked list
 void printList(struct Node* head) {
     struct Node* current = head;
-
-    // Traverse the list and print each element
     while (current != NULL) {
-        printf("%d ", current->data);
+        printf("(val: %d, flag: %d) ", current->data.val, current->data.flag);
         current = current->next;
     }
     printf("\n");
