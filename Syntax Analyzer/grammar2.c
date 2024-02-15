@@ -282,9 +282,9 @@ const char *TokenToString(enum Tokentype token)
     case TK_NOT:
         return "TK_NOT";
     case TK_LT1:
-        return "TK_LT1";
     case TK_LT2:
-        return "TK_LT2";
+    case TK_LT:
+        return "TK_LT";
     case TK_LE:
         return "TK_LE";
     case TK_EQ:
@@ -329,6 +329,83 @@ bool isEmpty (bool *destinationSet){
     }
     return true;
 }
+
+int recomputeSetIndex(struct Variable var){
+    int set_index = var.val;
+    if (var.flag == 0)
+    {
+        set_index += NUM_NON_TERMINALS;
+    }
+    return set_index;
+}
+
+void computeFollowSet(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal){
+    int numberOfRules = productions[nonTerminal].numProductions;
+    for (int j = 0; j < numberOfRules; j++)
+    {
+        // GET THE PRODUCTION
+        struct Variable *production = productions[nonTerminal].rules[j];
+
+        // LAST SYMBOL IN RULE IS A NON-TERMINAL
+        if (production[-1].flag == 1)
+        {
+            appendSetToSet(sets_for_all[nonTerminal]->followSets, production[0]);
+            continue;
+        }
+
+        // index keeps track of how many non-terminals we have looked at so far
+        int index = 0;
+
+        // length is supposed to keep the max of non-terminals we could have to check for
+        int length = sizeof(productions[nonTerminal].rules[j]) / sizeof(productions[nonTerminal].rules[j][0]);
+
+        int set_index = recomputeSetIndex(production[index]);
+
+        while (index < length && production[index].flag == 1)
+        {
+            // RECOMPUTE SET INDEX
+            set_index = production[index].val;
+
+            // CHECK WHETHER THE SET IS EMPTY
+            if (isEmpty(sets_for_all[set_index]->firstSets))
+            {
+                // COMPUTE ITS FIRST SET
+                computeFirstSetNT(productions, sets_for_all, production[index].val);
+            }
+
+            // ADD THE SET
+            appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[set_index]->firstSets);
+
+            // I ONLY KNOW IF THE SET HAS EPSILON AFTER COMPUTING IT IF IT WAS EMPTY
+            if (!containsEPS(sets_for_all[set_index]->firstSets))
+            {
+                break;
+            }
+
+            index++;
+        }
+
+        if (index != length)
+        {
+            // RECOMPUTE SET INDEX
+            set_index = recomputeSetIndex(production[index]);
+
+            if (nonTerminal == NT_FUN_CALL_STMT)
+            {
+                printf("%d\n", index);
+            }
+
+            // printf("INDEX %d APPENDED\n", index);
+            appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[set_index]->firstSets);
+            sets_for_all[nonTerminal]->firstSets[TK_EPS] = 0;
+        }
+
+        else
+        {
+            sets_for_all[nonTerminal]->firstSets[TK_EPS] = 1;
+        }
+    }
+}
 void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal)
 {
     //FOR EVERY PRODUCTION
@@ -353,38 +430,22 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
         int length = sizeof(productions[nonTerminal].rules[j]) / sizeof(productions[nonTerminal].rules[j][0]);
 
 
-        int set_index = production[index].val;
-        if (production[index].flag == 0)
-        {
-            set_index += NUM_NON_TERMINALS;
-        }
+        int set_index = recomputeSetIndex(production[index]);
 
         while (index < length && production[index].flag == 1)
         {
             //RECOMPUTE SET INDEX
             set_index = production[index].val;
-            if (production[index].flag == 0)
-            {
-                set_index += NUM_NON_TERMINALS;
-            }
 
                 //CHECK WHETHER THE SET IS EMPTY
             if (isEmpty(sets_for_all[set_index]->firstSets)){
-                if (nonTerminal == NT_PROGRAM)
-                {
-                    printf("%s EMPTY\n", NonTerminalToString(production[index].val));
-                }
                     //COMPUTE ITS FIRST SET
                 computeFirstSetNT(productions, sets_for_all, production[index].val);
             }
 
                 //ADD THE SET
-            // printf("APPENDED");
             appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[set_index]->firstSets);
                 
-            if (nonTerminal == NT_PROGRAM){
-                printf("%s IN LOOP\n", NonTerminalToString(production[index].val));
-            }
 
             //I ONLY KNOW IF THE SET HAS EPSILON AFTER COMPUTING IT IF IT WAS EMPTY
             if (!containsEPS(sets_for_all[set_index]->firstSets)){
@@ -395,8 +456,18 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
         }
 
         if (index != length){
+            //RECOMPUTE SET INDEX
+            set_index = recomputeSetIndex(production[index]);
+
+
+            if (nonTerminal == NT_FUN_CALL_STMT){
+                printf("%d\n", index);
+            }
+
+
             // printf("INDEX %d APPENDED\n", index);
             appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[set_index]->firstSets);
+            sets_for_all[nonTerminal]->firstSets[TK_EPS] = 0;
         }
 
         else{
@@ -404,8 +475,6 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
         }
         
     }
-
-    printf("%s FIRST SET COMPUTED\n", NonTerminalToString(nonTerminal));
 
 }
 void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions)

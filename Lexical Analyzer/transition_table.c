@@ -183,9 +183,9 @@ const char *TokenToString(enum Tokentype token)
     case TK_NOT:
         return "TK_NOT";
     case TK_LT1:
-        return "TK_LT1";
     case TK_LT2:
-        return "TK_LT2";
+    case TK_LT:
+        return "TK_LT";
     case TK_LE:
         return "TK_LE";
     case TK_EQ:

@@ -25,13 +25,13 @@
 <fieldDefinition> ===> TK_TYPE <datatype> TK_COLON TK_FIELDID TK_SEM
 <moreFields> ===> <fieldDefinition> <moreFields>
 <moreFields> ===> ePSILON
-<declarations> ===> <declaration> <declarations>|ePSILON
+<declarations> ===> <declaration> <declarations> | ePSILON
 <declaration> ===> TK_TYPE <dataType> TK_COLON TK_ID <optional_global> TK_SEM
-<optional_global> ===> TK_COLON TK_GLOBAL| ePSILON
+<optional_global> ===> TK_COLON TK_GLOBAL | ePSILON
 <otherStmts> ===> <stmt> <otherStmts>
 <otherStmts> ===> ePSILON
 <stmt> ===> <assignmentStmt>
-<stmt> ===> <iterativeStmt>|<conditionalStmt>|<ioStmt>| <funCallStmt>
+<stmt> ===> <iterativeStmt> | <conditionalStmt> | <ioStmt> | <funCallStmt>
 <assignmentStmt> ===> <singleOrRecId> TK_ASSIGNOP <arithmeticExpression> TK_SEM
 <singleOrRecId> ===> TK_ID <recID>
 <recID> ===> TK_DOT TK_FIELDID <recID>
@@ -80,3 +80,4 @@
 <definetypestmt> ===> TK_DEFINETYPE <A> TK_RUID TK_AS TK_RUID 
 <A> ===> TK_RECORD
 <A> ===> TK_UNION
+

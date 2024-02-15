@@ -1,6 +1,26 @@
 with open('../Documents/Grammar/input.txt', 'r') as file:
-    data=file.read()
+    data = file.read()
+    data = data.split('\n')
+with open('../Documents/Grammar/input.txt', 'w') as file:
+    file.write('')
+with open('../Documents/Grammar/input.txt', 'a') as file:
+    dict1={}
+    for i in data:
+        # print(i)
+        key, value =i.split(' ===> ')
+        dict1[key]=value
+    for i in dict1.keys():
+        dict1[i]=dict1[i].split('|')
+        for j in dict1[i]:
+            j.strip()
+    for i in dict1.keys():
+        for j in dict1[i]:
+            file.write(i+' ===> '+j+'\n')
 
+
+with open('../Documents/Grammar/input.txt', 'r') as file:
+    data=file.read()
+    
 
 nonterminals = {
     '<program>': 'PROGRAM',
@@ -59,9 +79,9 @@ nonterminals = {
 def process_rule(rule):
     nonterm, multi_prod = rule.split("===>")
     nonterm = nonterm.strip()
-    nonterm = nonterminals.get(nonterm, nonterm)
-
-    productions = []
+    nonterm = nonterminals[nonterm]
+    multi_prod=[multi_prod]
+    
 
     for prod in multi_prod:
         prod = prod.strip()
@@ -77,9 +97,34 @@ def process_rule(rule):
                 var = "TK_EPS"
 
             production.append((var, is_nonterminal))
+    return nonterm, [production]
 
-        productions.append(production)
+def print_grammar(data):
+    print("struct GrammarRule productions[NUM_NON_TERMINALS] = ", end="")
 
-    return productions
+    for rule_no, rule in enumerate(data):
+        nonterminals, productions = process_rule(rule)
 
-for rule in 
+        print("{" + str(len(productions)) + ",{", end="")
+
+        for i, prod in enumerate(productions):
+            print("{", end="")
+            for j, (var, k) in enumerate(prod):
+                print("{" + var + "," + str(k) + "}", end="")
+                if j != len(prod) - 1:
+                    print(",", end="")
+            print("}", end="")
+            if i != len(productions) - 1:
+                print(",", end="")
+
+        print("}}", end="")
+        if rule_no != len(data) - 1:
+            print(",", end="")
+
+    print(";")
+
+# for rule in data.split("\n"):
+#     if rule:
+#         print(process_rule(rule))
+
+print_grammar(data.split("\n"))
