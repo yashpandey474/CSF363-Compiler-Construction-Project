@@ -107,7 +107,8 @@ typedef enum Tokentype
     TK_NUM,
     TK_LT,
     TK_EPS,
-    TK_EOF
+    TK_EOF,
+    LEXICAL_ERROR
 } Tokentype;
 
 struct SymbolTableEntry

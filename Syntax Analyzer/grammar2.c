@@ -384,7 +384,7 @@ void computeFollowSetNT(struct GrammarRule *productions, struct Sets **sets_for_
                 // EPSILON UPTO THE LAST SYMBOL AFTER INDEX1
                 if (index2 == length)
                 {
-                    appendSetToSet(sets_for_all[nonTerminal]->followSets, sets_for_all[i]->followSets);
+                    appendSetToSet(sets_for_all[index1]->followSets, sets_for_all[nonTerminal]->followSets);
                 }
 
                 //REMOVE EPSILON FROM FOLLOW SET: NO FOLLOW SET CAN HAVE EPSILON
