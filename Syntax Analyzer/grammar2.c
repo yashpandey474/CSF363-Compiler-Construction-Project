@@ -9,14 +9,14 @@
 
 
 // Functions
-int appendVarToSet(bool *set, struct Variable element)
+int appendVarToSet(bool *set, enum Tokentype element)
 {
-    if (set[element.val] == true)
+    if (set[element] == true)
     {
         // Element already exists in the set
         return 0;
     }
-    set[element.val] = true;
+    set[element] = true;
     return 1;
 }
 
@@ -339,73 +339,82 @@ int recomputeSetIndex(struct Variable var){
     return set_index;
 }
 
-void computeFollowSet(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal){
+
+void computeFollowSetNT(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal)
+{
     int numberOfRules = productions[nonTerminal].numProductions;
     for (int j = 0; j < numberOfRules; j++)
     {
         // GET THE PRODUCTION
         struct Variable *production = productions[nonTerminal].rules[j];
 
-        // LAST SYMBOL IN RULE IS A NON-TERMINAL
-        if (production[-1].flag == 1)
-        {
-            appendSetToSet(sets_for_all[nonTerminal]->followSets, production[0]);
-            continue;
-        }
-
-        // index keeps track of how many non-terminals we have looked at so far
-        int index = 0;
-
-        // length is supposed to keep the max of non-terminals we could have to check for
+        //GET THE LENGTH OF THE PRODUCTION
         int length = sizeof(productions[nonTerminal].rules[j]) / sizeof(productions[nonTerminal].rules[j][0]);
-
-        int set_index = recomputeSetIndex(production[index]);
-
-        while (index < length && production[index].flag == 1)
+        for (int index1 = 0; index1 < length - 1; index1++)
         {
-            // RECOMPUTE SET INDEX
-            set_index = production[index].val;
-
-            // CHECK WHETHER THE SET IS EMPTY
-            if (isEmpty(sets_for_all[set_index]->firstSets))
-            {
-                // COMPUTE ITS FIRST SET
-                computeFirstSetNT(productions, sets_for_all, production[index].val);
+            //IF IT IS A TERMINAL: NO FOLLOW SET: SKIP
+            if (production[index1].flag = 0){
+                continue;
             }
 
-            // ADD THE SET
-            appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[set_index]->firstSets);
-
-            // I ONLY KNOW IF THE SET HAS EPSILON AFTER COMPUTING IT IF IT WAS EMPTY
-            if (!containsEPS(sets_for_all[set_index]->firstSets))
+                // If A -> αBβ, then Follow(B) = Follow(B) ∪ (First(β) - {ε})
+            int index2 = index1 + 1;
+            while (index2 < length)
             {
-                break;
+                int set_index = production[index2].val;
+
+                    // TERMINAL: INSTEAD OF ITERATING THROUGH WHOLE SET; ADD JUST THE TERMINAL
+                    if (production[index2].flag == 0)
+                    {
+                        appendVarToSet(sets_for_all[index1]->followSets, production[index2].val);
+                        //CANNOT CONTAIN EPSILON: NO FURTHER FIRST SETS ARE ADDED
+                        break;
+                    }
+                    
+                    //NON TERMINAL: ADD ITS FIRST SET
+                    appendSetToSet(sets_for_all[nonTerminal]->followSets, sets_for_all[set_index]->firstSets);
+
+                    // NO EPSILON: NO MORE FIRST SETS ADDED FROM THIS PRODUCTION
+                    if (!containsEPS(sets_for_all[set_index]->firstSets))
+                    {
+                        break;
+                    }
             }
 
-            index++;
-        }
+                // EPSILON UPTO THE LAST SYMBOL AFTER INDEX1
+                if (index2 == length)
+                {
+                    appendSetToSet(sets_for_all[nonTerminal]->followSets, sets_for_all[i]->followSets);
+                }
 
-        if (index != length)
-        {
-            // RECOMPUTE SET INDEX
-            set_index = recomputeSetIndex(production[index]);
-
-            if (nonTerminal == NT_FUN_CALL_STMT)
-            {
-                printf("%d\n", index);
-            }
-
-            // printf("INDEX %d APPENDED\n", index);
-            appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[set_index]->firstSets);
-            sets_for_all[nonTerminal]->firstSets[TK_EPS] = 0;
-        }
-
-        else
-        {
-            sets_for_all[nonTerminal]->firstSets[TK_EPS] = 1;
+                //REMOVE EPSILON FROM FOLLOW SET: NO FOLLOW SET CAN HAVE EPSILON
+                sets_for_all[index1]->followSets[TK_EPS] = false;
+            
         }
     }
 }
+
+void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *productions)
+{
+
+    // ADD TK_EOF [END OF INPUT MARKER] to follow set of NT_PROGRAM (start symbol)
+    appendVarToSet(sets_for_all[NT_PROGRAM]->followSets, TK_EOF);
+
+
+    for (int i = 0; i < NUM_NON_TERMINALS; i++)
+    {
+        //THE PRODUCTIONS OF  ONE NON TERMINAL HELP COMPUTE THE FOLLOW SET FOR OTHERS
+        computeFollowSetNT(productions, sets_for_all, i);
+        
+    }
+
+    // PRINT ALL THE FOLLOW SETS NON TERMINALS
+    for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
+    {
+        printSetWithIndex(sets_for_all[i]->followSets, i, 1);
+    }
+}
+
 void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal)
 {
     //FOR EVERY PRODUCTION
@@ -418,7 +427,7 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
         // first we check if the rule is an epsilon rule for that non terminal
         if (production[0].val == TK_EPS)
         {
-            appendVarToSet(sets_for_all[nonTerminal]->firstSets, production[0]);
+            appendVarToSet(sets_for_all[nonTerminal]->firstSets, TK_EPS);
             continue;
         }
 
@@ -458,12 +467,6 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
         if (index != length){
             //RECOMPUTE SET INDEX
             set_index = recomputeSetIndex(production[index]);
-
-
-            if (nonTerminal == NT_FUN_CALL_STMT){
-                printf("%d\n", index);
-            }
-
 
             // printf("INDEX %d APPENDED\n", index);
             appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[set_index]->firstSets);
