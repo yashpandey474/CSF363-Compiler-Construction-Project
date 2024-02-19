@@ -173,7 +173,7 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
                     }
 
                     // EPSILON UPTO THE LAST SYMBOL AFTER INDEX1
-                    if (index2 == length || (production[index2].val == 0 && production[index2].flag == 0))
+                    if (index2 == length || isDefault(production[index2]))
                     {
                         res = appendSetToSet(sets_for_all[production[index1].val]->followSets, sets_for_all[nonTerminal]->followSets);
                         
@@ -194,6 +194,12 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
     }
 }
 
+bool isDefault(struct Variable var){
+    if (var.flag == 0 && var.val == 0){
+        return true;
+    }
+    return false;
+}
 
 void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal)
 {
@@ -243,7 +249,7 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
             index++;
         }
 
-        if (index != length)
+        if (index != length || isDefault(production[index]))
         {
             // RECOMPUTE SET INDEX
             set_index = recomputeSetIndex(production[index]);
