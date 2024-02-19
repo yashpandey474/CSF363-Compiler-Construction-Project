@@ -25,7 +25,6 @@ void printSymbolTable();
 
 void changeForward(struct LexicalAnalyzer *LA, int flag);
 
-
 struct SymbolTableNode
 {
     struct SymbolTableEntry *entry;
@@ -167,5 +166,10 @@ extern CharacterType characterTypeMap[129];
 
 const char *CharacterTypeToString(enum CharacterType type);
 const char *TokenToString(enum Tokentype token);
+FILE *readTestFile(char *file_path);
+struct TwinBuffer *initialiseTwinBuffer(FILE *file);
+struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer);
+int readIntoBuffer(struct TwinBuffer *twinBuffer);
+struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA);
 
 #endif

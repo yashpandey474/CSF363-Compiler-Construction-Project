@@ -487,42 +487,42 @@ struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer)
     return LA;
 }
 
-int main()
-{
+// int main()
+// {
 
-    // printf("ENTERED MAIN\n");
+//     // printf("ENTERED MAIN\n");
 
-    // INITIALISE THE SYMBOL TABLE
-    insertAllKeywords();
+//     // INITIALISE THE SYMBOL TABLE
+//     insertAllKeywords();
 
-    // printf("KEYWORDS\n");
+//     // printf("KEYWORDS\n");
 
-    // TEST THE TWIN BUFFER
-    FILE *file = readTestFile("test_program_with_errors.txt");
+//     // TEST THE TWIN BUFFER
+//     FILE *file = readTestFile("test_program_with_errors.txt");
 
-    // INITIALISE A TWIN BUFFER
-    struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
+//     // INITIALISE A TWIN BUFFER
+//     struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
 
-    // INITIALISE LA
-    struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
+//     // INITIALISE LA
+//     struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
 
-    // printf("LA INITIALISED\n");
+//     // printf("LA INITIALISED\n");
 
-    // START SCANNING
-    readIntoBuffer(twinBuffer);
+//     // START SCANNING
+//     readIntoBuffer(twinBuffer);
 
-    // printf("READ INPUT\n");
+//     // printf("READ INPUT\n");
 
-    // THE TOKEN
-    struct SymbolTableEntry *token;
+//     // THE TOKEN
+//     struct SymbolTableEntry *token;
 
-    // printf("STARTING SCANNING\n");
+//     // printf("STARTING SCANNING\n");
 
-    while ((token = scanToken(LA)))
-    {
-        // printf("HU");
-        printf("(%s : %s) \n", TokenToString(token->tokenType), token->lexeme);
-    }
+//     while ((token = scanToken(LA)))
+//     {
+//         // printf("HU");
+//         printf("(%s : %s) \n", TokenToString(token->tokenType), token->lexeme);
+//     }
 
-    // printSymbolTable();
-}
+//     // printSymbolTable();
+// }
