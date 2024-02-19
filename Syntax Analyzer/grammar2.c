@@ -9,15 +9,15 @@
 
 
 // Functions
-int appendVarToSet(bool *set, enum Tokentype element)
+bool appendVarToSet(bool *set, enum Tokentype element)
 {
     if (set[element] == true)
     {
         // Element already exists in the set
-        return 0;
+        return false;
     }
     set[element] = true;
-    return 1;
+    return true;
 }
 
 bool containsEPS(bool *set)
@@ -25,18 +25,25 @@ bool containsEPS(bool *set)
     Tokentype value = TK_EPS;
     if (set[value] == true)
     {
-        return 1;
+        return false;
     }
-    return 0;
+    return true;
 }
 
-void appendSetToSet(bool *destinationSet, bool *sourceSet)
+bool appendSetToSet(bool *destinationSet, bool *sourceSet)
 {
+    bool changed = false;
     for (size_t i = 0; i < NUM_TERMINALS; ++i)
     {
+        //ADDING AN ELEMENT: CHANGED IS TRUE
+        if (sourceSet[i] == true && destinationSet[i] == false){
+            changed = true;
+        }
 
         destinationSet[i] = destinationSet[i] || sourceSet[i];
     }
+    
+    return changed;
 }
 
 const char *NonTerminalToString(enum NonTerminals nonTerminal)
@@ -339,61 +346,6 @@ int recomputeSetIndex(struct Variable var){
     return set_index;
 }
 
-
-void computeFollowSetNT(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal)
-{
-    int numberOfRules = productions[nonTerminal].numProductions;
-    for (int j = 0; j < numberOfRules; j++)
-    {
-        // GET THE PRODUCTION
-        struct Variable *production = productions[nonTerminal].rules[j];
-
-        //GET THE LENGTH OF THE PRODUCTION
-        int length = sizeof(productions[nonTerminal].rules[j]) / sizeof(productions[nonTerminal].rules[j][0]);
-        for (int index1 = 0; index1 < length - 1; index1++)
-        {
-            //IF IT IS A TERMINAL: NO FOLLOW SET: SKIP
-            if (production[index1].flag = 0){
-                continue;
-            }
-
-                // If A -> αBβ, then Follow(B) = Follow(B) ∪ (First(β) - {ε})
-            int index2 = index1 + 1;
-            while (index2 < length)
-            {
-                int set_index = production[index2].val;
-
-                    // TERMINAL: INSTEAD OF ITERATING THROUGH WHOLE SET; ADD JUST THE TERMINAL
-                    if (production[index2].flag == 0)
-                    {
-                        appendVarToSet(sets_for_all[index1]->followSets, production[index2].val);
-                        //CANNOT CONTAIN EPSILON: NO FURTHER FIRST SETS ARE ADDED
-                        break;
-                    }
-                    
-                    //NON TERMINAL: ADD ITS FIRST SET
-                    appendSetToSet(sets_for_all[nonTerminal]->followSets, sets_for_all[set_index]->firstSets);
-
-                    // NO EPSILON: NO MORE FIRST SETS ADDED FROM THIS PRODUCTION
-                    if (!containsEPS(sets_for_all[set_index]->firstSets))
-                    {
-                        break;
-                    }
-            }
-
-                // EPSILON UPTO THE LAST SYMBOL AFTER INDEX1
-                if (index2 == length)
-                {
-                    appendSetToSet(sets_for_all[index1]->followSets, sets_for_all[nonTerminal]->followSets);
-                }
-
-                //REMOVE EPSILON FROM FOLLOW SET: NO FOLLOW SET CAN HAVE EPSILON
-                sets_for_all[index1]->followSets[TK_EPS] = false;
-            
-        }
-    }
-}
-
 void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *productions)
 {
 
@@ -401,11 +353,66 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
     appendVarToSet(sets_for_all[NT_PROGRAM]->followSets, TK_EOF);
 
 
-    for (int i = 0; i < NUM_NON_TERMINALS; i++)
-    {
-        //THE PRODUCTIONS OF  ONE NON TERMINAL HELP COMPUTE THE FOLLOW SET FOR OTHERS
-        computeFollowSetNT(productions, sets_for_all, i);
-        
+    //WHILE THERE IS A CHANGE IN SOMEONE'S FOLLOW SET
+    bool changed = true;
+    bool res = false;
+    while (changed == true){
+        changed = false;
+
+        for (int nonTerminal = 0; nonTerminal < NUM_NON_TERMINALS; nonTerminal += 1){
+            int numberOfRules = productions[nonTerminal].numProductions;
+            for (int j = 0; j < numberOfRules; j++)
+            {
+                // GET THE PRODUCTION
+                struct Variable *production = productions[nonTerminal].rules[j];
+
+                // GET THE LENGTH OF THE PRODUCTION
+                int length = sizeof(productions[nonTerminal].rules[j]) / sizeof(productions[nonTerminal].rules[j][0]);
+                for (int index1 = 0; index1 < length; index1++)
+                {
+                    // IF IT IS A TERMINAL: NO FOLLOW SET: SKIP
+                    if (production[index1].flag == 0)
+                    {
+                        continue;
+                    }
+
+                    // If A -> αBβ, then Follow(B) = Follow(B) ∪ (First(β) - {ε})
+                    int index2 = index1 + 1;
+                    for (index2 = index1 + 1; index2 < length; index2++)
+                    {
+                        printf("%d %d %d\n", nonTerminal, index1, index2);
+                        // TERMINAL: INSTEAD OF ITERATING THROUGH WHOLE SET; ADD JUST THE TERMINAL
+                        if (production[index2].flag == 0)
+                        {
+                            res = appendVarToSet(sets_for_all[index1]->followSets, production[index2].val);
+                            changed = changed || res;
+                            // CANNOT CONTAIN EPSILON: NO FURTHER FIRST SETS ARE ADDED
+                            break;
+                        }
+
+                        // NON TERMINAL: ADD ITS FIRST SET
+                        res = appendSetToSet(sets_for_all[index1]->followSets, sets_for_all[production[index2].val]->firstSets);
+                        changed = changed || res;
+                        // NO EPSILON: NO MORE FIRST SETS ADDED FROM THIS PRODUCTION
+                        if (!containsEPS(sets_for_all[production[index2].val]->firstSets))
+                        {
+                            break;
+                        }
+                    }
+
+                    // EPSILON UPTO THE LAST SYMBOL AFTER INDEX1
+                    if (index2 == length)
+                    {
+                        res = appendSetToSet(sets_for_all[index1]->followSets, sets_for_all[nonTerminal]->followSets);
+                        changed = changed || res;
+                    }
+
+                    // REMOVE EPSILON FROM FOLLOW SET: NO FOLLOW SET CAN HAVE EPSILON
+                    sets_for_all[index1]->followSets[TK_EPS] = false;
+                }
+            }
+        }
+
     }
 
     // PRINT ALL THE FOLLOW SETS NON TERMINALS
@@ -510,7 +517,7 @@ void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions
 
 int main()
 {
-    freopen("output.txt", "w", stdout);
+    // freopen("output.txt", "w", stdout);
     struct Sets** sets_for_all = (struct Sets**)malloc(sizeof(struct Sets*)*(NUM_NON_TERMINALS + NUM_TERMINALS));
     
     for (int i = 0; i < NUM_NON_TERMINALS + NUM_TERMINALS; i += 1)
@@ -525,4 +532,5 @@ int main()
 
     
     computeFirstSet(sets_for_all, productions);
+    computeFollowSet(sets_for_all, productions);
 }
