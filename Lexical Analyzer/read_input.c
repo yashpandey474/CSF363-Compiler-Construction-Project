@@ -355,7 +355,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 // RELOAD OTHER BUFER
                 readIntoBuffer(LA->twinBuffer);
                 changeForward(LA, 1);
-                printf("RELOADED BUFFER\n");
+                // printf("RELOADED BUFFER\n");
 
                 //IF BOTH ARE AT EOF: INCREMENT BEGIN TOO
                 if (LA->begin == LA->forward){
@@ -370,7 +370,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 // AT START STATE
                 if (LA->state == 0)
                 {
-                    printf("\nEnd of input. Finished scanning");
+                    // printf("\nEnd of input. Finished scanning");
                     return NULL;
                 }
 
@@ -390,7 +390,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 // AT START STATE
                 if (LA->state == 0)
                 {
-                    printf("\nEnd of input. Finished scanning");
+                    // printf("\nEnd of input. Finished scanning");
                     return NULL;
                 }
 

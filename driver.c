@@ -1,4 +1,5 @@
 #include "Lexical Analyzer/lexical.h"
+#include <stdbool.h>
 
 #include <stdio.h>
 #include <time.h>
@@ -12,6 +13,8 @@ int main(int argc, char *argv[])
 {
     int option;
     clock_t start_time, end_time;
+    printf("FIRST and FOLLOW set automated\n");
+    printf("Lexical analyzer module developed\n");
 
     do
     {
@@ -22,7 +25,7 @@ int main(int argc, char *argv[])
         printf("3 : Parse and print parse tree\n");
         printf("4 : Print timing information\n");
 
-        printf("Enter option: ");
+        printf("Selected option: ");
         scanf("%d", &option);
 
         switch (option)
@@ -60,29 +63,42 @@ void remove_comments(char *filename)
         perror("Error opening file");
         return;
     }
+
     char buffer[50];
-    int prev_char = '\0'; // Store the previous character read
+    int prev_char = '\0';          // Store the previous character read
+    bool line_has_content = false; // Flag to track if the current line has non-comment content
 
     while (fgets(buffer, 50, file) != NULL)
     {
+        bool is_comment_line = false; // Flag to check if the current line is a comment line
         for (int i = 0; buffer[i] != '\0'; i++)
         {
+            // Check for the start of a comment
             if (prev_char == '%' && buffer[i] != '\n')
             {
+                is_comment_line = true;
                 continue;
             }
 
-            if (prev_char == '%' && buffer[i] == '\n')
+            // For new lines following a comment line, avoid printing if no content was found
+            if (is_comment_line && buffer[i] == '\n' && !line_has_content)
             {
-                printf("%c", buffer[i]);
+                break; // Skip printing the newline
             }
             else if (buffer[i] == '\n')
             {
-                printf("%c", buffer[i]);
+                if (line_has_content) // Only print newline if there was content
+                {
+                    printf("%c", buffer[i]);
+                }
+                line_has_content = false;
+                prev_char = buffer[i];
+                break;
             }
             else if (buffer[i] != '%')
             {
                 printf("%c", buffer[i]);
+                line_has_content = true;
             }
             prev_char = buffer[i];
         }
@@ -121,8 +137,9 @@ void print_token_list(char *filename)
 
     while ((token = scanToken(LA)))
     {
+
         // printf("HU");
-        printf("(%s : %s)", TokenToString(token->tokenType), token->lexeme);
+        printf("Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
     }
 }
 
