@@ -3,7 +3,7 @@
 #define MAX_NUM_PRODUCTIONS 6
 #define MAX_VARS 9
 #define NUM_TERMINALS 67     // including epsilon
-#define NUM_NON_TERMINALS 50 // num productions
+#define NUM_NON_TERMINALS 49 // num productions
 #define SET_SIZE 200
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,7 +46,6 @@ enum NonTerminals
   NT_TYPE_DEFINITION,
   NT_FIELD_DEFINITIONS,
   NT_FIELD_DEFINITION,
-  NT_NEW1,
   NT_MORE_FIELDS,
   NT_DECLARATIONS,
   NT_DECLARATION,
@@ -119,8 +118,6 @@ const char *NonTerminalToString(enum NonTerminals nonTerminal)
     return "NT_FIELD_DEFINITIONS";
   case NT_FIELD_DEFINITION:
     return "NT_FIELD_DEFINITION";
-  case NT_NEW1:
-    return "NT_NEW1";
   case NT_MORE_FIELDS:
     return "NT_MORE_FIELDS";
   case NT_DECLARATIONS:
