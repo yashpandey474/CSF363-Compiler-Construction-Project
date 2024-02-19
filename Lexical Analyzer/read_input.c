@@ -30,7 +30,7 @@ struct TwinBuffer
 
 void incrementLineNo(struct LexicalAnalyzer *LA)
 {
-    printf("\n >> line no : %d ended\n", LA->lineNo);
+    // printf("\n >> line no : %d ended\n", LA->lineNo);
     LA->lineNo += 1;
     return;
 }
