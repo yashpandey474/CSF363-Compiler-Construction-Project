@@ -32,7 +32,7 @@ nonterminals = {
     '<moreFields>': 'MORE_FIELDS',
     '<declarations>': 'DECLARATIONS',
     '<declaration>': 'DECLARATION',
-    '<optional_global>': 'OPTIONAL_GLOBAL',
+    '<global_or_not>': 'GLOBAL_OR_NOT',
     '<otherStmts>': 'OTHER_STMTS',
     '<stmt>': 'STMT',
     '<assignmentStmt>': 'ASSIGNMENT_STMT',
