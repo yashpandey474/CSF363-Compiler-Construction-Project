@@ -171,10 +171,6 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
                             break;
                         }
                     }
-                    if (nonTerminal == NT_STMT)
-                    {
-                        printf("HEELLO WHY? %s %d %d\n", NonTerminalToString(production[index1].val), index2, length);
-                    }
 
                     // EPSILON UPTO THE LAST SYMBOL AFTER INDEX1
                     if (index2 == length || (production[index2].val == 0 && production[index2].flag == 0))
