@@ -321,6 +321,8 @@ const char *TokenToString(enum Tokentype token)
   case TK_EPS:
     return "EPSILON";
 
+  case TK_EOF:
+    return "EOF";
   default:
     return "non accept state";
   }

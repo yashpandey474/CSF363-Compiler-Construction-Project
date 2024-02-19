@@ -10,14 +10,18 @@
 // Functions
 bool appendVarToSet(bool *set, struct Variable element)
 {
-    if (set[element.val] == true)
-    {
-        // Element already exists in the set
-        printf("ELE ALREADY EXISTS\n");
+    if (element.val == CARRIAGE_RETURN){
         return false;
     }
 
-    printf("ELE DID NOT EXIST?!");
+    if (set[element.val] == true)
+    {
+        // Element already exists in the set
+        // printf("ELE ALREADY EXISTS\n");
+        return false;
+    }
+
+    // printf("ELE DID NOT EXIST?!");
     set[element.val] = true;
     return true;
 }
@@ -27,6 +31,7 @@ bool containsEPS(bool *set)
     Tokentype value = TK_EPS;
     if (set[value] == true)
     {
+        // printf("CONTANS EPS??");
         return true;
     }
     return false;
@@ -37,6 +42,7 @@ bool appendSetToSet(bool *destinationSet, bool *sourceSet)
     bool changed = false;
     for (int i = 0; i < NUM_TERMINALS; ++i)
     {
+
         if ((i != TK_EPS) && (destinationSet[i] == false) && (sourceSet[i] == true)){
             changed = true;
         }
@@ -109,7 +115,9 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
 {
 
     // ADD TK_EOF [END OF INPUT MARKER] to follow set of NT_PROGRAM (start symbol)
-    struct Variable eof = {TK_EOF, 0};
+    struct Variable eof;
+    eof.val = TK_EOF;
+    eof.flag = 0;
     appendVarToSet(sets_for_all[NT_PROGRAM]->followSets, eof);
 
     // WHILE THERE IS A CHANGE IN SOMEONE'S FOLLOW SET
@@ -141,44 +149,43 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
                     int index2 = index1 + 1;
                     for (index2 = index1 + 1; index2 < length; index2++)
                     {
-                        printf("%d %d %d\n", nonTerminal, index1, index2);
+                        // printf("%d %d %d\n", nonTerminal, index1, index2);
                         // TERMINAL: INSTEAD OF ITERATING THROUGH WHOLE SET; ADD JUST THE TERMINAL
                         if (production[index2].flag == 0)
                         {
-                            res = appendVarToSet(sets_for_all[index1]->followSets, production[index2]);
+                            res = appendVarToSet(sets_for_all[production[index1].val]->followSets, production[index2]);
                             changed = changed || res;
                             // CANNOT CONTAIN EPSILON: NO FURTHER FIRST SETS ARE ADDED
                             break;
                         }
 
                         // NON TERMINAL: ADD ITS FIRST SET
-                        res = appendSetToSet(sets_for_all[index1]->followSets, sets_for_all[production[index2].val]->firstSets);
+                        res = appendSetToSet(sets_for_all[production[index1].val]->followSets, sets_for_all[production[index2].val]->firstSets);
                         changed = changed || res;
 
-                        if (res){
-                            printf("MG???");
-                        }
+
                         // NO EPSILON: NO MORE FIRST SETS ADDED FROM THIS PRODUCTION
                         if (!containsEPS(sets_for_all[production[index2].val]->firstSets))
                         {
+
                             break;
                         }
                     }
+                    if (nonTerminal == NT_STMT)
+                    {
+                        printf("HEELLO WHY? %s %d %d\n", NonTerminalToString(production[index1].val), index2, length);
+                    }
 
                     // EPSILON UPTO THE LAST SYMBOL AFTER INDEX1
-                    if (index2 == length)
+                    if (index2 == length || (production[index2].val == 0 && production[index2].flag == 0))
                     {
-                        res = appendSetToSet(sets_for_all[index1]->followSets, sets_for_all[nonTerminal]->followSets);
-                        
-                        if (res){
-                            printf("OG CHANGED IT!");
-                        }
+                        res = appendSetToSet(sets_for_all[production[index1].val]->followSets, sets_for_all[nonTerminal]->followSets);
                         
                         changed = changed || res;
                     }
 
                     // REMOVE EPSILON FROM FOLLOW SET: NO FOLLOW SET CAN HAVE EPSILON
-                    sets_for_all[index1]->followSets[TK_EPS] = false;
+                    sets_for_all[production[index1].val]->followSets[TK_EPS] = false;
                 }
             }
         }
