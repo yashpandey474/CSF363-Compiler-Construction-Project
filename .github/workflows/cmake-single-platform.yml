@@ -12,14 +12,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up GCC
-      uses: actions/setup-cpp@v2
-      with:
-        gcc-version: '11.4.0'
-        architecture: x64
-
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y make
+    - name: Set up environment
+      run: |
+        lsb_release -a
+        sudo apt update
+        sudo apt install -y gcc-11 g++-11 make
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100
+        gcc --version
+        g++ --version
 
     - name: Make clean
       run: make clean
@@ -29,9 +30,19 @@ jobs:
 
     - name: Execute program and remove comments
       run: |
-        printf '1\n' | ./stage1exe "Test Cases/t2.txt"
+        printf '1\n0\n' | ./stage1exe "Test Cases/t2.txt"
       shell: bash
 
     - name: Compare output
       run: |
         diff commentremove.txt "Test Cases/commentremoval_t2.txt"
+        
+    - name: Test Lexical Analyser without errors
+      run: |
+        printf '1\n0\n' | ./stage1exe "Test Cases/t2.txt"
+      shell: bash
+
+    - name: Compare output for T2
+      run: |
+        diff lexicaltest.txt "Test Cases/lexemesandtokens_t2.txt"
+      
