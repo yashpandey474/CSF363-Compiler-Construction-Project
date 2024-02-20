@@ -36,3 +36,13 @@ jobs:
     - name: Compare output
       run: |
         diff commentremove.txt "Test Cases/commentremoval_t2.txt"
+        
+    - name: Test Lexical Analyser without errors
+      run: |
+        printf '1\n0\n' | ./stage1exe "Test Cases/t2.txt"
+      shell: bash
+
+    - name: Compare output for T2
+      run: |
+        diff lexicaltest.txt "Test Cases/lexemesandtokens_t2.txt"
+      
