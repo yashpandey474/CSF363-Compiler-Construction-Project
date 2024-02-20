@@ -134,13 +134,22 @@ void print_token_list(char *filename)
     struct SymbolTableEntry *token;
 
     // printf("STARTING SCANNING\n");
+    FILE *outputFile = fopen("lexicaltest.txt", "w");
+    if (outputFile == NULL)
+    {
+        perror("Error opening output file");
+        fclose(file);
+        return;
+    }
 
     while ((token = scanToken(LA)))
     {
 
         // printf("HU");
         printf("Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
+        fprintf(outputFile, "Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
     }
+    fclose(outputFile);
 }
 
 void parse_and_print_tree(char *filename)
