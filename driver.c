@@ -64,52 +64,52 @@ void remove_comments(char *filename)
         return;
     }
 
+    // Open an additional file for writing the output
+    FILE *outputFile = fopen("commentremove.txt", "w");
+    if (outputFile == NULL)
+    {
+        perror("Error opening output file");
+        fclose(file);
+        return;
+    }
+
     char buffer[50];
-    int prev_char = '\0';          // Store the previous character read
-    bool line_has_content = false; // Flag to track if the current line has non-comment content
+    int prev_char = '\0'; // Store the previous character read
 
     while (fgets(buffer, 50, file) != NULL)
     {
-        bool is_comment_line = false; // Flag to check if the current line is a comment line
         for (int i = 0; buffer[i] != '\0'; i++)
         {
-            // Check for the start of a comment
             if (prev_char == '%' && buffer[i] != '\n')
             {
-                is_comment_line = true;
                 continue;
             }
 
-            // For new lines following a comment line, avoid printing if no content was found
-            if (is_comment_line && buffer[i] == '\n' && !line_has_content)
+            if (prev_char == '%' && buffer[i] == '\n')
             {
-                break; // Skip printing the newline
+                printf("%c", buffer[i]);
+                fprintf(outputFile, "%c", buffer[i]);
             }
             else if (buffer[i] == '\n')
             {
-                if (line_has_content) // Only print newline if there was content
-                {
-                    printf("%c", buffer[i]);
-                }
-                line_has_content = false;
-                prev_char = buffer[i];
-                break;
+                printf("%c", buffer[i]);
+                fprintf(outputFile, "%c", buffer[i]);
             }
             else if (buffer[i] != '%')
             {
                 printf("%c", buffer[i]);
-                line_has_content = true;
+                fprintf(outputFile, "%c", buffer[i]);
             }
             prev_char = buffer[i];
         }
     }
 
     fclose(file);
+    fclose(outputFile);
 }
 
 void print_token_list(char *filename)
 {
-    printf("Printing token list...\n");
     insertAllKeywords();
 
     // printf("KEYWORDS\n");
@@ -146,7 +146,7 @@ void print_token_list(char *filename)
 void parse_and_print_tree(char *filename)
 {
     // FILE *file = fopen(filename, "w");
-    printf("Parsing and printing parse tree...\n");
+    // printf("Parsing and printing parse tree...\n");
     // Implement parsing and printing parse tree logic here
 }
 
