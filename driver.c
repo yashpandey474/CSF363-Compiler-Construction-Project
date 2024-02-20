@@ -144,10 +144,6 @@ void print_token_list(char *filename)
 
     while ((token = scanToken(LA)))
     {
-        if (token->tokenType == TK_COMMENT)
-        {
-            printf("HI comment");
-        }
         if (token->tokenType == LEXICAL_ERROR)
         {
             printf("Line no. %-5d Error: %s\n", LA->lineNo, token->lexeme);
