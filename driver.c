@@ -144,10 +144,20 @@ void print_token_list(char *filename)
 
     while ((token = scanToken(LA)))
     {
-
-        // printf("HU");
-        printf("Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
-        fprintf(outputFile, "Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
+        if (token->tokenType == TK_COMMENT)
+        {
+            printf("HI comment");
+        }
+        if (token->tokenType == LEXICAL_ERROR)
+        {
+            printf("Line no. %-5d Error: %s\n", LA->lineNo, token->lexeme);
+            fprintf(outputFile, "Line no. %-5d Error: %s\n", LA->lineNo, token->lexeme);
+        }
+        else
+        {
+            printf("Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
+            fprintf(outputFile, "Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
+        }
     }
     fclose(outputFile);
 }

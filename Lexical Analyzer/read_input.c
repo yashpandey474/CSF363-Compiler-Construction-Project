@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
-
+#include <stdbool.h>
 // PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
 #define END_OF_FILE_VAL 128
 #define BUFFER_SIZE 150
@@ -170,13 +170,46 @@ void returnToStart(struct LexicalAnalyzer *LA)
     LA->state = 0;
     resetBegin(LA);
 }
-struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA, char additional, char *errorMessage)
+
+struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA, bool toIncludeString, char *errorMessage)
 {
-    char *readSymbol = strncustomcpy(LA);
-    // IDENTIFIED TOKEN FLAG: JUST PRINT AND CHANGE TOKEN BACK INSTEAD OF REINITIALISING
+    // printf("Called");
+
+    if (toIncludeString)
+    {
+        if (LA->forward == LA->begin)
+            LA->forward++;
+        char *readSymbol = strncustomcpy(LA);
+        // printf("%d %d", LA->begin, LA->forward);
+        // printf("Read symbol %s\n", readSymbol);
+        // +1 for the null terminator
+        int length = strlen(readSymbol) + 22; // "Unknown pattern: <>" + null terminator
+        token->lexeme = (char *)malloc(length * sizeof(char));
+        if (token->lexeme == NULL)
+        {
+            return NULL;
+        }
+        if (strlen(readSymbol) > 1)
+        {
+            sprintf(token->lexeme, "Unknown pattern <%s>", readSymbol);
+        }
+        else
+        {
+            sprintf(token->lexeme, "Unknown Symbol <%s>", readSymbol);
+        }
+    }
+    else
+    {
+        token->lexeme = (char *)malloc(strlen(errorMessage) + 1);
+        if (token->lexeme == NULL)
+        {
+            return NULL;
+        }
+        strncpy(token->lexeme, errorMessage, strlen(errorMessage) + 1);
+    }
     token->tokenType = LEXICAL_ERROR;
-    printf("LEXICAL ERROR: String %s : %s %c, [Line no. %d]", readSymbol, errorMessage, additional, LA->lineNo);
-    printf("Entering error recovery mode.\n");
+
+    // Return to start
     returnToStart(LA);
     return token;
 }
@@ -186,7 +219,7 @@ struct SymbolTableEntry *lexicalError(struct SymbolTableEntry *token, struct Lex
 
     if (token->tokenType == TK_ID && strlen(token->lexeme) > MAX_ID_SIZE)
     {
-        setErrorMessage(token, LA, ' ', "Lexical Error: Token Identifier of greater than maximum size");
+        setErrorMessage(token, LA, false, "Variable Identifier is longer than the prescribed length of 20 characters.");
     }
     else if (token->tokenType == TK_FUNID && strlen(token->lexeme) > MAX_FUNID_SIZE)
     {
@@ -271,12 +304,16 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
 
     // SET TOKEN TYPE [SET FOR TOKEN, NOT SET FOR CARRIAGE_RETURN OR DELIMITER]
     token->tokenType = state;
-
     // DOUBLE STAR STATES
     if (state == TK_NUM2 || state == TK_LT2)
+
     {
         // DECREMENT FORWARD POINTER
         changeForward(LA, -1);
+    }
+    else if (state == TK_RNUM1)
+    {
+        changeForward(LA, 1);
     }
     token->lexeme = strncustomcpy(LA);
 
@@ -303,9 +340,13 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
             token = getToken(token);
         }
     }
+    else if (state == TK_LT1 || state == TK_GT)
+    {
+        token->lexeme = strncustomcpy(LA);
+    }
 
     // FINAL STATE WITHOUT ANY OTHER ACTIONS
-    else if (state != TK_LT2 && state != TK_NUM2)
+    else
     {
         // INCREMENT FORWARD
         changeForward(LA, +1);
@@ -401,8 +442,8 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 // REACHED TRAP STATE
                 if (LA->state == -1)
                 {
-                    setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
-                    return NULL;
+                    setErrorMessage(token, LA, true, "");
+                    return token;
                 }
 
                 // TAKE ACTIONS FOR THE STATE
@@ -412,12 +453,13 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                 if (LA->state == 0)
                 {
                     // printf("\nEnd of input. Finished scanning");
-                    return NULL;
+                    setErrorMessage(token, LA, true, "");
+                    return token;
                 }
 
                 if (token->tokenType == LEXICAL_ERROR)
                 {
-                    return NULL;
+                    return token;
                 }
 
                 // HAVE TO RETURN
@@ -427,30 +469,17 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
                     resetBegin(LA);
                     return token;
                 }
-
-                printf("STATE ON EOF: %d\n", LA->state);
-
-                // NO CONTINUE IF EOF AND LEXICAL ERROR [NOTHING ELSE TO SCAN]
-                setErrorMessage(token, LA, character, "COULD NOT REACH ACCEPT STATE");
-
-                // CONTINUE SCANNING
-                return NULL;
             }
         }
-
-        // CHANGE STATE
+        // TODO: CHECK
+        //  CHANGE STATE
         if (characterTypeMap[(int)character] == CT_INVALID && LA->state == 0)
         {
-            setErrorMessage(token, LA, character, "INVALID CHARACTER");
+            setErrorMessage(token, LA, true, "");
 
             // INCREMENT FORWARD BECAUSE CHARACTER IS INVALID; CANNOT RESUME TOKENISATION
             changeForward(LA, 1);
-
-            // REINITIALISE TOKEN
-            token->tokenType = 0;
-
-            // CONTINUE SCANNING
-            continue;
+            return token;
         }
 
         // GET NEXT STATE
@@ -462,21 +491,21 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
         // TRAP STATE
         if (LA->state == -1)
         {
-            setErrorMessage(token, LA, character, "REACHED TRAP STATE CHARACTER");
-
-            token->tokenType = 0;
-
-            // PRINT AND RETURN NEXT TOKEN
-            continue;
+            setErrorMessage(token, LA, true, "");
+            // exit(0);
+            return token;
         }
+        // if (character == '<')
+        // {
+        //     printf("STATE %d\n", LA->state);
+        // }
 
         // TAKE ACTIONS FOR THE STATE
         token = takeActions(LA, token);
 
         if (token->tokenType == LEXICAL_ERROR)
         {
-            token->tokenType = 0;
-            continue;
+            return token;
         }
 
         // HAVE TO RETURN
