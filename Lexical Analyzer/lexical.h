@@ -162,10 +162,12 @@ typedef enum CharacterType
     CT_HASH
 } CharacterType;
 
-extern CharacterType characterTypeMap[129];
-
 const char *CharacterTypeToString(enum CharacterType type);
 const char *TokenToString(enum Tokentype token);
+
+
+extern CharacterType characterTypeMap[129];
+
 FILE *readTestFile(char *file_path);
 struct TwinBuffer *initialiseTwinBuffer(FILE *file);
 struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer);

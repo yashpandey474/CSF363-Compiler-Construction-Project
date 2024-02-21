@@ -1,66 +1,107 @@
-
-// MAKE AN ENUM FOR NONTERMINALS#
-
 #include "syntactical.h"
 
-#include <stdbool.h>
-
-// STRUCTURES FOR GRAMMAR
-
-// Functions
-bool appendVarToSet(bool *set, struct Variable element)
+bool isDefault(struct Variable var)
 {
-    if (element.val == CARRIAGE_RETURN){
+    return (var.flag == 0 && var.val == 0);
+}
+struct Node *createLLNode(struct Variable data)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    if (newNode == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(1);
+    }
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void insertAtBeginning(struct LinkedListArray *linkedList, int newData, int flag)
+{
+
+    struct Variable var;
+    var.val = newData;
+    var.flag = flag;
+    // Create a new node
+    struct Node *newNode = createLLNode(var);
+
+    // Set the next pointer of the new node to point to the current head
+    newNode->next = linkedList->head;
+
+    // Update the head to point to the new node
+    linkedList->head = newNode;
+
+    // INCREASE LENGTH
+    linkedList->length += 1;
+}
+
+bool appendVarToSet(struct LinkedListSet *set, struct Variable element)
+{
+    if (element.val == CARRIAGE_RETURN)
+    {
         return false;
     }
 
-    if (set[element.val] == true)
+    if (set->booleanArr[element.val] == true)
     {
         // Element already exists in the set
         // printf("ELE ALREADY EXISTS\n");
         return false;
     }
 
-    // printf("ELE DID NOT EXIST?!");
-    set[element.val] = true;
+    // INSERT INTO LINKED LIST
+    insertAtBeginning(set->linkedList, element.val, element.flag);
+
+    // SET IN BOOLEAN ARRAY
+    set->booleanArr[element.val] = true;
     return true;
 }
 
-bool containsEPS(bool *set)
+bool containsEPS(struct LinkedListSet *set)
 {
-    Tokentype value = TK_EPS;
-    if (set[value] == true)
-    {
-        // printf("CONTANS EPS??");
-        return true;
-    }
-    return false;
+    return (set->booleanArr[TK_EPS] == true);
 }
 
-bool appendSetToSet(bool *destinationSet, bool *sourceSet)
+bool appendSetToSet(struct LinkedListSet *destinationSet, struct LinkedListSet *sourceSet)
 {
     bool changed = false;
     for (int i = 0; i < NUM_TERMINALS; ++i)
     {
 
-        if ((i != TK_EPS) && (destinationSet[i] == false) && (sourceSet[i] == true)){
+        if ((i != TK_EPS) && (destinationSet->booleanArr[i] == false) && (sourceSet->booleanArr[i] == true))
+        {
             changed = true;
-        }
 
-        destinationSet[i] = (destinationSet[i] || sourceSet[i]);
+            // INSERT INTO LINKED LIST
+            insertAtBeginning(destinationSet->linkedList, i, 0);
+
+            // SET IN BOOLEAN ARRAY
+            destinationSet->booleanArr[i] = true;
+        }
     }
     return changed;
 }
 
-void printSetWithIndex(bool *set, size_t setIndex, int flag)
+void printSetWithIndex(struct LinkedListSet *set, size_t setIndex, int flag, int firstorfollow)
 {
+    char str[10];
+    if (firstorfollow)
+    {
+        strcpy(str, "Follow");
+    }
+    else
+    {
+        strcpy(str, "First");
+    }
+
     if (flag == 1)
     {
-        printf("Set %s: ", NonTerminalToString((enum NonTerminals)setIndex));
+        printf("%s Set %s: ", str, NonTerminalToString((enum NonTerminals)setIndex));
         for (size_t i = 0; i < NUM_TERMINALS; ++i)
         {
             // Assuming elements are integers for simplicity
-            if (set[i])
+            if (set->booleanArr[i] == true)
             {
                 printf("%s, ", TokenToString((enum Tokentype)i));
             }
@@ -73,7 +114,7 @@ void printSetWithIndex(bool *set, size_t setIndex, int flag)
         for (size_t i = 0; i < NUM_TERMINALS; ++i)
         {
             // Assuming elements are integers for simplicity
-            if (set[i])
+            if (set->booleanArr[i])
             {
                 printf("%s, ", TokenToString((enum Tokentype)i));
             }
@@ -82,23 +123,40 @@ void printSetWithIndex(bool *set, size_t setIndex, int flag)
     }
 }
 
-void initSets(struct Sets *sets)
+struct LinkedListSet *initialiseLLSet()
 {
-    memset(sets->firstSets, 0, sizeof(sets->firstSets));
-    memset(sets->followSets, 0, sizeof(sets->followSets));
+    struct LinkedListSet *set = (struct LinkedListSet *)malloc(sizeof(struct LinkedListSet));
+    memset(set->booleanArr, false, sizeof(set->booleanArr));
+
+    set->linkedList = (struct LinkedListArray *)malloc(sizeof(struct LinkedListArray));
+    set->linkedList->head = NULL;
+    set->linkedList->length = 0;
+
+    return set;
 }
 
-
-bool isEmpty(bool *destinationSet)
+struct Sets *initializeSets()
 {
-    for (size_t i = 0; i < NUM_TERMINALS; ++i)
+    struct Sets *newSets = (struct Sets *)malloc(sizeof(struct Sets));
+
+    // Initialize firstSets
+    newSets->firstSets = initialiseLLSet();
+
+    // Initialize followSets
+    newSets->followSets = initialiseLLSet();
+
+    return newSets;
+}
+
+bool isEmpty(struct LinkedListSet *destinationSet)
+{
+    // DIRECTLY CHECK LINKED LIST INSTEAD OF ITERATING THROUGH BOOLEAN ARRAY
+    if (destinationSet->linkedList->length == 0)
     {
-        if (destinationSet[i] == true)
-        {
-            return false;
-        }
+        return true;
     }
-    return true;
+
+    return false;
 }
 
 int recomputeSetIndex(struct Variable var)
@@ -163,11 +221,9 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
                         res = appendSetToSet(sets_for_all[production[index1].val]->followSets, sets_for_all[production[index2].val]->firstSets);
                         changed = changed || res;
 
-
                         // NO EPSILON: NO MORE FIRST SETS ADDED FROM THIS PRODUCTION
                         if (!containsEPS(sets_for_all[production[index2].val]->firstSets))
                         {
-
                             break;
                         }
                     }
@@ -176,12 +232,12 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
                     if (index2 == length || isDefault(production[index2]))
                     {
                         res = appendSetToSet(sets_for_all[production[index1].val]->followSets, sets_for_all[nonTerminal]->followSets);
-                        
+
                         changed = changed || res;
                     }
 
                     // REMOVE EPSILON FROM FOLLOW SET: NO FOLLOW SET CAN HAVE EPSILON
-                    sets_for_all[production[index1].val]->followSets[TK_EPS] = false;
+                    sets_for_all[production[index1].val]->followSets->booleanArr[TK_EPS] = false;
                 }
             }
         }
@@ -190,15 +246,8 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
     // PRINT ALL THE FOLLOW SETS NON TERMINALS
     for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
     {
-        printSetWithIndex(sets_for_all[i]->followSets, i, 1);
+        printSetWithIndex(sets_for_all[i]->followSets, i, 1, 1);
     }
-}
-
-bool isDefault(struct Variable var){
-    if (var.flag == 0 && var.val == 0){
-        return true;
-    }
-    return false;
 }
 
 void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal)
@@ -261,23 +310,25 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
 
             // printf("INDEX %d APPENDED\n", index);
             appendSetToSet(sets_for_all[nonTerminal]->firstSets, sets_for_all[set_index]->firstSets);
-            sets_for_all[nonTerminal]->firstSets[TK_EPS] = 0;
+            sets_for_all[nonTerminal]->firstSets->booleanArr[TK_EPS] = 0;
         }
 
         else
         {
-            sets_for_all[nonTerminal]->firstSets[TK_EPS] = 1;
+            sets_for_all[nonTerminal]->firstSets->booleanArr[TK_EPS] = 1;
         }
     }
 }
+
 void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions)
 {
+    printf("FIRST SETS\n");
     // for all the terminal first sets, we add the terminal to the first set
     // I have created the sets_for_all as an array of Sets structures. Each structure holds the first and follow sets for that variable
     // I have kept the non terminals first and only then have I kept the terminals
     for (int i = NUM_NON_TERMINALS; i < NUM_NON_TERMINALS + NUM_TERMINALS; i++)
     {
-        sets_for_all[i]->firstSets[i - NUM_NON_TERMINALS] = true;
+        sets_for_all[i]->firstSets->booleanArr[i - NUM_NON_TERMINALS] = true;
     }
 
     // for (int hardik = 0; hardik < 3; hardik += 1)
@@ -291,26 +342,21 @@ void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions
         }
     }
     // }
-
     // PRINT ALL THE FIRST SETS NON TERMINALS
     for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
     {
-        printSetWithIndex(sets_for_all[i]->firstSets, i, 1);
+        printSetWithIndex(sets_for_all[i]->firstSets, i, 1, 0);
     }
 }
 
-int main()
+struct Sets **initialiseSetsWhole()
 {
-    // freopen("output.txt", "w", stdout);
     struct Sets **sets_for_all = (struct Sets **)malloc(sizeof(struct Sets *) * (NUM_NON_TERMINALS + NUM_TERMINALS));
 
     for (int i = 0; i < NUM_NON_TERMINALS + NUM_TERMINALS; i += 1)
     {
-        sets_for_all[i] = (struct Sets *)malloc(sizeof(struct Sets));
-        initSets(sets_for_all[i]);
+        sets_for_all[i] = initializeSets();
     }
 
-    struct GrammarRule productions[NUM_NON_TERMINALS] = {{1, {{{NT_OTHER_FUNCTIONS, 1}, {NT_MAIN_FUNCTION, 1}}}}, {1, {{{TK_MAIN, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {2, {{{NT_FUNCTION, 1}, {NT_OTHER_FUNCTIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_FUNID, 0}, {NT_INPUT_PAR, 1}, {NT_OUTPUT_PAR, 1}, {TK_SEM, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {1, {{{TK_INPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}}}, {2, {{{TK_OUTPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{NT_DATA_TYPE, 1}, {TK_ID, 0}, {NT_REMAINING_LIST, 1}}}}, {2, {{{NT_PRIMITIVE_DATA_TYPE, 1}}, {{NT_CONSTRUCTED_DATA_TYPE, 1}}}}, {2, {{{TK_INT, 0}}, {{TK_REAL, 0}}}}, {2, {{{NT_A, 1}, {TK_RUID, 0}}, {{TK_RUID, 0}}}}, {2, {{{TK_COMMA, 0}, {NT_PARAMETER_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_TYPE_DEFINITIONS, 1}, {NT_DECLARATIONS, 1}, {NT_OTHER_STMTS, 1}, {NT_RETURN_STMT, 1}}}}, {3, {{{NT_TYPE_DEFINITION, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{NT_DEFINETYPE_STMT, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_RECORD, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDRECORD, 0}}, {{TK_UNION, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDUNION, 0}}}}, {1, {{{NT_FIELD_DEFINITION, 1}, {NT_FIELD_DEFINITIONS, 1}, {NT_MORE_FIELDS, 1}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_FIELDID, 0}, {TK_SEM, 0}}}}, {2, {{{NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_DECLARATION, 1}, {NT_DECLARATIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_ID, 0}, {NT_GLOBAL_OR_NOT, 1}, {TK_SEM, 0}}}}, {2, {{{TK_COLON, 0}, {TK_GLOBAL, 0}}, {{TK_EPS, 0}}}}, {2, {{{NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {5, {{{NT_ASSIGNMENT_STMT, 1}}, {{NT_ITERATIVE_STMT, 1}}, {{NT_CONDITIONAL_STMT, 1}}, {{NT_IO_STMT, 1}}, {{NT_FUN_CALL_STMT, 1}}}}, {1, {{{NT_SINGLE_OR_REC_ID, 1}, {TK_ASSIGNOP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_SEM, 0}}}}, {1, {{{TK_ID, 0}, {NT_REC_ID, 1}}}}, {2, {{{TK_DOT, 0}, {TK_FIELDID, 0}, {NT_REC_ID, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_OUTPUT_PARAMETERS, 1}, {TK_CALL, 0}, {TK_FUNID, 0}, {TK_WITH, 0}, {TK_PARAMETERS, 0}, {NT_INPUT_PARAMETERS, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}, {TK_ASSIGNOP, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}}}, {1, {{{TK_WHILE, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {TK_ENDWHILE, 0}}}}, {1, {{{TK_IF, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {TK_THEN, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {NT_NEW3, 1}, {TK_ENDIF, 0}}}}, {2, {{{TK_ELSE, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_READ, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}, {{TK_WRITE, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}}}, {1, {{{NT_TERM, 1}, {NT_NEW5, 1}}}}, {2, {{{NT_OPERATOR, 1}, {NT_TERM, 1}, {NT_NEW5, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_FACTOR, 1}, {NT_NEW6, 1}}}}, {2, {{{NT_OP_H, 1}, {NT_FACTOR, 1}, {NT_NEW6, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_VAR, 1}}, {{TK_OP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_CL, 0}}}}, {2, {{{TK_PLUS, 0}}, {{TK_MINUS, 0}}}}, {2, {{{TK_MUL, 0}}, {{TK_DIV, 0}}}}, {3, {{{TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_LOGICAL_OP, 1}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}, {{NT_VAR, 1}, {NT_RELATIONAL_OP, 1}, {NT_VAR, 1}}, {{TK_NOT, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}}}, {3, {{{NT_SINGLE_OR_REC_ID, 1}}, {{TK_NUM, 0}}, {{TK_RNUM, 0}}}}, {2, {{{TK_AND, 0}}, {{TK_OR, 0}}}}, {6, {{{TK_LT, 0}}, {{TK_LE, 0}}, {{TK_EQ, 0}}, {{TK_GT, 0}}, {{TK_GE, 0}}, {{TK_NE, 0}}}}, {1, {{{TK_RETURN, 0}, {NT_OPTIONAL_RETURN, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_ID, 0}, {NT_MORE_IDS, 1}}}}, {2, {{{TK_COMMA, 0}, {TK_ID, 0}, {NT_MORE_IDS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_DEFINETYPE, 0}, {NT_A, 1}, {TK_RUID, 0}, {TK_AS, 0}, {TK_RUID, 0}}}}, {2, {{{TK_RECORD, 0}}, {{TK_UNION, 0}}}}};
-    computeFirstSet(sets_for_all, productions);
-    computeFollowSet(sets_for_all, productions);
+    return sets_for_all;
 }
