@@ -30,3 +30,10 @@ struct leaf* create_leaf(struct Variable data) {
     return new_leaf;
 }
 
+void add_child(struct node *parent, struct Variable data, int length) {
+    struct node *new_node = create_node(data, length);
+    parent->children[parent->length++] = *new_node;
+}
+
+
+
