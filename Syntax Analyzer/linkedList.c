@@ -4,16 +4,7 @@
 #include<syntactical.h>
 
 // Struct for the array of linked lists
-struct LinkedListArray {
-    struct Node* head;
-};
 
-//structure of Linked list node
-struct Node
-{
-  struct Variable data;
-  struct Node *next;
-};
 // Function to create a new node with the given data
 struct Node* createNode(struct Variable data) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
@@ -25,6 +16,7 @@ struct Node* createNode(struct Variable data) {
     newNode->next = NULL;
     return newNode;
 }
+
 // Function to create a singly linked list with the given elements
 struct Node* createLinkedList(struct Variable* elements, int size) {
     struct Node* head = NULL;
@@ -48,17 +40,24 @@ struct Node* createLinkedList(struct Variable* elements, int size) {
 
     return head;
 }
-// Function to insert a new node at the beginning of the linked list
-void insertAtBeginning(struct Node** headRef, struct Variable newData) {
+// ADD A NEW NODE CONTAINING A VARIABLE IN LINKED LIST
+void insertAtBeginning(struct LinkedListArray* linkedList, int newData, int flag) {
+
+    struct Variable var; var.val = newData;  var.flag = flag;
     // Create a new node
-    struct Node* newNode = createNode(newData);
+    struct Node* newNode = createNode(var);
 
     // Set the next pointer of the new node to point to the current head
-    newNode->next = *headRef;
+    newNode->next = linkedList->head;
 
     // Update the head to point to the new node
-    *headRef = newNode;
+    linkedList->head = newNode;
+
+    // INCREASE LENGTH
+    linkedList->length += 1;
 }
+
+
 // Function to print all elements of the linked list
 void printList(struct Node* head) {
     struct Node* current = head;

@@ -8,17 +8,40 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 struct Variable
 {
   int val;
   int flag; // 0 FOR TERMINAL AND 1 FOR NONTERMINAL
 };
 
+struct LinkedListArray
+{
+  struct Node *head;
+  int length;
+};
+
+struct LinkedListSet
+{
+  bool booleanArr[NUM_TERMINALS];
+  struct LinkedListArray* linkedList;
+};
+
+void insertAtBeginning(struct LinkedListArray *linkedList, int newData, int flag);
+struct Node *createNode(struct Variable data);
+    // structure of Linked list node
+    struct Node
+{
+  struct Variable data;
+  struct Node *next;
+};
+
+
+
 struct Sets
 {
-  bool firstSets[NUM_TERMINALS];
-  bool followSets[NUM_TERMINALS];
+  /// EACH SET HAS A BOOLEAN ARRAY AND A LINKED LIST
+  struct LinkedListSet* firstSets;
+  struct LinkedListSet* followSets;
 };
 
 struct GrammarRule
@@ -26,6 +49,12 @@ struct GrammarRule
   // enum NonTerminals nonTerminal;
   int numProductions;
   struct Variable rules[MAX_NUM_PRODUCTIONS][MAX_VARS];
+};
+
+struct ParsingTable
+{
+  struct Variable *table[NUM_NON_TERMINALS][NUM_TERMINALS];
+  // rule is array of variables of size maxvars
 };
 
 enum NonTerminals
