@@ -181,7 +181,7 @@ struct Variable peek(struct stack *st)
     }
 }
 
-struct Variable *predictive_parsing(enum Tokentype a, struct ParsingTable *pt, struct stack *st)
+int predictive_parsing(enum Tokentype a, struct ParsingTable *pt, struct stack *st)
 {
 
     struct Variable X = st->stack[st->top];
@@ -189,13 +189,14 @@ struct Variable *predictive_parsing(enum Tokentype a, struct ParsingTable *pt, s
     if (X.val == a && X.flag == 0)
     {
         pop(st);
+        return 1;
         // a=next symbol of w
     }
     else if ((X.flag == 0) || (pt->table[X.val][a] == NULL))
     {
         // CALL ERROR FUNCTION
         printf("SYNTAX ERROR");
-        return NULL;
+        return 2;
     }
     else
     {
@@ -204,20 +205,27 @@ struct Variable *predictive_parsing(enum Tokentype a, struct ParsingTable *pt, s
         struct Variable *arr = pt->table[X.val][a];
 
         pop(st);
-
+        printf("Pushing rule %s-->\n", NonTerminalToString(arr[0].val));
         for (int var = 0; var < 9; var += 1)
         {
             if (arr[var].val == 0 && arr[var].flag == 0)
             {
                 break;
             }
+            if (arr[var].flag == 0)
+            {
+                printf("%s ", TokenToString(arr[var].val));
+            }
+            else
+            {
+                printf("%s ", NonTerminalToString(arr[var].val));
+            }
             push(st, arr[var]);
         }
 
-        return arr;
+        return 0;
     }
 
-    return NULL;
     // TODO: WHAT TO RETURN IF ERROR
 }
 
@@ -271,7 +279,10 @@ int main()
         {
             printf("Stack before:\n");
             printStack(stack);
-            predictive_parsing(token->tokenType, PT, stack);
+            while (predictive_parsing(token->tokenType, PT, stack) == 0)
+            {
+                // keep doing it basically. youll only go to the next token if there's a valid accepting thing( in which case it returns something)
+            }
             printf("Stack after:\n");
             printStack(stack);
         }
