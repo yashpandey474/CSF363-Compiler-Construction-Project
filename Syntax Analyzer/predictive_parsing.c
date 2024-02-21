@@ -111,110 +111,129 @@ const char *NonTerminalToString(enum NonTerminals nonTerminal)
     }
 }
 
-
 #define STACK_INITIAL_SIZE 128
-struct stack{
+struct stack
+{
     struct Variable *stack;
     int top;
     int MAX;
 };
+void printStack(struct stack *st)
+{
+    for (int i = 0; i <= st->top; i++)
+    {
+        printf("%s ", NonTerminalToString(st->stack[i].val));
+    }
+    printf("\n");
+}
 
-bool isEmptyStack(struct stack *st) {
+bool isEmptyStack(struct stack *st)
+{
     return st->top == -1;
 }
 
-bool isFull(struct stack* st) {
-    if (st->top==st->MAX-1)
+bool isFull(struct stack *st)
+{
+    if (st->top == st->MAX - 1)
     {
-        st->MAX+=128;
-        st->stack = (struct Variable *)realloc(st->stack , 2*st->MAX*sizeof(struct Variable));
+        st->MAX += 128;
+        st->stack = (struct Variable *)realloc(st->stack, 2 * st->MAX * sizeof(struct Variable));
         return true;
     }
-    return false; 
+    return false;
 }
 
-void push(struct stack *st, struct Variable data) {
-    if (isFull(st)) {
+void push(struct stack *st, struct Variable data)
+{
+    if (isFull(st))
+    {
         printf("Stack is full\n");
     }
     st->stack[++st->top] = data;
 }
 
-struct Variable pop(struct stack *st) {
+struct Variable pop(struct stack *st)
+{
     struct Variable stackBottom;
     stackBottom.val = -1;
 
-    if (isEmptyStack(st)) {
+    if (isEmptyStack(st))
+    {
         printf("Stack is empty\n");
         return stackBottom;
     }
     return st->stack[st->top--];
 }
 
-struct Variable peek(struct stack *st) {
+struct Variable peek(struct stack *st)
+{
     struct Variable stackBottom;
     stackBottom.val = -1;
 
-    if (!isEmptyStack(st)) {
+    if (!isEmptyStack(st))
+    {
         return st->stack[st->top];
-    } else {
+    }
+    else
+    {
         printf("Stack is empty\n");
         return stackBottom;
     }
 }
 
+struct Variable *predictive_parsing(enum Tokentype a, struct ParsingTable *pt, struct stack *st)
+{
 
-struct Variable* predictive_parsing(enum Tokentype a, struct ParsingTable* pt, struct stack* st){
-    
     struct Variable X = st->stack[st->top];
-        //BOTH ARE TERMINALS
-        if (X.val == a && X.flag == 0){ 
-            pop(st);
-            //a=next symbol of w
-        }
-        else if ( (X.flag == 0) || (pt->table[X.val][a] == NULL)){
-            //CALL ERROR FUNCTION
-            printf("SYNTAX ERROR");
-            return NULL;
-
-        }
-        else {
-
-            //GET THE RULE
-            struct Variable *arr = pt->table[X.val][a];
-
-            
-            pop(st);
-
-            for (int var = 0; var < 9; var += 1)
-            {
-                if (arr[var].val == 0 && arr[var].flag == 0)
-                {
-                    break;
-                }
-                push(st, arr[var]);
-            }
-
-            return arr;
-        }        
-
+    // BOTH ARE TERMINALS
+    if (X.val == a && X.flag == 0)
+    {
+        pop(st);
+        // a=next symbol of w
+    }
+    else if ((X.flag == 0) || (pt->table[X.val][a] == NULL))
+    {
+        // CALL ERROR FUNCTION
+        printf("SYNTAX ERROR");
         return NULL;
-        //TODO: WHAT TO RETURN IF ERROR
-       
+    }
+    else
+    {
+
+        // GET THE RULE
+        struct Variable *arr = pt->table[X.val][a];
+
+        pop(st);
+
+        for (int var = 0; var < 9; var += 1)
+        {
+            if (arr[var].val == 0 && arr[var].flag == 0)
+            {
+                break;
+            }
+            push(st, arr[var]);
+        }
+
+        return arr;
     }
 
-struct stack* initialiseStack(){
-    struct stack* stack = (struct stack*)malloc(sizeof(struct stack));
+    return NULL;
+    // TODO: WHAT TO RETURN IF ERROR
+}
+
+struct stack *initialiseStack()
+{
+    struct stack *stack = (struct stack *)malloc(sizeof(struct stack));
 
     stack->MAX = STACK_INITIAL_SIZE;
     stack->top = -1;
-    stack->stack = (struct Variable*)malloc(sizeof(struct Variable)*STACK_INITIAL_SIZE);
+    stack->stack = (struct Variable *)malloc(sizeof(struct Variable) * STACK_INITIAL_SIZE);
     return stack;
 }
 
-
-int main() {
-    struct stack* stack = initialiseStack();
+int main()
+{
+    struct stack *stack = initialiseStack();
     insertAllKeywords();
 
     // printf("KEYWORDS\n");
@@ -226,23 +245,35 @@ int main() {
     struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
     struct SymbolTableEntry *token;
     struct GrammarRule productions[NUM_NON_TERMINALS] = {{1, {{{NT_OTHER_FUNCTIONS, 1}, {NT_MAIN_FUNCTION, 1}}}}, {1, {{{TK_MAIN, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {2, {{{NT_FUNCTION, 1}, {NT_OTHER_FUNCTIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_FUNID, 0}, {NT_INPUT_PAR, 1}, {NT_OUTPUT_PAR, 1}, {TK_SEM, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {1, {{{TK_INPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}}}, {2, {{{TK_OUTPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{NT_DATA_TYPE, 1}, {TK_ID, 0}, {NT_REMAINING_LIST, 1}}}}, {2, {{{NT_PRIMITIVE_DATA_TYPE, 1}}, {{NT_CONSTRUCTED_DATA_TYPE, 1}}}}, {2, {{{TK_INT, 0}}, {{TK_REAL, 0}}}}, {2, {{{NT_A, 1}, {TK_RUID, 0}}, {{TK_RUID, 0}}}}, {2, {{{TK_COMMA, 0}, {NT_PARAMETER_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_TYPE_DEFINITIONS, 1}, {NT_DECLARATIONS, 1}, {NT_OTHER_STMTS, 1}, {NT_RETURN_STMT, 1}}}}, {3, {{{NT_TYPE_DEFINITION, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{NT_DEFINETYPE_STMT, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_RECORD, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDRECORD, 0}}, {{TK_UNION, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDUNION, 0}}}}, {1, {{{NT_FIELD_DEFINITION, 1}, {NT_FIELD_DEFINITIONS, 1}, {NT_MORE_FIELDS, 1}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_FIELDID, 0}, {TK_SEM, 0}}}}, {2, {{{NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_DECLARATION, 1}, {NT_DECLARATIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_ID, 0}, {NT_GLOBAL_OR_NOT, 1}, {TK_SEM, 0}}}}, {2, {{{TK_COLON, 0}, {TK_GLOBAL, 0}}, {{TK_EPS, 0}}}}, {2, {{{NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {5, {{{NT_ASSIGNMENT_STMT, 1}}, {{NT_ITERATIVE_STMT, 1}}, {{NT_CONDITIONAL_STMT, 1}}, {{NT_IO_STMT, 1}}, {{NT_FUN_CALL_STMT, 1}}}}, {1, {{{NT_SINGLE_OR_REC_ID, 1}, {TK_ASSIGNOP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_SEM, 0}}}}, {1, {{{TK_ID, 0}, {NT_REC_ID, 1}}}}, {2, {{{TK_DOT, 0}, {TK_FIELDID, 0}, {NT_REC_ID, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_OUTPUT_PARAMETERS, 1}, {TK_CALL, 0}, {TK_FUNID, 0}, {TK_WITH, 0}, {TK_PARAMETERS, 0}, {NT_INPUT_PARAMETERS, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}, {TK_ASSIGNOP, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}}}, {1, {{{TK_WHILE, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {TK_ENDWHILE, 0}}}}, {1, {{{TK_IF, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {TK_THEN, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {NT_NEW3, 1}, {TK_ENDIF, 0}}}}, {2, {{{TK_ELSE, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_READ, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}, {{TK_WRITE, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}}}, {1, {{{NT_TERM, 1}, {NT_NEW5, 1}}}}, {2, {{{NT_OPERATOR, 1}, {NT_TERM, 1}, {NT_NEW5, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_FACTOR, 1}, {NT_NEW6, 1}}}}, {2, {{{NT_OP_H, 1}, {NT_FACTOR, 1}, {NT_NEW6, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_VAR, 1}}, {{TK_OP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_CL, 0}}}}, {2, {{{TK_PLUS, 0}}, {{TK_MINUS, 0}}}}, {2, {{{TK_MUL, 0}}, {{TK_DIV, 0}}}}, {3, {{{TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_LOGICAL_OP, 1}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}, {{NT_VAR, 1}, {NT_RELATIONAL_OP, 1}, {NT_VAR, 1}}, {{TK_NOT, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}}}, {3, {{{NT_SINGLE_OR_REC_ID, 1}}, {{TK_NUM, 0}}, {{TK_RNUM, 0}}}}, {2, {{{TK_AND, 0}}, {{TK_OR, 0}}}}, {6, {{{TK_LT, 0}}, {{TK_LE, 0}}, {{TK_EQ, 0}}, {{TK_GT, 0}}, {{TK_GE, 0}}, {{TK_NE, 0}}}}, {1, {{{TK_RETURN, 0}, {NT_OPTIONAL_RETURN, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_ID, 0}, {NT_MORE_IDS, 1}}}}, {2, {{{TK_COMMA, 0}, {TK_ID, 0}, {NT_MORE_IDS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_DEFINETYPE, 0}, {NT_A, 1}, {TK_RUID, 0}, {TK_AS, 0}, {TK_RUID, 0}}}}, {2, {{{TK_RECORD, 0}}, {{TK_UNION, 0}}}}};
-    struct Sets **sets_for_all = (struct Sets **)malloc(sizeof(struct Sets *) * (NUM_NON_TERMINALS + NUM_TERMINALS));
-    struct ParsingTable* PT = (struct ParsingTable *) malloc(sizeof(struct ParsingTable));
+    struct Sets **sets_for_all = initialiseSetsWhole();
+
+    struct ParsingTable *PT = (struct ParsingTable *)malloc(sizeof(struct ParsingTable));
 
     readIntoBuffer(twinBuffer);
+    printf("READ INPUT\n");
     computeFirstSet(sets_for_all, productions);
+    printf("FIRST SET COMPUTED\n");
     computeFollowSet(sets_for_all, productions);
-    populate_parsing_table(PT,productions,sets_for_all);
-
+    printf("FOLLOW SET COMPUTED\n");
+    populate_parsing_table(PT, productions, sets_for_all);
+    printf("PARSING TABLE POPULATED\n");
+    // printParsingTable(PT);
+    push(stack, (struct Variable){NT_PROGRAM, 1});
     while ((token = scanToken(LA)))
     {
-        if (token->tokenType == LEXICAL_ERROR ||token->tokenType==TK_COMMENT)
+
+        printf("Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
+        if (token->tokenType == LEXICAL_ERROR || token->tokenType == TK_COMMENT)
         {
-            //TAKE LITE
+            // TAKE LITE
         }
         else
         {
-            predictive_parsing(token->tokenType,PT,stack);
+            printf("Stack before:\n");
+            printStack(stack);
+            predictive_parsing(token->tokenType, PT, stack);
+            printf("Stack after:\n");
+            printStack(stack);
         }
     }
     return 0;

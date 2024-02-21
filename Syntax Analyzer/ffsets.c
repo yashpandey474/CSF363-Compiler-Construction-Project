@@ -2,8 +2,7 @@
 
 bool isDefault(struct Variable var)
 {
-    return  (var.flag == 0 && var.val == 0);
-
+    return (var.flag == 0 && var.val == 0);
 }
 struct Node *createLLNode(struct Variable data)
 {
@@ -37,10 +36,10 @@ void insertAtBeginning(struct LinkedListArray *linkedList, int newData, int flag
     linkedList->length += 1;
 }
 
-
 bool appendVarToSet(struct LinkedListSet *set, struct Variable element)
 {
-    if (element.val == CARRIAGE_RETURN){
+    if (element.val == CARRIAGE_RETURN)
+    {
         return false;
     }
 
@@ -51,10 +50,10 @@ bool appendVarToSet(struct LinkedListSet *set, struct Variable element)
         return false;
     }
 
-    //INSERT INTO LINKED LIST
+    // INSERT INTO LINKED LIST
     insertAtBeginning(set->linkedList, element.val, element.flag);
 
-    //SET IN BOOLEAN ARRAY
+    // SET IN BOOLEAN ARRAY
     set->booleanArr[element.val] = true;
     return true;
 }
@@ -62,7 +61,6 @@ bool appendVarToSet(struct LinkedListSet *set, struct Variable element)
 bool containsEPS(struct LinkedListSet *set)
 {
     return (set->booleanArr[TK_EPS] == true);
-
 }
 
 bool appendSetToSet(struct LinkedListSet *destinationSet, struct LinkedListSet *sourceSet)
@@ -71,26 +69,29 @@ bool appendSetToSet(struct LinkedListSet *destinationSet, struct LinkedListSet *
     for (int i = 0; i < NUM_TERMINALS; ++i)
     {
 
-        if ((i != TK_EPS) && (destinationSet->booleanArr[i] == false) && (sourceSet->booleanArr[i] == true)){
+        if ((i != TK_EPS) && (destinationSet->booleanArr[i] == false) && (sourceSet->booleanArr[i] == true))
+        {
             changed = true;
 
-            //INSERT INTO LINKED LIST
+            // INSERT INTO LINKED LIST
             insertAtBeginning(destinationSet->linkedList, i, 0);
 
-            //SET IN BOOLEAN ARRAY
-            destinationSet->booleanArr[i] = true;   
+            // SET IN BOOLEAN ARRAY
+            destinationSet->booleanArr[i] = true;
         }
-        
     }
     return changed;
 }
 
 void printSetWithIndex(struct LinkedListSet *set, size_t setIndex, int flag, int firstorfollow)
 {
-    char str[10]; 
-    if (firstorfollow) {
+    char str[10];
+    if (firstorfollow)
+    {
         strcpy(str, "Follow");
-    } else {
+    }
+    else
+    {
         strcpy(str, "First");
     }
 
@@ -122,11 +123,12 @@ void printSetWithIndex(struct LinkedListSet *set, size_t setIndex, int flag, int
     }
 }
 
-struct LinkedListSet* initialiseLLSet(){
-    struct LinkedListSet* set = (struct LinkedListSet*)malloc (sizeof(struct LinkedListSet));
+struct LinkedListSet *initialiseLLSet()
+{
+    struct LinkedListSet *set = (struct LinkedListSet *)malloc(sizeof(struct LinkedListSet));
     memset(set->booleanArr, false, sizeof(set->booleanArr));
 
-    set->linkedList =(struct LinkedListArray*) malloc(sizeof(struct LinkedListArray));
+    set->linkedList = (struct LinkedListArray *)malloc(sizeof(struct LinkedListArray));
     set->linkedList->head = NULL;
     set->linkedList->length = 0;
 
@@ -135,7 +137,7 @@ struct LinkedListSet* initialiseLLSet(){
 
 struct Sets *initializeSets()
 {
-    struct Sets *newSets = (struct Sets*) malloc(sizeof(struct Sets));
+    struct Sets *newSets = (struct Sets *)malloc(sizeof(struct Sets));
 
     // Initialize firstSets
     newSets->firstSets = initialiseLLSet();
@@ -148,8 +150,9 @@ struct Sets *initializeSets()
 
 bool isEmpty(struct LinkedListSet *destinationSet)
 {
-    //DIRECTLY CHECK LINKED LIST INSTEAD OF ITERATING THROUGH BOOLEAN ARRAY
-    if (destinationSet->linkedList->length == 0){
+    // DIRECTLY CHECK LINKED LIST INSTEAD OF ITERATING THROUGH BOOLEAN ARRAY
+    if (destinationSet->linkedList->length == 0)
+    {
         return true;
     }
 
@@ -170,7 +173,9 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
 {
 
     // ADD TK_EOF [END OF INPUT MARKER] to follow set of NT_PROGRAM (start symbol)
-    struct Variable eof; eof.val = TK_EOF; eof.flag = 0;
+    struct Variable eof;
+    eof.val = TK_EOF;
+    eof.flag = 0;
     appendVarToSet(sets_for_all[NT_PROGRAM]->followSets, eof);
 
     // WHILE THERE IS A CHANGE IN SOMEONE'S FOLLOW SET
@@ -216,7 +221,6 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
                         res = appendSetToSet(sets_for_all[production[index1].val]->followSets, sets_for_all[production[index2].val]->firstSets);
                         changed = changed || res;
 
-
                         // NO EPSILON: NO MORE FIRST SETS ADDED FROM THIS PRODUCTION
                         if (!containsEPS(sets_for_all[production[index2].val]->firstSets))
                         {
@@ -228,7 +232,7 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
                     if (index2 == length || isDefault(production[index2]))
                     {
                         res = appendSetToSet(sets_for_all[production[index1].val]->followSets, sets_for_all[nonTerminal]->followSets);
-                        
+
                         changed = changed || res;
                     }
 
@@ -245,7 +249,6 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
         printSetWithIndex(sets_for_all[i]->followSets, i, 1, 1);
     }
 }
-
 
 void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal)
 {
@@ -319,6 +322,7 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
 
 void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions)
 {
+    printf("FIRST SETS\n");
     // for all the terminal first sets, we add the terminal to the first set
     // I have created the sets_for_all as an array of Sets structures. Each structure holds the first and follow sets for that variable
     // I have kept the non terminals first and only then have I kept the terminals
@@ -338,7 +342,6 @@ void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions
         }
     }
     // }
-
     // PRINT ALL THE FIRST SETS NON TERMINALS
     for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
     {
@@ -346,16 +349,14 @@ void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions
     }
 }
 
-
-struct Sets** initialiseSetsWhole(){
-    struct Sets** sets_for_all = (struct Sets **)malloc(sizeof(struct Sets *) * (NUM_NON_TERMINALS + NUM_TERMINALS));
+struct Sets **initialiseSetsWhole()
+{
+    struct Sets **sets_for_all = (struct Sets **)malloc(sizeof(struct Sets *) * (NUM_NON_TERMINALS + NUM_TERMINALS));
 
     for (int i = 0; i < NUM_NON_TERMINALS + NUM_TERMINALS; i += 1)
-    {         sets_for_all[i] = initializeSets();
+    {
+        sets_for_all[i] = initializeSets();
     }
 
     return sets_for_all;
 }
-
-
-
