@@ -28,8 +28,8 @@ struct LinkedListSet
 
 void insertAtBeginning(struct LinkedListArray *linkedList, int newData, int flag);
 struct Node *createNode(struct Variable data);
-    // structure of Linked list node
-    struct Node
+// structure of Linked list node
+struct Node
 {
   struct Variable data;
   struct Node *next;

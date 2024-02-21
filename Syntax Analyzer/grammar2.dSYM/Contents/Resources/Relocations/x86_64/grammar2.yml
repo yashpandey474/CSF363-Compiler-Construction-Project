@@ -1,0 +1,27 @@
+---
+triple:          'x86_64-apple-darwin'
+binary-path:     '/Users/kpandey/Desktop/3-2/Compiler Construction/Project/Syntax Analyzer/grammar2'
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _NonTerminalToString, symObjAddr: 0x0, symBinAddr: 0x100000C90, symSize: 0x420 }
+  - { offsetInCU: 0x436, offset: 0x436, size: 0x8, addend: 0x0, symName: _NonTerminalToString, symObjAddr: 0x0, symBinAddr: 0x100000C90, symSize: 0x420 }
+  - { offsetInCU: 0x45E, offset: 0x45E, size: 0x8, addend: 0x0, symName: _TokenToString, symObjAddr: 0x420, symBinAddr: 0x1000010B0, symSize: 0x520 }
+  - { offsetInCU: 0x486, offset: 0x486, size: 0x8, addend: 0x0, symName: _printParsingTable, symObjAddr: 0x940, symBinAddr: 0x1000015D0, symSize: 0x180 }
+  - { offsetInCU: 0x51A, offset: 0x51A, size: 0x8, addend: 0x0, symName: _insert, symObjAddr: 0xAC0, symBinAddr: 0x100001750, symSize: 0x40 }
+  - { offsetInCU: 0x568, offset: 0x568, size: 0x8, addend: 0x0, symName: _populate_parsing_table, symObjAddr: 0xB00, symBinAddr: 0x100001790, symSize: 0x1E0 }
+  - { offsetInCU: 0x664, offset: 0x664, size: 0x8, addend: 0x0, symName: _createNode, symObjAddr: 0xCE0, symBinAddr: 0x100001970, symSize: 0x70 }
+  - { offsetInCU: 0x69A, offset: 0x69A, size: 0x8, addend: 0x0, symName: _insertAtBeginning, symObjAddr: 0xD50, symBinAddr: 0x1000019E0, symSize: 0x60 }
+  - { offsetInCU: 0x6F6, offset: 0x6F6, size: 0x8, addend: 0x0, symName: _isDefault, symObjAddr: 0xDB0, symBinAddr: 0x100001A40, symSize: 0x40 }
+  - { offsetInCU: 0x71E, offset: 0x71E, size: 0x8, addend: 0x0, symName: _appendVarToSet, symObjAddr: 0xDF0, symBinAddr: 0x100001A80, symSize: 0x80 }
+  - { offsetInCU: 0x754, offset: 0x754, size: 0x8, addend: 0x0, symName: _containsEPS, symObjAddr: 0xE70, symBinAddr: 0x100001B00, symSize: 0x40 }
+  - { offsetInCU: 0x78A, offset: 0x78A, size: 0x8, addend: 0x0, symName: _appendSetToSet, symObjAddr: 0xEB0, symBinAddr: 0x100001B40, symSize: 0xB0 }
+  - { offsetInCU: 0x7EA, offset: 0x7EA, size: 0x8, addend: 0x0, symName: _printSetWithIndex, symObjAddr: 0xF60, symBinAddr: 0x100001BF0, symSize: 0x1B0 }
+  - { offsetInCU: 0x87E, offset: 0x87E, size: 0x8, addend: 0x0, symName: _initialiseLLSet, symObjAddr: 0x1110, symBinAddr: 0x100001DA0, symSize: 0x70 }
+  - { offsetInCU: 0x8A6, offset: 0x8A6, size: 0x8, addend: 0x0, symName: _initializeSets, symObjAddr: 0x1180, symBinAddr: 0x100001E10, symSize: 0x40 }
+  - { offsetInCU: 0x8CE, offset: 0x8CE, size: 0x8, addend: 0x0, symName: _isEmpty, symObjAddr: 0x11C0, symBinAddr: 0x100001E50, symSize: 0x40 }
+  - { offsetInCU: 0x8F6, offset: 0x8F6, size: 0x8, addend: 0x0, symName: _recomputeSetIndex, symObjAddr: 0x1200, symBinAddr: 0x100001E90, symSize: 0x30 }
+  - { offsetInCU: 0x92F, offset: 0x92F, size: 0x8, addend: 0x0, symName: _computeFollowSet, symObjAddr: 0x1230, symBinAddr: 0x100001EC0, symSize: 0x310 }
+  - { offsetInCU: 0xA6B, offset: 0xA6B, size: 0x8, addend: 0x0, symName: _computeFirstSetNT, symObjAddr: 0x1540, symBinAddr: 0x1000021D0, symSize: 0x240 }
+  - { offsetInCU: 0xB25, offset: 0xB25, size: 0x8, addend: 0x0, symName: _computeFirstSet, symObjAddr: 0x1780, symBinAddr: 0x100002410, symSize: 0xF0 }
+  - { offsetInCU: 0xBB1, offset: 0xBB1, size: 0x8, addend: 0x0, symName: _initialiseSetsWhole, symObjAddr: 0x1870, symBinAddr: 0x100002500, symSize: 0x60 }
+  - { offsetInCU: 0xBF8, offset: 0xBF8, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x18D0, symBinAddr: 0x100002560, symSize: 0xE6 }
+...
