@@ -1,7 +1,24 @@
 //2D PARSING TABLE
 //NT - T TO RULE
 #include "syntactical.h"
+void printRule(enum NonTerminals nt, struct Variable* ruleArray)
+{
+  for(int i=0;i<9;i++)
+  {
+    if(ruleArray[i].val==0 &&ruleArray[i].flag==0)
+    {
+      break;
+    }
+          if (ruleArray[i].flag == 0){
+              printf("%s ", TokenToString(ruleArray[i].val));
+          }
+          else{
+            printf("%s ", NonTerminalToString(ruleArray[i].val));
+        }
+  }
 
+  printf("\n");
+}
 void printParsingTable(struct ParsingTable* pt) {
   if (pt == NULL) {
     printf("ParsingTable pointer is NULL\n");
@@ -9,12 +26,17 @@ void printParsingTable(struct ParsingTable* pt) {
   }
   for (int i = 0; i < NUM_NON_TERMINALS; i++) {
     for (int j = 0; j < NUM_TERMINALS; j++) {
+      struct Variable* var = pt->table[i][j];
+
+      printf("Cell[%s][%s]:", NonTerminalToString(i), TokenToString(j));
+
+      
       if (pt->table[i][j] != NULL) {
-        printf("Cell[%d][%d]: Val = %d, Flag = %s\n", 
-               i, j, pt->table[i][j]->val, 
-               (pt->table[i][j]->flag == 0) ? "TERMINAL" : "NONTERMINAL");
-      } else {
-        printf("Cell[%d][%d]: ERROR\n", i, j);
+        printRule(i, pt->table[i][j]);
+      }
+      else
+      {
+          printf("ERROR\n");
       }
     }
   }
@@ -26,10 +48,9 @@ void insert(enum NonTerminals nt, enum Tokentype terminal, struct Variable* rule
 
 void populate_parsing_table(struct ParsingTable * PT, struct GrammarRule* productions,struct Sets **sets_for_all){
     for(int nt=0;nt<NUM_NON_TERMINALS;nt++){
-        struct GrammarRule a=productions[nt];
-        for(int i=0;i<a.numProductions;i++)
+        for(int i=0;i<productions[nt].numProductions;i++)
         {
-            struct Variable* rule=a.rules[i];
+            struct Variable* rule=productions[nt].rules[i];
             if(rule[0].val==TK_EPS)
             {
                 struct Node* current = sets_for_all[nt]->followSets->linkedList->head;
@@ -40,17 +61,48 @@ void populate_parsing_table(struct ParsingTable * PT, struct GrammarRule* produc
                 }
             }
             else{
-                int set_index = rule[0].val;
-                if (rule[0].flag == 0){
-                    set_index += NUM_NON_TERMINALS;
-                }
-                struct Node* current = sets_for_all[set_index]->firstSets->linkedList->head;
 
-                while (current != NULL){
-                    
-                    insert(nt, current->data.val, rule, PT);
-                    current=current->next;
+            int var = 0;
+            for (; var < 9 && !(isDefault(rule[var])); var += 1)
+            {
+
+              int set_index = rule[var].val;
+              if (rule[var].flag == 0)
+              {
+                set_index += NUM_NON_TERMINALS;
+              }
+              struct Node *current = sets_for_all[set_index]->firstSets->linkedList->head;
+
+              while (current != NULL)
+              {
+                // DONT ADD TK_EPS
+                if (current->data.val == TK_EPS)
+                {
+                  continue;
                 }
+                insert(nt, current->data.val, rule, PT);
+                current = current->next;
+              }
+
+              if (!(containsEPS(sets_for_all[set_index]->firstSets)))
+              {
+                break;
+              }
+            }
+
+            if (var == 9 || isDefault(rule[var])){
+              printf("LOOP IN FOLLOW");
+              //ADD THE RULE IN FOLLOW OF THE VAR [EPSILON RULE]
+              struct Node *current = sets_for_all[nt]->followSets->linkedList->head;
+
+              while (current != NULL)
+              {
+                insert(nt, current->data.val, rule, PT);
+                current = current->next;
+              }
+            }
+
+
             }
         }
     }
