@@ -261,22 +261,22 @@ int main()
     populate_parsing_table(PT, productions, sets_for_all);
     printf("PARSING TABLE POPULATED\n");
     printParsingTable(PT);
-    // push(stack, (struct Variable){NT_PROGRAM, 1});
-    // while ((token = scanToken(LA)))
-    // {
+    push(stack, (struct Variable){NT_PROGRAM, 1});
+    while ((token = scanToken(LA)))
+    {
 
-    //     printf("Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
-    //     if (!(token->tokenType == LEXICAL_ERROR || token->tokenType == TK_COMMENT))
-    //     {
-    //         printf("Stack before:\n");
-    //         printStack(stack);
-    //         while (predictive_parsing(token->tokenType, PT, stack) == 0)
-    //         {
-    //             // keep doing it basically. youll only go to the next token if there's a valid accepting thing( in which case it returns something)
-    //         }
-    //         printf("Stack after:\n");
-    //         printStack(stack);
-    //     }
-    // }
+        printf("Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
+        if (!(token->tokenType == LEXICAL_ERROR || token->tokenType == TK_COMMENT))
+        {
+            printf("Stack before:\n");
+            printStack(stack);
+            while (predictive_parsing(token->tokenType, PT, stack) == 0)
+            {
+                // keep doing it basically. youll only go to the next token if there's a valid accepting thing( in which case it returns something)
+            }
+            printf("Stack after:\n");
+            printStack(stack);
+        }
+    }
     return 0;
 }

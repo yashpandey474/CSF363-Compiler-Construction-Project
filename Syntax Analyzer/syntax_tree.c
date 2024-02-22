@@ -24,23 +24,20 @@ int add_child(struct node *parent, struct node *child){
         printf("Error: Parent is a terminal\n");
         return -1;
     }
-    if(parent->children == NULL){
-        parent->children = (struct node*)malloc(sizeof(struct node));
-        parent->children[0] = *child; 
+    
+    struct node* temp = (struct node*)realloc(parent->children, (parent->number_of_children+1)*sizeof(struct node));
+    if (temp == NULL) {
+        printf("Error: Memory reallocation failed\n");
+        return -1;
     }
-    else{
-        struct node* temp = (struct node*)realloc(parent->children, (parent->number_of_children+1)*sizeof(struct node));
-        if (temp == NULL) {
-            printf("Error: Memory reallocation failed\n");
-            return -1;
-        }
-        parent->children = temp;
-        parent->children[parent->number_of_children] = *child; 
-    }
+    parent->children = temp;
+    parent->children[parent->number_of_children] = *child; 
     parent->number_of_children++;
     return  0;
 }
 
 int main(){
+    //add a few nodes and check if the tree is being created properly
+
     return 0;
 }
