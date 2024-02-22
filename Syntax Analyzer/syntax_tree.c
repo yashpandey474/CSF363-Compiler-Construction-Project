@@ -290,13 +290,15 @@ int add_child(struct node *parent, struct node *child){
 
 // Add multiple children to the parent node
 // Returns 0 if all children are successfully added, -1 
-int add_parent_children(struct node *parent, struct node **children, int num_children) {
+
+int add_parent_children(struct node *parent, struct Variable *children, int num_children) {
     if (parent == NULL || children == NULL || num_children <= 0) {
         printf("Error: Invalid input\n");
         return -1;
     }
 
     for (int i = 0; i < num_children; i++) {
+        struct node* temp = 
         if (add_child(parent, children[i]) == -1) {
             // Error occurred while adding child, rollback and return -1
             for (int j = 0; j < i; j++) {
