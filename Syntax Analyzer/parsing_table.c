@@ -3,6 +3,9 @@
 #include "syntactical.h"
 void printRule(enum NonTerminals nt, struct Variable* ruleArray)
 {
+
+  printf("%s ===> ", NonTerminalToString(nt));
+
   for(int i=0;i<9;i++)
   {
     if(ruleArray[i].val==0 &&ruleArray[i].flag==0)
@@ -25,12 +28,12 @@ void printParsingTable(struct ParsingTable* pt) {
     return;
   }
   for (int i = 0; i < NUM_NON_TERMINALS; i++) {
+    if (i != NT_FUNCTION){
+      continue;
+    }
     for (int j = 0; j < NUM_TERMINALS; j++) {
-      struct Variable* var = pt->table[i][j];
 
       printf("Cell[%s][%s]:", NonTerminalToString(i), TokenToString(j));
-
-      
       if (pt->table[i][j] != NULL) {
         printRule(i, pt->table[i][j]);
       }
@@ -50,7 +53,10 @@ void populate_parsing_table(struct ParsingTable * PT, struct GrammarRule* produc
     for(int nt=0;nt<NUM_NON_TERMINALS;nt++){
         for(int i=0;i<productions[nt].numProductions;i++)
         {
+          //GET CURRENT RULE
             struct Variable* rule=productions[nt].rules[i];
+
+          //EPSILON RULE
             if(rule[0].val==TK_EPS)
             {
                 struct Node* current = sets_for_all[nt]->followSets->linkedList->head;
@@ -60,6 +66,8 @@ void populate_parsing_table(struct ParsingTable * PT, struct GrammarRule* produc
                     current=current->next;
                 }
             }
+
+
             else{
 
             int var = 0;
