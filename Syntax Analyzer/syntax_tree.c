@@ -261,6 +261,12 @@ struct node{
     struct node* parent;
 };
 
+//we get the rules in the form of a variable(non-terminal) and the children of the non-terminal
+//the node that we create will have the value of the non-terminal and the children will be the children of the non-terminal
+//then the next rule that we take a look at will have the first non-terminal in the children array as the parent
+//we repeat steps 1 to 3 until the array is over for that particular non-terminal
+//if the array is completed, we return to the previous non-terminal and continue adding the rules to the tree
+
 struct node* create_node(struct Variable *value){
     struct node* new_node = (struct node*)malloc(sizeof(struct node));
     new_node->value = value;
@@ -289,27 +295,36 @@ int add_child(struct node *parent, struct node *child){
 }
 
 // Add multiple children to the parent node
-// Returns 0 if all children are successfully added, -1 
-
+// Returns 0 if all children are successfully added, -1 if any error occurs
 int add_parent_children(struct node *parent, struct Variable *children, int num_children) {
-    if (parent == NULL || children == NULL || num_children <= 0) {
-        printf("Error: Invalid input\n");
-        return -1;
-    }
 
     for (int i = 0; i < num_children; i++) {
-        struct node* temp = 
-        if (add_child(parent, children[i]) == -1) {
-            // Error occurred while adding child, rollback and return -1
-            for (int j = 0; j < i; j++) {
-                free(parent->children[parent->number_of_children - 1]);
-                parent->number_of_children--;
-            }
+        // Create a new node for each child variable
+        struct node* temp = create_node(&children[i]);
+        if (temp == NULL) {
+            // Memory allocation failed for the child node
+            printf("Error: Memory allocation failed for child node\n");
+            return -1;
+        }
+
+        // Add the child node to the parent
+        if (add_child(parent, temp) == -1) {
+            // Error occurred while adding child, free allocated memory and return -1
+            free(temp);
             return -1;
         }
     }
-    return 0;
+    return 0; // All children successfully added
 }
+
+
+void add_rules_to_tree(){
+    //we add a rule to the tree by calling the add_parent_children function
+    //then we look through the array just added and add another rule to the the first non-terminal that we find in the array
+    //we keep doing this until we have added all the rules to the tree
+    if ()
+}
+
 
 void print_tree(struct node *root){
     if (root->value->flag == 0){

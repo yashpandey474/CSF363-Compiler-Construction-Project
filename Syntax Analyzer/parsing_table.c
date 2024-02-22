@@ -28,9 +28,6 @@ void printParsingTable(struct ParsingTable* pt) {
     return;
   }
   for (int i = 0; i < NUM_NON_TERMINALS; i++) {
-    if (i != NT_FUNCTION){
-      continue;
-    }
     for (int j = 0; j < NUM_TERMINALS; j++) {
 
       printf("Cell[%s][%s]:", NonTerminalToString(i), TokenToString(j));
@@ -49,8 +46,28 @@ void insert(enum NonTerminals nt, enum Tokentype terminal, struct Variable* rule
     PT->table[(int)(nt)][(int)terminal] = rule;
 }
 
+void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal)
+{
+  //SYN INDICATING RULE
+  struct Variable* rule = (struct Variable*)malloc(sizeof(struct Variable));
+  rule[0].val = -1;
+
+  struct Node *current = sets_for_all[nonTerminal]->followSets->linkedList->head;
+
+  //FOR ALL TERMINALS IN FOLLOW OF NONTERMINAL
+  while (current != NULL)
+  {
+    //INSERT INTO PARSING TABLE
+    insert(nonTerminal, current->data.val, rule, PT);
+    current = current->next;
+  }
+}
+
 void populate_parsing_table(struct ParsingTable * PT, struct GrammarRule* productions,struct Sets **sets_for_all){
     for(int nt=0;nt<NUM_NON_TERMINALS;nt++){
+      //ADD THE SYN INDICATOR FOR ALL TERMINALS IN FOLLOW OF NT
+      addSyn(PT, sets_for_all, nt);
+      
         for(int i=0;i<productions[nt].numProductions;i++)
         {
           //GET CURRENT RULE

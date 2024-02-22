@@ -271,9 +271,14 @@ const char *TokenToString(enum Tokentype token)
         return "TK_RUID";
     case DELIMITER:
         return "DELIMITER";
-    case TK_EPS: return "TK_EPS";
-    case TK_EOF: return "TK_EOF";
-    case LEXICAL_ERROR: return "LEXICAL_ERROR";
+    case TK_EPS:
+        return "TK_EPS";
+    case TK_EOF:
+        return "TK_EOF";
+    case LEXICAL_ERROR:
+        return "LEXICAL_ERROR";
+    case -1:
+        return "SYN TOKEN";
 
     default:
         return "non accept state";
