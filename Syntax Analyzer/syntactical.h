@@ -108,8 +108,8 @@ enum NonTerminals
   NT_MORE_IDS,
   NT_DEFINETYPE_STMT,
   NT_A
-
 };
+
 const char *NonTerminalToString(enum NonTerminals nonTerminal);
 
 struct Sets **initialiseSetsWhole();
@@ -117,3 +117,4 @@ void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions
 void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *productions);
 void populate_parsing_table(struct ParsingTable *PT, struct GrammarRule *productions, struct Sets **sets_for_all);
 void printParsingTable(struct ParsingTable *pt);
+void printFFSetsTable(FILE* cfile, struct Sets **sets_for_all);

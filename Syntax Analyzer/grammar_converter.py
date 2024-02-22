@@ -88,7 +88,7 @@ def process_rule(rule):
             if var in nonterminals:
                 var = "NT_" + nonterminals[var]
                 is_nonterminal = 1
-            elif var == "ePSILON":
+            elif var == "EPSILON":
                 var = "TK_EPS"
 
             production.append((var, is_nonterminal))

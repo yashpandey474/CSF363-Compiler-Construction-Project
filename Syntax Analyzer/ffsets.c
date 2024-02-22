@@ -4,6 +4,7 @@ bool isDefault(struct Variable var)
 {
     return (var.flag == 0 && var.val == 0);
 }
+
 struct Node *createLLNode(struct Variable data)
 {
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
@@ -83,45 +84,61 @@ bool appendSetToSet(struct LinkedListSet *destinationSet, struct LinkedListSet *
     return changed;
 }
 
-void printSetWithIndex(struct LinkedListSet *set, size_t setIndex, int flag, int firstorfollow)
+void fprintSetWithIndex(FILE* cfile,struct LinkedListSet *set, int setIndex, int flag, int firstorfollow)
 {
     char str[10];
     if (firstorfollow)
     {
-        strcpy(str, "Follow");
+        strcpy(str, "First");
     }
     else
     {
-        strcpy(str, "First");
+        strcpy(str, "Follow");
     }
 
     if (flag == 1)
     {
-        printf("%s Set %s: ", str, NonTerminalToString((enum NonTerminals)setIndex));
-        for (size_t i = 0; i < NUM_TERMINALS; ++i)
+        fprintf(cfile, "%s(%s): ", NonTerminalToString((enum NonTerminals)setIndex), str);
+        for (int i = 0; i < NUM_TERMINALS; ++i)
         {
             // Assuming elements are integers for simplicity
             if (set->booleanArr[i] == true)
             {
-                printf("%s, ", TokenToString((enum Tokentype)i));
+                fprintf(cfile, "%s, ", TokenToString((enum Tokentype)i));
             }
         }
-        printf("\n\n");
+        fprintf(cfile,"\n");
     }
     else
     {
-        printf("Set %s: ", TokenToString((enum Tokentype)setIndex));
-        for (size_t i = 0; i < NUM_TERMINALS; ++i)
+        fprintf(cfile, "%s(%s): ", TokenToString((enum Tokentype)setIndex), str);
+        for (int i = 0; i < NUM_TERMINALS; ++i)
         {
             // Assuming elements are integers for simplicity
             if (set->booleanArr[i])
             {
-                printf("%s, ", TokenToString((enum Tokentype)i));
+                fprintf(cfile, "%s, ", TokenToString((enum Tokentype)i));
             }
         }
-        printf("\n\n");
+        fprintf(cfile, "\n");
     }
 }
+
+void printFFSetsTable(FILE* cfile, struct Sets **sets_for_all){
+    for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
+    {
+        fprintSetWithIndex(cfile, sets_for_all[i]->firstSets, i, 1, 1);
+        fprintSetWithIndex(cfile, sets_for_all[i]->followSets, i, 1, 0);
+        fprintf(cfile,"\n");
+    }
+    // for (int i = 0; i < NUM_TERMINALS; i += 1)
+    // {
+    //     fprintSetWithIndex(cfile, sets_for_all[i+NUM_NON_TERMINALS]->firstSets, i, 0, 1);
+    //     fprintSetWithIndex(cfile, sets_for_all[i+NUM_NON_TERMINALS]->followSets, i, 0, 0);
+    //     fprintf(cfile,"\n");
+    // }
+}
+
 
 struct LinkedListSet *initialiseLLSet()
 {
@@ -244,10 +261,11 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
     }
 
     // PRINT ALL THE FOLLOW SETS NON TERMINALS
-    for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
-    {
-        printSetWithIndex(sets_for_all[i]->followSets, i, 1, 1);
-    }
+    // removed, now printed to file 
+    // for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
+    // {
+    //     printSetWithIndex(sets_for_all[i]->followSets, i, 1, 1);
+    // }
 }
 
 void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal)
@@ -322,7 +340,7 @@ void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_a
 
 void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions)
 {
-    printf("FIRST SETS\n");
+    // printf("FIRST SETS\n");
     // for all the terminal first sets, we add the terminal to the first set
     // I have created the sets_for_all as an array of Sets structures. Each structure holds the first and follow sets for that variable
     // I have kept the non terminals first and only then have I kept the terminals
@@ -343,10 +361,11 @@ void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions
     }
     // }
     // PRINT ALL THE FIRST SETS NON TERMINALS
-    for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
-    {
-        printSetWithIndex(sets_for_all[i]->firstSets, i, 1, 0);
-    }
+    // removed, now printed to file 
+    // for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
+    // {
+    //     printSetWithIndex(sets_for_all[i]->firstSets, i, 1, 0);
+    // }
 }
 
 struct Sets **initialiseSetsWhole()
