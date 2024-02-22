@@ -1,39 +1,43 @@
-//tree with variable number of children where leaves are terminals and nodes are non terminals
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "syntactical.h"
 
-struct node {
-    struct Variable data;  //this stores the data of the non terminal which is represented by this node
-    struct node *children; //this is the array of pointers to the next nodes
-    int length; //this stores the number of children of this node
-    
+struct node{
+    struct Variable *value;
+    int type; // 0 for non-terminal, 1 for terminal
+    struct node* children;  //children can be terminals or non_terminals
+    int number_of_children; //to store the number of children
 };
 
-struct leaf{
-    struct Variable data; //this stores the data of the terminal which is represented by this node
-};
-
-struct node* create_node(struct Variable data, int length) {
-    struct node *new_node = (struct node*)malloc(sizeof(struct node));
-    new_node->data = data;
-    new_node->children = (struct node*)malloc(length * sizeof(struct node));    //allocating memory for the array of pointers
-    new_node->length = length;
+struct node* create_node(struct Variable *value){
+    struct node* new_node = (struct node*)malloc(sizeof(struct node));
+    new_node->value = value;
+    new_node->children = NULL;
+    new_node->number_of_children = 0;
     return new_node;
 }
 
-struct leaf* create_leaf(struct Variable data) {
-    struct leaf *new_leaf = (struct leaf*)malloc(sizeof(struct leaf));
-    new_leaf->data = data;
-    return new_leaf;
+//if the value returned is 0, then the child is successfully added
+int add_child(struct node *parent, struct node *child){
+    if (parent->value->flag == 0){
+        printf("Error: Parent is a terminal\n");
+        return -1;
+    }
+    
+    struct node* temp = (struct node*)realloc(parent->children, (parent->number_of_children+1)*sizeof(struct node));
+    if (temp == NULL) {
+        printf("Error: Memory reallocation failed\n");
+        return -1;
+    }
+    parent->children = temp;
+    parent->children[parent->number_of_children] = *child; 
+    parent->number_of_children++;
+    return  0;
 }
 
-void add_child(struct node *parent, struct Variable data, int length) {
-    struct node *new_node = create_node(data, length);
-    parent->children[parent->length++] = *new_node;
+int main(){
+    //add a few nodes and check if the tree is being created properly
+
+    return 0;
 }
-
-
-

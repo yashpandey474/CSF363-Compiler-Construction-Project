@@ -28,7 +28,10 @@ struct LinkedListSet
 
 void insertAtBeginning(struct LinkedListArray *linkedList, int newData, int flag);
 struct Node *createLLNode(struct Variable data);
-// structure of Linked list node
+bool containsEPS(struct LinkedListSet *set);
+bool isDefault(struct Variable var);
+
+    // structure of Linked list node
 struct Node
 {
   struct Variable data;
