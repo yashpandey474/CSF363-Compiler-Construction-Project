@@ -134,6 +134,9 @@ int readIntoBuffer(struct TwinBuffer *twinBuffer)
     }
     // READING ALTERNATE BUFFER
     twinBuffer->readingFirst = 1 - twinBuffer->readingFirst;
+
+    printf("HELLO");
+    
     size_t read_bytes = fread(buffer, sizeof(char), BUFFER_SIZE, twinBuffer->file);
 
     // MARK END OF INPUT
