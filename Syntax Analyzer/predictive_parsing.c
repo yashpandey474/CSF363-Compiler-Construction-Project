@@ -219,7 +219,7 @@ int predictive_parsing(struct SymbolTableEntry *token, struct ParsingTable *pt, 
     else if (pt->table[X.val][a][0].val == -1)
     {
         // SYN TOKEN; POP THE NONTERMINAL
-        printf("Line no. %-5d Error: The token %s for lexeme %s  does not match with the expected token %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
+        printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
 
         pop(st);
         return 0;
@@ -299,9 +299,11 @@ int main()
 
     while ((token = scanToken(LA)))
     {
-        if(token->tokenType==LEXICAL_ERROR)
-{        printf("Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo, token->lexeme, TokenToString(token->tokenType));
-}        if (!(token->tokenType == LEXICAL_ERROR || token->tokenType == TK_COMMENT))
+        if (token->tokenType == LEXICAL_ERROR)
+        {
+            printf("Line no. %-5d Error: %-30s\n", LA->lineNo, token->lexeme);
+        }
+        if (!(token->tokenType == LEXICAL_ERROR || token->tokenType == TK_COMMENT))
         {
             // printf("Stack before:\n");
             // printStack(stack);

@@ -160,8 +160,7 @@ typedef enum CharacterType
 } CharacterType;
 
 const char *CharacterTypeToString(enum CharacterType type);
-const char *TokenToString(enum Tokentype token);
-
+const char *TokenToString(int token);
 
 extern CharacterType characterTypeMap[129];
 

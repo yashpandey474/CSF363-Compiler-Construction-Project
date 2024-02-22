@@ -143,7 +143,7 @@ const char *CharacterTypeToString(enum CharacterType type)
     }
 }
 
-const char *TokenToString(enum Tokentype token)
+const char *TokenToString(int token)
 {
     switch (token)
     {
