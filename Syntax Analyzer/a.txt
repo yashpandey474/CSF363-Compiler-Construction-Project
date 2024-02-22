@@ -4,23 +4,23 @@ FIRST SET COMPUTED
 FOLLOW SET COMPUTED
 PARSING TABLE POPULATED
 Line no. 7     Error: The token TK_SQL for lexeme [  does not match with the expected token TK_LIST
-Line no. 8     Lexeme Variable Identifier is longer than the prescribed length of 20 characters. Token LEXICAL_ERROR
+Line no. 8     Error: Variable Identifier is longer than the prescribed length of 20 characters.
 Line no. 8     Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ID
-Line no. 10    Lexeme Unknown pattern <5000.7>       Token LEXICAL_ERROR
-Line no. 10    Error: The token TK_SEM for lexeme ;  does not match with the expected token NT_ARITHMETIC_EXPRESSION
+Line no. 10    Error: Unknown pattern <5000.7>      
+Line 10    Error: Invalid token TK_SEM encountered with value ; stack top NT_ARITHMETIC_EXPRESSION
 Line no. 11    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_CL
-Line no. 13    Lexeme Unknown pattern <&&>           Token LEXICAL_ERROR
-Line no. 13    Error: The token TK_OP for lexeme (  does not match with the expected token NT_LOGICAL_OP
+Line no. 13    Error: Unknown pattern <&&>          
+Line 13    Error: Invalid token TK_OP encountered with value ( stack top NT_LOGICAL_OP
 Line no. 17    Error: The token TK_CL for lexeme )  does not match with the expected token TK_SEM
 Line no. 25    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ASSIGNOP
-Line no. 25    Error: The token TK_SEM for lexeme ;  does not match with the expected token NT_ARITHMETIC_EXPRESSION
+Line 25    Error: Invalid token TK_SEM encountered with value ; stack top NT_ARITHMETIC_EXPRESSION
 Line no. 26    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ASSIGNOP
-Line no. 26    Error: The token TK_SEM for lexeme ;  does not match with the expected token NT_ARITHMETIC_EXPRESSION
+Line 26    Error: Invalid token TK_SEM encountered with value ; stack top NT_ARITHMETIC_EXPRESSION
 Line no. 27    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ASSIGNOP
-Line no. 27    Error: The token TK_SEM for lexeme ;  does not match with the expected token NT_ARITHMETIC_EXPRESSION
-Line no. 28    Lexeme Unknown Symbol <$>             Token LEXICAL_ERROR
+Line 27    Error: Invalid token TK_SEM encountered with value ; stack top NT_ARITHMETIC_EXPRESSION
+Line no. 28    Error: Unknown Symbol <$>            
 Line no. 28    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ASSIGNOP
-Line no. 28    Error: The token TK_SEM for lexeme ;  does not match with the expected token NT_ARITHMETIC_EXPRESSION
-Line no. 29    Lexeme Unknown pattern <<-->          Token LEXICAL_ERROR
+Line 28    Error: Invalid token TK_SEM encountered with value ; stack top NT_ARITHMETIC_EXPRESSION
+Line no. 29    Error: Unknown pattern <<-->         
 Line no. 29    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ASSIGNOP
-Line no. 29    Error: The token TK_SEM for lexeme ;  does not match with the expected token NT_ARITHMETIC_EXPRESSION
+Line 29    Error: Invalid token TK_SEM encountered with value ; stack top NT_ARITHMETIC_EXPRESSION
