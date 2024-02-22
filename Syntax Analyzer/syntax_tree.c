@@ -3,6 +3,7 @@
 #include <string.h>
 #include "syntactical.h"
 
+// functions to use for help with printing
 const char *NonTerminalToString(enum NonTerminals nonTerminal)
 {
     switch (nonTerminal)
@@ -239,107 +240,104 @@ const char *TokenToString(enum Tokentype token)
         return "TK_RUID";
     case DELIMITER:
         return "DELIMITER";
-    
     case TK_EPS:
-        return "EPSILON";
-
+        return "TK_EPS";
     case TK_EOF:
         return "TK_EOF";
+    case LEXICAL_ERROR:
+        return "LEXICAL_ERROR";
+    case -1:
+        return "SYN TOKEN";
 
     default:
         return "non accept state";
     }
 }
 
-
-struct node{
-    struct Variable *value;
-    int type; // 0 for non-terminal, 1 for terminal
-    struct node** children;  //children can be terminals or non_terminals
-    // struct node children[];   
-    int number_of_children; //to store the number of children
-    struct node* parent;
+// I am assuming that the function which gives me the rule to be added returns a structure which has
+// a field called nonterminal whose value is the non-terminal whose rule is being added
+// the other field in the structure is an array of variables which is the reverse ordered rule called rule
+// another field is the length of the rule called length
+struct input_structure
+{
+    struct Variable nonterminal;
+    struct Variable *rule;
+    int length;
 };
 
-//we get the rules in the form of a variable(non-terminal) and the children of the non-terminal
-//the node that we create will have the value of the non-terminal and the children will be the children of the non-terminal
-//then the next rule that we take a look at will have the first non-terminal in the children array as the parent
-//we repeat steps 1 to 3 until the array is over for that particular non-terminal
-//if the array is completed, we return to the previous non-terminal and continue adding the rules to the tree
+// declaration of function to fetch rule from the predictive parsing table
+// add its definition
+struct input_structure fetch_rule();
 
-struct node* create_node(struct Variable *value){
-    struct node* new_node = (struct node*)malloc(sizeof(struct node));
-    new_node->value = value;
-    new_node->children = NULL;
-    new_node->number_of_children = 0;
-    new_node->parent = NULL;
-    return new_node;
+// structure for the tree node
+struct tree_node
+{
+    struct Variable data;     // stores the variable that is represented by this node
+    struct tree_node *next;   // stores a pointer to the next child of its parent node (next sibling)
+    struct tree_node *head;   // stores pointer to its first child
+    struct tree_node *parent; // stores a pointer back to its parent node
+};
+
+// function to create a new tree_node
+struct tree_node *create_tree_node(struct Variable data)
+{
+    struct tree_node *new_tree_node = (struct tree_node *)malloc(sizeof(struct tree_node *));
+    new_tree_node->data = data;
+    new_tree_node->next = NULL;
+    new_tree_node->head = NULL;
+    new_tree_node->parent = NULL;
+    return new_tree_node;
 }
 
-//if the value returned is 0, then the child is successfully added
-int add_child(struct node *parent, struct node *child){
-    if (parent->value->flag == 0){
-        printf("Error: Parent is a terminal\n");
+// function to add a tree_node to the linkedlist which functions as the children of the parse tree
+// the tree_nodes are added to the head (they are in reverse order)
+void add_tree_node(struct tree_node *parent, struct tree_node *child)
+{
+    child->next = parent->head;
+    parent->head = child;
+    child->parent = parent;
+}
+
+// function to find the next non terminal for a given node
+struct tree_node *nextNonTerminal(struct tree_node *current)
+{
+    while (current->next != NULL && current->data.flag == 0)
+    {
+        current = current->next;
+    }
+    if (current->data.flag == 1)
+    {
+        return current;
+    }
+    return nextNonTerminal(current->parent->next);
+}
+
+// function which takes the structure described in the first few comments as input and the tree_node where the rule has to be added
+struct tree_node *repeated_add(struct tree_node *parent, struct input_structure input)
+{
+    if (parent->data.val != input.nonterminal.val)
+    {
+        printf("Error: The input does not match the first non-terminal found\n");
+        printf("Non-terminal entered: %s\n", NonTerminalToString(input.nonterminal.val));
+        printf("Non-terminal found: %s\n", NonTerminalToString(parent->data.val));
         return -1;
     }
-    
-    struct node** temp = (struct node**)realloc(parent->children, (parent->number_of_children+1)*sizeof(struct node*));
-    if (temp == NULL) {
-        printf("Error: Memory reallocation failed\n");
-        return -1;
+
+    for (int i = 0; i < input.length; i++)
+    {
+        add_tree_node(parent, create_tree_node(input.rule[i]));
     }
-    parent->children = temp;
-    parent->children[parent->number_of_children] = child; 
-    parent->number_of_children++;
-    return  0;
+
+    return nextNonTerminal(parent->head);
 }
 
-// Add multiple children to the parent node
-// Returns 0 if all children are successfully added, -1 if any error occurs
-int add_parent_children(struct node *parent, struct Variable *children, int num_children) {
-
-    for (int i = 0; i < num_children; i++) {
-        // Create a new node for each child variable
-        struct node* temp = create_node(&children[i]);
-        if (temp == NULL) {
-            // Memory allocation failed for the child node
-            printf("Error: Memory allocation failed for child node\n");
-            return -1;
-        }
-
-        // Add the child node to the parent
-        if (add_child(parent, temp) == -1) {
-            // Error occurred while adding child, free allocated memory and return -1
-            free(temp);
-            return -1;
-        }
+int main()
+{ // initialise the root_node which is the NT_PROGRAM node and add the first input_structure to it using repeated_add
+    struct tree_node *node_to_add_to = create_tree_node((struct Variable){0, 1});
+    while (1)
+    {
+        struct input_structure input = fetch_rule();
+        node_to_add_to = repeated_add(node_to_add_to, input);
     }
-    return 0; // All children successfully added
-}
-
-
-void add_rules_to_tree(){
-    //we add a rule to the tree by calling the add_parent_children function
-    //then we look through the array just added and add another rule to the the first non-terminal that we find in the array
-    //we keep doing this until we have added all the rules to the tree
-    if ()
-}
-
-
-void print_tree(struct node *root){
-    if (root->value->flag == 0){
-        printf("%s\n", TokenToString(root->value->val));
-    }
-    else{
-        printf("%s\n", NonTerminalToString(root->value->val));
-        for (int i = 0; i < root->number_of_children; i++){
-            print_tree(root->children[i]);
-        }
-    }
-}
-
-int main(){
-    //add a few nodes and check if the tree is being created properly
-    
     return 0;
 }
