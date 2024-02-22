@@ -5,7 +5,6 @@
 /output.txt
 /myProgram
 /myProgram.exe
-```
 Lexical Analyzer/output.txt
 Lexical Analyzer/myProgram
 Lexical Analyzer/myProgram.dSYM/
@@ -14,8 +13,6 @@ Syntax Analyzer/grammar2.dSYM/
 Syntax Analyzer/stage2exe.dSYM/
 commentremove.txt
 stage1exe
-stage1exe
+stage2exe
 testing.txt
-stage1exe
-lexicaltest.txt
 lexicaltest.txt
