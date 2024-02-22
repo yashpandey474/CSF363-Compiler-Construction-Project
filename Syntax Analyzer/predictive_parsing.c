@@ -122,7 +122,14 @@ void printStack(struct stack *st)
 {
     for (int i = 0; i <= st->top; i++)
     {
-        printf("%s ", NonTerminalToString(st->stack[i].val));
+
+        if (st->stack[i].flag == 1){
+            printf("%s ", NonTerminalToString(st->stack[i].val));
+        }
+
+        else{
+            printf("%s ", TokenToString(st->stack[i].val));
+        }
     }
     printf("\n");
 }
@@ -145,10 +152,10 @@ bool isFull(struct stack *st)
 
 void push(struct stack *st, struct Variable data)
 {
-    if (isFull(st))
-    {
-        printf("Stack is full\n");
-    }
+    //CHECKS IF FULL AND REALLOCATES
+    isFull(st);
+
+    
     st->stack[++st->top] = data;
 }
 
@@ -188,6 +195,7 @@ int predictive_parsing(enum Tokentype a, struct ParsingTable *pt, struct stack *
     // BOTH ARE TERMINALS
     if (X.val == a && X.flag == 0)
     {
+        printf("POPPED TERMINAL: %s\n", TokenToString(X.val));
         pop(st);
         return 1;
         // a=next symbol of w
@@ -204,22 +212,36 @@ int predictive_parsing(enum Tokentype a, struct ParsingTable *pt, struct stack *
         // GET THE RULE
         struct Variable *arr = pt->table[X.val][a];
 
-        pop(st);
-        printf("Pushing rule %s-->\n", NonTerminalToString(arr[0].val));
-        for (int var = 0; var < 9; var += 1)
+        struct Variable topStack = pop(st);
+        printf("Pushing rule ");
+        printRule(topStack.val, arr);
+
+        
+        for (int var = 8; var >= 0; var -= 1)
         {
-            if (arr[var].val == 0 && arr[var].flag == 0)
+                      
+        
+
+            if(isDefault(arr[var]))
             {
+                // printf("defaulted for %d",var);
+                continue;
+            }
+
+            if (arr[var].val == TK_EPS && arr[var].flag == 0){
                 break;
-            }
-            if (arr[var].flag == 0)
-            {
-                printf("%s ", TokenToString(arr[var].val));
-            }
-            else
-            {
-                printf("%s ", NonTerminalToString(arr[var].val));
-            }
+            } 
+
+            // printf(" PUSHED: ");
+            // if (arr[var].flag == 0)
+            // {
+            //     printf("%s ", TokenToString(arr[var].val));
+            // }
+            // else
+            // {
+            //     printf("%s ", NonTerminalToString(arr[var].val));
+            // }
+
             push(st, arr[var]);
         }
 
@@ -286,10 +308,19 @@ int main()
             printStack(stack);
             while (predictive_parsing(token->tokenType, PT, stack) == 0)
             {
+                            printf("Stack after:\n");
+
+                printStack(stack);
+
                 // keep doing it basically. youll only go to the next token if there's a valid accepting thing( in which case it returns something)
+
             }
-            printf("Stack after:\n");
-            printStack(stack);
+
         }
+    }
+
+    if (isEmptyStack(stack)){
+        printf("TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
+    }
     return 0;
 }

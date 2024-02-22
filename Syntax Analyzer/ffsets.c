@@ -2,7 +2,10 @@
 
 bool isDefault(struct Variable var)
 {
-    return (var.flag == 0 && var.val == 0);
+    if (var.flag == 0 && var.val == 0){
+        return true;
+    }
+    return false;
 }
 
 struct Node *createLLNode(struct Variable data)
@@ -346,6 +349,10 @@ void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions
     // I have kept the non terminals first and only then have I kept the terminals
     for (int i = NUM_NON_TERMINALS; i < NUM_NON_TERMINALS + NUM_TERMINALS; i++)
     {
+        //INSERT IN LINKED LIST
+        insertAtBeginning(sets_for_all[i]->firstSets->linkedList, i - NUM_NON_TERMINALS, 0);
+
+        //SET IN BOOLEAN ARRAY
         sets_for_all[i]->firstSets->booleanArr[i - NUM_NON_TERMINALS] = true;
     }
 

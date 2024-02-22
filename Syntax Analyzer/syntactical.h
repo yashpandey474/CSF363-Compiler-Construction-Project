@@ -118,3 +118,4 @@ void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *production
 void populate_parsing_table(struct ParsingTable *PT, struct GrammarRule *productions, struct Sets **sets_for_all);
 void printParsingTable(struct ParsingTable *pt);
 void printFFSetsTable(FILE* cfile, struct Sets **sets_for_all);
+void printRule(enum NonTerminals nt, struct Variable* ruleArray);
