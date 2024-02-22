@@ -78,6 +78,7 @@ void populate_parsing_table(struct ParsingTable * PT, struct GrammarRule* produc
                 // DONT ADD TK_EPS
                 if (current->data.val == TK_EPS)
                 {
+                  current = current->next;
                   continue;
                 }
                 insert(nt, current->data.val, rule, PT);
@@ -91,7 +92,6 @@ void populate_parsing_table(struct ParsingTable * PT, struct GrammarRule* produc
             }
 
             if (var == 9 || isDefault(rule[var])){
-              printf("LOOP IN FOLLOW");
               //ADD THE RULE IN FOLLOW OF THE VAR [EPSILON RULE]
               struct Node *current = sets_for_all[nt]->followSets->linkedList->head;
 
