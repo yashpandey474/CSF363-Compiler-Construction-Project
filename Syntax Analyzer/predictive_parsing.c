@@ -230,8 +230,9 @@ int predictive_parsing(struct SymbolTableEntry *token, struct ParsingTable *pt, 
         struct Variable *arr = pt->table[X.val][a];
         struct Variable topStack = pop(st);
 
-        //PASS TO TREE
+        // PASS TO TREE & GET CURRENT NODE
         parent = add_to_tree(topStack, arr);
+
         // printf("Pushing rule ");
         // printRule(topStack.val, arr);
 
@@ -270,6 +271,7 @@ int main()
 {
 
     struct tree_node *parent = create_tree_node((struct Variable){0, 1});
+    struct tree_node *node_to_add_to = parent;
 
     struct stack *stack = initialiseStack();
     insertAllKeywords();
@@ -313,7 +315,7 @@ int main()
         {
             // printf("Stack before:\n");
             // printStack(stack);
-            while (predictive_parsing(token, PT, stack, LA, parent) == 0)
+            while (predictive_parsing(token, PT, stack, LA, node_to_add_to) == 0)
             {
                 // printf("Stack after:\n");
 
