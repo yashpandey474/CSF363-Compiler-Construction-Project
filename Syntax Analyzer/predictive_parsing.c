@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "syntactical.h"
-
+#include <string.h>
 const char *NonTerminalToString(enum NonTerminals nonTerminal)
 {
     switch (nonTerminal)
@@ -107,7 +107,11 @@ const char *NonTerminalToString(enum NonTerminals nonTerminal)
         return "NT_A";
 
     default:
-        return "Unknown NonTerminal";
+    {
+        char *result = (char *)malloc(50);
+        snprintf(result, 50, "Unknown NonTerminal - %s", TokenToString(nonTerminal));
+        return result;
+    }
     }
 }
 
@@ -135,10 +139,31 @@ void printStack(struct stack *st)
     }
     printf("\n");
 }
-
 bool isEmptyStack(struct stack *st)
 {
     return st->top == -1;
+}
+
+struct Variable peek(struct stack *st)
+{
+    struct Variable stackBottom;
+    stackBottom.val = -1;
+
+    if (!isEmptyStack(st))
+    {
+        return st->stack[st->top];
+    }
+    else
+    {
+        printf("Stack is empty\n");
+        return stackBottom;
+    }
+}
+
+bool onlyContainsEOF(struct stack *st)
+{
+    struct Variable topStack = peek(st);
+    return st->top == 0 && topStack.val == TK_EOF && topStack.flag == 0;
 }
 
 bool isFull(struct stack *st)
@@ -173,35 +198,21 @@ struct Variable pop(struct stack *st)
     return st->stack[st->top--];
 }
 
-struct Variable peek(struct stack *st)
+int predictive_parsing(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, struct LexicalAnalyzer *LA, struct tree_node *parent, bool skipError, struct tree_node **parentpointer)
 {
-    struct Variable stackBottom;
-    stackBottom.val = -1;
 
-    if (!isEmptyStack(st))
-    {
-        return st->stack[st->top];
-    }
-    else
-    {
-        printf("Stack is empty\n");
-        return stackBottom;
-    }
-}
-
-int predictive_parsing(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, struct LexicalAnalyzer *LA, struct tree_node *parent)
-{
     enum Tokentype a = token->tokenType;
 
     struct Variable X = st->stack[st->top];
+
     // BOTH ARE TERMINALS
     if (X.val == a && X.flag == 0)
     {
         // printf("POPPED TERMINAL: %s\n", TokenToString(X.val));
         pop(st);
         return 1;
-        // a=next symbol of w
     }
+
     else if (X.flag == 0)
     {
         // CALL ERROR FUNCTION
@@ -209,46 +220,61 @@ int predictive_parsing(struct SymbolTableEntry *token, struct ParsingTable *pt, 
         pop(st);
         return 0;
     }
+
+    // ERROR
     else if (pt->table[X.val][a] == NULL)
     {
-        // printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
+        if (!skipError)
+            printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
         // go and get the next token
-        return 1;
+
+        // DISCARD UNTIL SYN OR VALID
+        return -1;
     }
     // SYN
     else if (pt->table[X.val][a][0].val == -1)
     {
         // SYN TOKEN; POP THE NONTERMINAL
-        printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
+        // printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
 
         pop(st);
+
+        // CONTINUE FROM  SYN TOKEN
         return 0;
     }
     else
     {
         // GET THE RULE
-        struct Variable *arr = pt->table[X.val][a];
+        // struct Variable *arr = pt->table[X.val][a];
         struct Variable topStack = pop(st);
-
-        // PASS TO TREE & GET CURRENT NODE
-        parent = add_to_tree(topStack, arr);
 
         // printf("Pushing rule ");
         // printRule(topStack.val, arr);
 
         for (int var = 8; var >= 0; var -= 1)
         {
-            if (isDefault(arr[var]))
+            if (isDefault(pt->table[X.val][a][var]))
             {
                 continue;
             }
 
-            if (arr[var].val == TK_EPS && arr[var].flag == 0)
+            if (pt->table[X.val][a][var].val == TK_EPS && pt->table[X.val][a][var].flag == 0)
             {
                 break;
             }
 
-            push(st, arr[var]);
+            push(st, pt->table[X.val][a][var]);
+        }
+        printf("While passing to addto tree stack was\n");
+        printStack(st);
+
+        // PASS TO TREE & GET CURRENT NODE
+        parent = add_to_tree(topStack, a, pt, parent);
+        *parentpointer = parent;
+
+        if (parent != NULL)
+        {
+            printf("RETURNED PARENT: %s\n", NonTerminalToString(parent->data.val));
         }
 
         return 0;
@@ -267,15 +293,40 @@ struct stack *initialiseStack()
     return stack;
 }
 
+// void printTree(struct tree_node *root, int depth)
+// {
+//     if (root == NULL)
+//     {
+//         return;
+//     }
+
+//     // Print current node
+//     for (int i = 0; i < depth; i++)
+//     {
+//         printf("  "); // Adjust the spacing for indentation
+//     }
+//     printf("Node data\n");
+
+//     // Recursively print child nodes
+//     struct tree_node *child = root->head;
+//     while (child != NULL)
+//     {
+//         printTree(child, depth + 1);
+//         child = child->next;
+//     }
+// }
+
 int main()
 {
 
-    struct tree_node *parent = create_tree_node((struct Variable){0, 1});
+    struct tree_node *parent = create_tree_node((struct Variable){NT_PROGRAM, 1});
+    struct tree_node *root_for_later = parent;
     struct tree_node *node_to_add_to = parent;
-
+    struct tree_node **parentpointer = (struct tree_node **)malloc(sizeof(struct tree_node *));
+    *parentpointer = node_to_add_to;
     struct stack *stack = initialiseStack();
     insertAllKeywords();
-    FILE *file = readTestFile("t6.txt");
+    FILE *file = readTestFile("t2.txt");
 
     struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
     struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
@@ -293,6 +344,7 @@ int main()
     populate_parsing_table(PT, productions, sets_for_all);
     printf("PARSING TABLE POPULATED\n");
     // printParsingTable(PT);
+    push(stack, (struct Variable){TK_EOF, 0});
     push(stack, (struct Variable){NT_PROGRAM, 1});
 
     // write to computed_sets.txt
@@ -305,6 +357,8 @@ int main()
     printFFSetsTable(cfile, sets_for_all);
     fclose(cfile);
 
+    int res = 0;
+    bool skip_error = false;
     while ((token = scanToken(LA)))
     {
         if (token->tokenType == LEXICAL_ERROR)
@@ -315,19 +369,45 @@ int main()
         {
             // printf("Stack before:\n");
             // printStack(stack);
-            while (predictive_parsing(token, PT, stack, LA, node_to_add_to) == 0)
+            printf("PASSED PARENT TO PARSING: %s\n", NonTerminalToString(node_to_add_to->data.val));
+            while ((res = predictive_parsing(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer)) == 0)
             {
+                if (*parentpointer != NULL)
+                {
+                    node_to_add_to = *parentpointer;
+                }
                 // printf("Stack after:\n");
 
                 // printStack(stack);
 
                 // keep doing it basically. youll only go to the next token if there's a valid accepting thing( in which case it returns something)
             }
+
+            if (res == -1)
+            {
+                skip_error = true;
+            }
+            if (res == 1)
+            {
+
+                skip_error = false;
+            }
+            if (*parentpointer != NULL)
+            {
+                node_to_add_to = *parentpointer;
+            }
         }
     }
-    if (isEmptyStack(stack))
+    printf("After parsing\n");
+    printStack(stack);
+
+    printTree(parent, 0);
+
+    if (onlyContainsEOF(stack))
     {
         printf("TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
     }
+    serialize_tree(root_for_later);
+
     return 0;
 }

@@ -26,12 +26,27 @@ struct LinkedListSet
   struct LinkedListArray *linkedList;
 };
 
+struct input_structure
+{
+  struct Variable nonterminal;
+  struct Variable *rule;
+  int length;
+};
+
+struct tree_node
+{
+  struct Variable data;     // stores the variable that is represented by this node
+  struct tree_node *next;   // stores a pointer to the next child of its parent node (next sibling)
+  struct tree_node *head;   // stores pointer to its first child
+  struct tree_node *parent; // stores a pointer back to its parent node
+};
+
 void insertAtBeginning(struct LinkedListArray *linkedList, int newData, int flag);
 struct Node *createLLNode(struct Variable data);
 bool containsEPS(struct LinkedListSet *set);
 bool isDefault(struct Variable var);
 
-    // structure of Linked list node
+// structure of Linked list node
 struct Node
 {
   struct Variable data;
@@ -117,5 +132,9 @@ void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions
 void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *productions);
 void populate_parsing_table(struct ParsingTable *PT, struct GrammarRule *productions, struct Sets **sets_for_all);
 void printParsingTable(struct ParsingTable *pt);
-void printFFSetsTable(FILE* cfile, struct Sets **sets_for_all);
-void printRule(enum NonTerminals nt, struct Variable* ruleArray);
+void printFFSetsTable(FILE *cfile, struct Sets **sets_for_all);
+void printRule(enum NonTerminals nt, struct Variable *ruleArray);
+struct tree_node *add_to_tree(struct Variable nt, int a, struct ParsingTable *pt, struct tree_node *parent);
+struct tree_node *create_tree_node(struct Variable data);
+void printTree(struct tree_node *root, int depth);
+void serialize_tree(struct tree_node *root);

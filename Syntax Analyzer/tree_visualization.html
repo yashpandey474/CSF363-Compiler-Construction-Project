@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 750px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "0x7fbd82004110", "label": "NT_PROGRAM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004850", "label": "NT_OTHER_FUNCTIONS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004890", "label": "NT_FUNCTION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004950", "label": "TK_FUNID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004930", "label": "NT_INPUT_PAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004a40", "label": "TK_INPUT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004a20", "label": "TK_PARAMETER", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004a00", "label": "TK_LIST", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820049e0", "label": "TK_SQL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820049c0", "label": "NT_PARAMETER_LIST", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004b70", "label": "NT_DATA_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004b90", "label": "NT_PRIMITIVE_DATA_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004bb0", "label": "TK_INT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004b50", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004b30", "label": "NT_REMAINING_LIST", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004c50", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820049a0", "label": "TK_SQR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004910", "label": "NT_OUTPUT_PAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004d40", "label": "TK_OUTPUT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004d20", "label": "TK_PARAMETER", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004d00", "label": "TK_LIST", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004ce0", "label": "TK_SQL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004cc0", "label": "NT_PARAMETER_LIST", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004e70", "label": "NT_DATA_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004e90", "label": "NT_PRIMITIVE_DATA_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004eb0", "label": "TK_REAL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004e50", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004e30", "label": "NT_REMAINING_LIST", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004f50", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004ca0", "label": "TK_SQR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820048f0", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820048d0", "label": "NT_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005040", "label": "NT_TYPE_DEFINITIONS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005060", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005020", "label": "NT_DECLARATIONS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820050a0", "label": "NT_DECLARATION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005160", "label": "TK_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005140", "label": "NT_DATA_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820051b0", "label": "NT_PRIMITIVE_DATA_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820051d0", "label": "TK_INT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005120", "label": "TK_COLON", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005100", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820050e0", "label": "NT_GLOBAL_OR_NOT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820052b0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820050c0", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005080", "label": "NT_DECLARATIONS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005300", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005000", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005340", "label": "NT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005360", "label": "NT_ASSIGNMENT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820053e0", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005420", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005400", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005480", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820053c0", "label": "TK_ASSIGNOP", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820053a0", "label": "NT_ARITHMETIC_EXPRESSION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820054f0", "label": "NT_TERM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005530", "label": "NT_FACTOR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005550", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005570", "label": "TK_NUM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005510", "label": "NT_NEW6", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820055d0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820054d0", "label": "NT_NEW5", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820055f0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005380", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005320", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005660", "label": "NT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005680", "label": "NT_ASSIGNMENT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005700", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005740", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005720", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820057a0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820056e0", "label": "TK_ASSIGNOP", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820056c0", "label": "NT_ARITHMETIC_EXPRESSION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005810", "label": "NT_TERM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005850", "label": "NT_FACTOR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005870", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005890", "label": "TK_RNUM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005830", "label": "NT_NEW6", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820058f0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820057f0", "label": "NT_NEW5", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005910", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820056a0", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005640", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005980", "label": "NT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820059a0", "label": "NT_ITERATIVE_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005a80", "label": "TK_WHILE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005a60", "label": "TK_OP", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005a40", "label": "NT_BOOLEAN_EXPRESSION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005b50", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005b70", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005bb0", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005b90", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005c10", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005b30", "label": "NT_RELATIONAL_OP", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005c30", "label": "TK_LE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005b10", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005c80", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005cc0", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005ca0", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005d20", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005a20", "label": "TK_CL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005a00", "label": "NT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005d70", "label": "NT_IO_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005e10", "label": "TK_READ", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005df0", "label": "TK_OP", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005dd0", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005eb0", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005ef0", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005ed0", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005f50", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005db0", "label": "TK_CL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005d90", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820059e0", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006000", "label": "NT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006020", "label": "NT_ASSIGNMENT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820060a0", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820060e0", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820060c0", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006140", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006080", "label": "TK_ASSIGNOP", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006060", "label": "NT_ARITHMETIC_EXPRESSION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820061b0", "label": "NT_TERM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820061f0", "label": "NT_FACTOR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006210", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006230", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006270", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006250", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820062d0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820061d0", "label": "NT_NEW6", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820062f0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006190", "label": "NT_NEW5", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006350", "label": "NT_OPERATOR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006370", "label": "TK_PLUS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006330", "label": "NT_TERM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820063e0", "label": "NT_FACTOR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006400", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006420", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006460", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006440", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820064c0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820063c0", "label": "NT_NEW6", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820064e0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006310", "label": "NT_NEW5", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006500", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006040", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005fe0", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006570", "label": "NT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006590", "label": "NT_ASSIGNMENT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006610", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006650", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006630", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820066b0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820065f0", "label": "TK_ASSIGNOP", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820065d0", "label": "NT_ARITHMETIC_EXPRESSION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006720", "label": "NT_TERM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006760", "label": "NT_FACTOR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006780", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820067a0", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820067e0", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820067c0", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006840", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006740", "label": "NT_NEW6", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006860", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006700", "label": "NT_NEW5", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820068c0", "label": "NT_OPERATOR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820068e0", "label": "TK_PLUS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820068a0", "label": "NT_TERM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006950", "label": "NT_FACTOR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006970", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006990", "label": "TK_NUM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006930", "label": "NT_NEW6", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820069f0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006880", "label": "NT_NEW5", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006a10", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820065b0", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006550", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006a60", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820059c0", "label": "TK_ENDWHILE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82005960", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006ab0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004fe0", "label": "NT_RETURN_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006b10", "label": "TK_RETURN", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006af0", "label": "NT_OPTIONAL_RETURN", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006bb0", "label": "TK_SQL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006b90", "label": "NT_ID_LIST", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006c20", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006c00", "label": "NT_MORE_IDS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006c80", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006b70", "label": "TK_SQR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006ad0", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820048b0", "label": "TK_END", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004870", "label": "NT_OTHER_FUNCTIONS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006d40", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82004830", "label": "NT_MAIN_FUNCTION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006da0", "label": "TK_MAIN", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006d80", "label": "NT_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006e50", "label": "NT_TYPE_DEFINITIONS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006e70", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006e30", "label": "NT_DECLARATIONS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006eb0", "label": "NT_DECLARATION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006f70", "label": "TK_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006f50", "label": "NT_DATA_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006fc0", "label": "NT_PRIMITIVE_DATA_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006fe0", "label": "TK_INT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006f30", "label": "TK_COLON", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006f10", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006ef0", "label": "NT_GLOBAL_OR_NOT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820070c0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006ed0", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006e90", "label": "NT_DECLARATIONS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007130", "label": "NT_DECLARATION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820071f0", "label": "TK_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820071d0", "label": "NT_DATA_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007240", "label": "NT_PRIMITIVE_DATA_TYPE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007260", "label": "TK_REAL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820071b0", "label": "TK_COLON", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007190", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007170", "label": "NT_GLOBAL_OR_NOT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007340", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007150", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007110", "label": "NT_DECLARATIONS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007390", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006e10", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820073d0", "label": "NT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820073f0", "label": "NT_ASSIGNMENT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007470", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820074b0", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007490", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007510", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007450", "label": "TK_ASSIGNOP", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007430", "label": "NT_ARITHMETIC_EXPRESSION", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007580", "label": "NT_TERM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820075c0", "label": "NT_FACTOR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820075e0", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007600", "label": "TK_NUM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820075a0", "label": "NT_NEW6", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007660", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007560", "label": "NT_NEW5", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007680", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007410", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820073b0", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007700", "label": "NT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007720", "label": "NT_FUN_CALL_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007800", "label": "NT_OUTPUT_PARAMETERS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007880", "label": "TK_SQL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007860", "label": "NT_ID_LIST", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820078f0", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820078d0", "label": "NT_MORE_IDS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007950", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007840", "label": "TK_SQR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007820", "label": "TK_ASSIGNOP", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820077e0", "label": "TK_CALL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820077c0", "label": "TK_FUNID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820077a0", "label": "TK_WITH", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007780", "label": "TK_PARAMETERS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007760", "label": "NT_INPUT_PARAMETERS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007af0", "label": "TK_SQL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007ad0", "label": "NT_ID_LIST", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007b60", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007b40", "label": "NT_MORE_IDS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007bc0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007ab0", "label": "TK_SQR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007740", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd820076e0", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007c70", "label": "NT_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007c90", "label": "NT_IO_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007d30", "label": "TK_WRITE", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007d10", "label": "TK_OP", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007cf0", "label": "NT_VAR", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007dc0", "label": "NT_SINGLE_OR_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007e00", "label": "TK_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007de0", "label": "NT_REC_ID", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007e60", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007cd0", "label": "TK_CL", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007cb0", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007c50", "label": "NT_OTHER_STMTS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007ef0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006df0", "label": "NT_RETURN_STMT", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007f50", "label": "TK_RETURN", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007f30", "label": "NT_OPTIONAL_RETURN", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007fb0", "label": "TK_EPS", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82007f10", "label": "TK_SEM", "shape": "dot"}, {"color": "#97c2fc", "id": "0x7fbd82006d60", "label": "TK_END", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "0x7fbd82004110", "to": "0x7fbd82004850"}, {"from": "0x7fbd82004850", "to": "0x7fbd82004890"}, {"from": "0x7fbd82004890", "to": "0x7fbd82004950"}, {"from": "0x7fbd82004890", "to": "0x7fbd82004930"}, {"from": "0x7fbd82004930", "to": "0x7fbd82004a40"}, {"from": "0x7fbd82004930", "to": "0x7fbd82004a20"}, {"from": "0x7fbd82004930", "to": "0x7fbd82004a00"}, {"from": "0x7fbd82004930", "to": "0x7fbd820049e0"}, {"from": "0x7fbd82004930", "to": "0x7fbd820049c0"}, {"from": "0x7fbd820049c0", "to": "0x7fbd82004b70"}, {"from": "0x7fbd82004b70", "to": "0x7fbd82004b90"}, {"from": "0x7fbd82004b90", "to": "0x7fbd82004bb0"}, {"from": "0x7fbd820049c0", "to": "0x7fbd82004b50"}, {"from": "0x7fbd820049c0", "to": "0x7fbd82004b30"}, {"from": "0x7fbd82004b30", "to": "0x7fbd82004c50"}, {"from": "0x7fbd82004930", "to": "0x7fbd820049a0"}, {"from": "0x7fbd82004890", "to": "0x7fbd82004910"}, {"from": "0x7fbd82004910", "to": "0x7fbd82004d40"}, {"from": "0x7fbd82004910", "to": "0x7fbd82004d20"}, {"from": "0x7fbd82004910", "to": "0x7fbd82004d00"}, {"from": "0x7fbd82004910", "to": "0x7fbd82004ce0"}, {"from": "0x7fbd82004910", "to": "0x7fbd82004cc0"}, {"from": "0x7fbd82004cc0", "to": "0x7fbd82004e70"}, {"from": "0x7fbd82004e70", "to": "0x7fbd82004e90"}, {"from": "0x7fbd82004e90", "to": "0x7fbd82004eb0"}, {"from": "0x7fbd82004cc0", "to": "0x7fbd82004e50"}, {"from": "0x7fbd82004cc0", "to": "0x7fbd82004e30"}, {"from": "0x7fbd82004e30", "to": "0x7fbd82004f50"}, {"from": "0x7fbd82004910", "to": "0x7fbd82004ca0"}, {"from": "0x7fbd82004890", "to": "0x7fbd820048f0"}, {"from": "0x7fbd82004890", "to": "0x7fbd820048d0"}, {"from": "0x7fbd820048d0", "to": "0x7fbd82005040"}, {"from": "0x7fbd82005040", "to": "0x7fbd82005060"}, {"from": "0x7fbd820048d0", "to": "0x7fbd82005020"}, {"from": "0x7fbd82005020", "to": "0x7fbd820050a0"}, {"from": "0x7fbd820050a0", "to": "0x7fbd82005160"}, {"from": "0x7fbd820050a0", "to": "0x7fbd82005140"}, {"from": "0x7fbd82005140", "to": "0x7fbd820051b0"}, {"from": "0x7fbd820051b0", "to": "0x7fbd820051d0"}, {"from": "0x7fbd820050a0", "to": "0x7fbd82005120"}, {"from": "0x7fbd820050a0", "to": "0x7fbd82005100"}, {"from": "0x7fbd820050a0", "to": "0x7fbd820050e0"}, {"from": "0x7fbd820050e0", "to": "0x7fbd820052b0"}, {"from": "0x7fbd820050a0", "to": "0x7fbd820050c0"}, {"from": "0x7fbd82005020", "to": "0x7fbd82005080"}, {"from": "0x7fbd82005080", "to": "0x7fbd82005300"}, {"from": "0x7fbd820048d0", "to": "0x7fbd82005000"}, {"from": "0x7fbd82005000", "to": "0x7fbd82005340"}, {"from": "0x7fbd82005340", "to": "0x7fbd82005360"}, {"from": "0x7fbd82005360", "to": "0x7fbd820053e0"}, {"from": "0x7fbd820053e0", "to": "0x7fbd82005420"}, {"from": "0x7fbd820053e0", "to": "0x7fbd82005400"}, {"from": "0x7fbd82005400", "to": "0x7fbd82005480"}, {"from": "0x7fbd82005360", "to": "0x7fbd820053c0"}, {"from": "0x7fbd82005360", "to": "0x7fbd820053a0"}, {"from": "0x7fbd820053a0", "to": "0x7fbd820054f0"}, {"from": "0x7fbd820054f0", "to": "0x7fbd82005530"}, {"from": "0x7fbd82005530", "to": "0x7fbd82005550"}, {"from": "0x7fbd82005550", "to": "0x7fbd82005570"}, {"from": "0x7fbd820054f0", "to": "0x7fbd82005510"}, {"from": "0x7fbd82005510", "to": "0x7fbd820055d0"}, {"from": "0x7fbd820053a0", "to": "0x7fbd820054d0"}, {"from": "0x7fbd820054d0", "to": "0x7fbd820055f0"}, {"from": "0x7fbd82005360", "to": "0x7fbd82005380"}, {"from": "0x7fbd82005000", "to": "0x7fbd82005320"}, {"from": "0x7fbd82005320", "to": "0x7fbd82005660"}, {"from": "0x7fbd82005660", "to": "0x7fbd82005680"}, {"from": "0x7fbd82005680", "to": "0x7fbd82005700"}, {"from": "0x7fbd82005700", "to": "0x7fbd82005740"}, {"from": "0x7fbd82005700", "to": "0x7fbd82005720"}, {"from": "0x7fbd82005720", "to": "0x7fbd820057a0"}, {"from": "0x7fbd82005680", "to": "0x7fbd820056e0"}, {"from": "0x7fbd82005680", "to": "0x7fbd820056c0"}, {"from": "0x7fbd820056c0", "to": "0x7fbd82005810"}, {"from": "0x7fbd82005810", "to": "0x7fbd82005850"}, {"from": "0x7fbd82005850", "to": "0x7fbd82005870"}, {"from": "0x7fbd82005870", "to": "0x7fbd82005890"}, {"from": "0x7fbd82005810", "to": "0x7fbd82005830"}, {"from": "0x7fbd82005830", "to": "0x7fbd820058f0"}, {"from": "0x7fbd820056c0", "to": "0x7fbd820057f0"}, {"from": "0x7fbd820057f0", "to": "0x7fbd82005910"}, {"from": "0x7fbd82005680", "to": "0x7fbd820056a0"}, {"from": "0x7fbd82005320", "to": "0x7fbd82005640"}, {"from": "0x7fbd82005640", "to": "0x7fbd82005980"}, {"from": "0x7fbd82005980", "to": "0x7fbd820059a0"}, {"from": "0x7fbd820059a0", "to": "0x7fbd82005a80"}, {"from": "0x7fbd820059a0", "to": "0x7fbd82005a60"}, {"from": "0x7fbd820059a0", "to": "0x7fbd82005a40"}, {"from": "0x7fbd82005a40", "to": "0x7fbd82005b50"}, {"from": "0x7fbd82005b50", "to": "0x7fbd82005b70"}, {"from": "0x7fbd82005b70", "to": "0x7fbd82005bb0"}, {"from": "0x7fbd82005b70", "to": "0x7fbd82005b90"}, {"from": "0x7fbd82005b90", "to": "0x7fbd82005c10"}, {"from": "0x7fbd82005a40", "to": "0x7fbd82005b30"}, {"from": "0x7fbd82005b30", "to": "0x7fbd82005c30"}, {"from": "0x7fbd82005a40", "to": "0x7fbd82005b10"}, {"from": "0x7fbd82005b10", "to": "0x7fbd82005c80"}, {"from": "0x7fbd82005c80", "to": "0x7fbd82005cc0"}, {"from": "0x7fbd82005c80", "to": "0x7fbd82005ca0"}, {"from": "0x7fbd82005ca0", "to": "0x7fbd82005d20"}, {"from": "0x7fbd820059a0", "to": "0x7fbd82005a20"}, {"from": "0x7fbd820059a0", "to": "0x7fbd82005a00"}, {"from": "0x7fbd82005a00", "to": "0x7fbd82005d70"}, {"from": "0x7fbd82005d70", "to": "0x7fbd82005e10"}, {"from": "0x7fbd82005d70", "to": "0x7fbd82005df0"}, {"from": "0x7fbd82005d70", "to": "0x7fbd82005dd0"}, {"from": "0x7fbd82005dd0", "to": "0x7fbd82005eb0"}, {"from": "0x7fbd82005eb0", "to": "0x7fbd82005ef0"}, {"from": "0x7fbd82005eb0", "to": "0x7fbd82005ed0"}, {"from": "0x7fbd82005ed0", "to": "0x7fbd82005f50"}, {"from": "0x7fbd82005d70", "to": "0x7fbd82005db0"}, {"from": "0x7fbd82005d70", "to": "0x7fbd82005d90"}, {"from": "0x7fbd820059a0", "to": "0x7fbd820059e0"}, {"from": "0x7fbd820059e0", "to": "0x7fbd82006000"}, {"from": "0x7fbd82006000", "to": "0x7fbd82006020"}, {"from": "0x7fbd82006020", "to": "0x7fbd820060a0"}, {"from": "0x7fbd820060a0", "to": "0x7fbd820060e0"}, {"from": "0x7fbd820060a0", "to": "0x7fbd820060c0"}, {"from": "0x7fbd820060c0", "to": "0x7fbd82006140"}, {"from": "0x7fbd82006020", "to": "0x7fbd82006080"}, {"from": "0x7fbd82006020", "to": "0x7fbd82006060"}, {"from": "0x7fbd82006060", "to": "0x7fbd820061b0"}, {"from": "0x7fbd820061b0", "to": "0x7fbd820061f0"}, {"from": "0x7fbd820061f0", "to": "0x7fbd82006210"}, {"from": "0x7fbd82006210", "to": "0x7fbd82006230"}, {"from": "0x7fbd82006230", "to": "0x7fbd82006270"}, {"from": "0x7fbd82006230", "to": "0x7fbd82006250"}, {"from": "0x7fbd82006250", "to": "0x7fbd820062d0"}, {"from": "0x7fbd820061b0", "to": "0x7fbd820061d0"}, {"from": "0x7fbd820061d0", "to": "0x7fbd820062f0"}, {"from": "0x7fbd82006060", "to": "0x7fbd82006190"}, {"from": "0x7fbd82006190", "to": "0x7fbd82006350"}, {"from": "0x7fbd82006350", "to": "0x7fbd82006370"}, {"from": "0x7fbd82006190", "to": "0x7fbd82006330"}, {"from": "0x7fbd82006330", "to": "0x7fbd820063e0"}, {"from": "0x7fbd820063e0", "to": "0x7fbd82006400"}, {"from": "0x7fbd82006400", "to": "0x7fbd82006420"}, {"from": "0x7fbd82006420", "to": "0x7fbd82006460"}, {"from": "0x7fbd82006420", "to": "0x7fbd82006440"}, {"from": "0x7fbd82006440", "to": "0x7fbd820064c0"}, {"from": "0x7fbd82006330", "to": "0x7fbd820063c0"}, {"from": "0x7fbd820063c0", "to": "0x7fbd820064e0"}, {"from": "0x7fbd82006190", "to": "0x7fbd82006310"}, {"from": "0x7fbd82006310", "to": "0x7fbd82006500"}, {"from": "0x7fbd82006020", "to": "0x7fbd82006040"}, {"from": "0x7fbd820059e0", "to": "0x7fbd82005fe0"}, {"from": "0x7fbd82005fe0", "to": "0x7fbd82006570"}, {"from": "0x7fbd82006570", "to": "0x7fbd82006590"}, {"from": "0x7fbd82006590", "to": "0x7fbd82006610"}, {"from": "0x7fbd82006610", "to": "0x7fbd82006650"}, {"from": "0x7fbd82006610", "to": "0x7fbd82006630"}, {"from": "0x7fbd82006630", "to": "0x7fbd820066b0"}, {"from": "0x7fbd82006590", "to": "0x7fbd820065f0"}, {"from": "0x7fbd82006590", "to": "0x7fbd820065d0"}, {"from": "0x7fbd820065d0", "to": "0x7fbd82006720"}, {"from": "0x7fbd82006720", "to": "0x7fbd82006760"}, {"from": "0x7fbd82006760", "to": "0x7fbd82006780"}, {"from": "0x7fbd82006780", "to": "0x7fbd820067a0"}, {"from": "0x7fbd820067a0", "to": "0x7fbd820067e0"}, {"from": "0x7fbd820067a0", "to": "0x7fbd820067c0"}, {"from": "0x7fbd820067c0", "to": "0x7fbd82006840"}, {"from": "0x7fbd82006720", "to": "0x7fbd82006740"}, {"from": "0x7fbd82006740", "to": "0x7fbd82006860"}, {"from": "0x7fbd820065d0", "to": "0x7fbd82006700"}, {"from": "0x7fbd82006700", "to": "0x7fbd820068c0"}, {"from": "0x7fbd820068c0", "to": "0x7fbd820068e0"}, {"from": "0x7fbd82006700", "to": "0x7fbd820068a0"}, {"from": "0x7fbd820068a0", "to": "0x7fbd82006950"}, {"from": "0x7fbd82006950", "to": "0x7fbd82006970"}, {"from": "0x7fbd82006970", "to": "0x7fbd82006990"}, {"from": "0x7fbd820068a0", "to": "0x7fbd82006930"}, {"from": "0x7fbd82006930", "to": "0x7fbd820069f0"}, {"from": "0x7fbd82006700", "to": "0x7fbd82006880"}, {"from": "0x7fbd82006880", "to": "0x7fbd82006a10"}, {"from": "0x7fbd82006590", "to": "0x7fbd820065b0"}, {"from": "0x7fbd82005fe0", "to": "0x7fbd82006550"}, {"from": "0x7fbd82006550", "to": "0x7fbd82006a60"}, {"from": "0x7fbd820059a0", "to": "0x7fbd820059c0"}, {"from": "0x7fbd82005640", "to": "0x7fbd82005960"}, {"from": "0x7fbd82005960", "to": "0x7fbd82006ab0"}, {"from": "0x7fbd820048d0", "to": "0x7fbd82004fe0"}, {"from": "0x7fbd82004fe0", "to": "0x7fbd82006b10"}, {"from": "0x7fbd82004fe0", "to": "0x7fbd82006af0"}, {"from": "0x7fbd82006af0", "to": "0x7fbd82006bb0"}, {"from": "0x7fbd82006af0", "to": "0x7fbd82006b90"}, {"from": "0x7fbd82006b90", "to": "0x7fbd82006c20"}, {"from": "0x7fbd82006b90", "to": "0x7fbd82006c00"}, {"from": "0x7fbd82006c00", "to": "0x7fbd82006c80"}, {"from": "0x7fbd82006af0", "to": "0x7fbd82006b70"}, {"from": "0x7fbd82004fe0", "to": "0x7fbd82006ad0"}, {"from": "0x7fbd82004890", "to": "0x7fbd820048b0"}, {"from": "0x7fbd82004850", "to": "0x7fbd82004870"}, {"from": "0x7fbd82004870", "to": "0x7fbd82006d40"}, {"from": "0x7fbd82004110", "to": "0x7fbd82004830"}, {"from": "0x7fbd82004830", "to": "0x7fbd82006da0"}, {"from": "0x7fbd82004830", "to": "0x7fbd82006d80"}, {"from": "0x7fbd82006d80", "to": "0x7fbd82006e50"}, {"from": "0x7fbd82006e50", "to": "0x7fbd82006e70"}, {"from": "0x7fbd82006d80", "to": "0x7fbd82006e30"}, {"from": "0x7fbd82006e30", "to": "0x7fbd82006eb0"}, {"from": "0x7fbd82006eb0", "to": "0x7fbd82006f70"}, {"from": "0x7fbd82006eb0", "to": "0x7fbd82006f50"}, {"from": "0x7fbd82006f50", "to": "0x7fbd82006fc0"}, {"from": "0x7fbd82006fc0", "to": "0x7fbd82006fe0"}, {"from": "0x7fbd82006eb0", "to": "0x7fbd82006f30"}, {"from": "0x7fbd82006eb0", "to": "0x7fbd82006f10"}, {"from": "0x7fbd82006eb0", "to": "0x7fbd82006ef0"}, {"from": "0x7fbd82006ef0", "to": "0x7fbd820070c0"}, {"from": "0x7fbd82006eb0", "to": "0x7fbd82006ed0"}, {"from": "0x7fbd82006e30", "to": "0x7fbd82006e90"}, {"from": "0x7fbd82006e90", "to": "0x7fbd82007130"}, {"from": "0x7fbd82007130", "to": "0x7fbd820071f0"}, {"from": "0x7fbd82007130", "to": "0x7fbd820071d0"}, {"from": "0x7fbd820071d0", "to": "0x7fbd82007240"}, {"from": "0x7fbd82007240", "to": "0x7fbd82007260"}, {"from": "0x7fbd82007130", "to": "0x7fbd820071b0"}, {"from": "0x7fbd82007130", "to": "0x7fbd82007190"}, {"from": "0x7fbd82007130", "to": "0x7fbd82007170"}, {"from": "0x7fbd82007170", "to": "0x7fbd82007340"}, {"from": "0x7fbd82007130", "to": "0x7fbd82007150"}, {"from": "0x7fbd82006e90", "to": "0x7fbd82007110"}, {"from": "0x7fbd82007110", "to": "0x7fbd82007390"}, {"from": "0x7fbd82006d80", "to": "0x7fbd82006e10"}, {"from": "0x7fbd82006e10", "to": "0x7fbd820073d0"}, {"from": "0x7fbd820073d0", "to": "0x7fbd820073f0"}, {"from": "0x7fbd820073f0", "to": "0x7fbd82007470"}, {"from": "0x7fbd82007470", "to": "0x7fbd820074b0"}, {"from": "0x7fbd82007470", "to": "0x7fbd82007490"}, {"from": "0x7fbd82007490", "to": "0x7fbd82007510"}, {"from": "0x7fbd820073f0", "to": "0x7fbd82007450"}, {"from": "0x7fbd820073f0", "to": "0x7fbd82007430"}, {"from": "0x7fbd82007430", "to": "0x7fbd82007580"}, {"from": "0x7fbd82007580", "to": "0x7fbd820075c0"}, {"from": "0x7fbd820075c0", "to": "0x7fbd820075e0"}, {"from": "0x7fbd820075e0", "to": "0x7fbd82007600"}, {"from": "0x7fbd82007580", "to": "0x7fbd820075a0"}, {"from": "0x7fbd820075a0", "to": "0x7fbd82007660"}, {"from": "0x7fbd82007430", "to": "0x7fbd82007560"}, {"from": "0x7fbd82007560", "to": "0x7fbd82007680"}, {"from": "0x7fbd820073f0", "to": "0x7fbd82007410"}, {"from": "0x7fbd82006e10", "to": "0x7fbd820073b0"}, {"from": "0x7fbd820073b0", "to": "0x7fbd82007700"}, {"from": "0x7fbd82007700", "to": "0x7fbd82007720"}, {"from": "0x7fbd82007720", "to": "0x7fbd82007800"}, {"from": "0x7fbd82007800", "to": "0x7fbd82007880"}, {"from": "0x7fbd82007800", "to": "0x7fbd82007860"}, {"from": "0x7fbd82007860", "to": "0x7fbd820078f0"}, {"from": "0x7fbd82007860", "to": "0x7fbd820078d0"}, {"from": "0x7fbd820078d0", "to": "0x7fbd82007950"}, {"from": "0x7fbd82007800", "to": "0x7fbd82007840"}, {"from": "0x7fbd82007800", "to": "0x7fbd82007820"}, {"from": "0x7fbd82007720", "to": "0x7fbd820077e0"}, {"from": "0x7fbd82007720", "to": "0x7fbd820077c0"}, {"from": "0x7fbd82007720", "to": "0x7fbd820077a0"}, {"from": "0x7fbd82007720", "to": "0x7fbd82007780"}, {"from": "0x7fbd82007720", "to": "0x7fbd82007760"}, {"from": "0x7fbd82007760", "to": "0x7fbd82007af0"}, {"from": "0x7fbd82007760", "to": "0x7fbd82007ad0"}, {"from": "0x7fbd82007ad0", "to": "0x7fbd82007b60"}, {"from": "0x7fbd82007ad0", "to": "0x7fbd82007b40"}, {"from": "0x7fbd82007b40", "to": "0x7fbd82007bc0"}, {"from": "0x7fbd82007760", "to": "0x7fbd82007ab0"}, {"from": "0x7fbd82007720", "to": "0x7fbd82007740"}, {"from": "0x7fbd820073b0", "to": "0x7fbd820076e0"}, {"from": "0x7fbd820076e0", "to": "0x7fbd82007c70"}, {"from": "0x7fbd82007c70", "to": "0x7fbd82007c90"}, {"from": "0x7fbd82007c90", "to": "0x7fbd82007d30"}, {"from": "0x7fbd82007c90", "to": "0x7fbd82007d10"}, {"from": "0x7fbd82007c90", "to": "0x7fbd82007cf0"}, {"from": "0x7fbd82007cf0", "to": "0x7fbd82007dc0"}, {"from": "0x7fbd82007dc0", "to": "0x7fbd82007e00"}, {"from": "0x7fbd82007dc0", "to": "0x7fbd82007de0"}, {"from": "0x7fbd82007de0", "to": "0x7fbd82007e60"}, {"from": "0x7fbd82007c90", "to": "0x7fbd82007cd0"}, {"from": "0x7fbd82007c90", "to": "0x7fbd82007cb0"}, {"from": "0x7fbd820076e0", "to": "0x7fbd82007c50"}, {"from": "0x7fbd82007c50", "to": "0x7fbd82007ef0"}, {"from": "0x7fbd82006d80", "to": "0x7fbd82006df0"}, {"from": "0x7fbd82006df0", "to": "0x7fbd82007f50"}, {"from": "0x7fbd82006df0", "to": "0x7fbd82007f30"}, {"from": "0x7fbd82007f30", "to": "0x7fbd82007fb0"}, {"from": "0x7fbd82006df0", "to": "0x7fbd82007f10"}, {"from": "0x7fbd82004830", "to": "0x7fbd82006d60"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
