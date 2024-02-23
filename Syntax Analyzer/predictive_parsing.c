@@ -189,7 +189,7 @@ struct Variable peek(struct stack *st)
     }
 }
 
-int predictive_parsing(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, struct LexicalAnalyzer *LA)
+int predictive_parsing(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, struct LexicalAnalyzer *LA, struct tree_node *parent)
 {
     enum Tokentype a = token->tokenType;
 
@@ -229,6 +229,9 @@ int predictive_parsing(struct SymbolTableEntry *token, struct ParsingTable *pt, 
         // GET THE RULE
         struct Variable *arr = pt->table[X.val][a];
         struct Variable topStack = pop(st);
+
+        //PASS TO TREE
+        parent = add_to_tree(topStack, arr);
         // printf("Pushing rule ");
         // printRule(topStack.val, arr);
 
@@ -265,6 +268,9 @@ struct stack *initialiseStack()
 
 int main()
 {
+
+    struct tree_node *parent = create_tree_node((struct Variable){0, 1});
+
     struct stack *stack = initialiseStack();
     insertAllKeywords();
     FILE *file = readTestFile("t6.txt");
@@ -307,7 +313,7 @@ int main()
         {
             // printf("Stack before:\n");
             // printStack(stack);
-            while (predictive_parsing(token, PT, stack, LA) == 0)
+            while (predictive_parsing(token, PT, stack, LA, parent) == 0)
             {
                 // printf("Stack after:\n");
 

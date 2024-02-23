@@ -331,6 +331,19 @@ struct tree_node *repeated_add(struct tree_node *parent, struct input_structure 
     return nextNonTerminal(parent->head);
 }
 
+struct tree_node *add_to_tree(struct Variable nt, struct Variable *rule, struct tree_node *parent)
+{
+    struct input_structure inp;
+    inp.nonterminal = nt;
+    inp.rule = rule;
+
+    parent = repeated_add(parent, inp);
+
+    return parent;
+}
+
+
+
 int main()
 { // initialise the root_node which is the NT_PROGRAM node and add the first input_structure to it using repeated_add
     struct tree_node *node_to_add_to = create_tree_node((struct Variable){0, 1});
