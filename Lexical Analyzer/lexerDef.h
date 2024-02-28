@@ -1,4 +1,3 @@
-// Enumerated token types
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,19 +9,22 @@
 #define NUM_NON_ACCEPT_STATES 29
 #define NUM_STATES 95 // 66 accept states, number of states including accept states
 #define END_OF_FILE_VAL 128
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 150
 #define FINAL_STATE_OFFSET NUM_NON_ACCEPT_STATES + 1 // this is same as NON ACCEPT STATES + 1
 #define MAX_LEXEME_SIZE 100
-// extern int numStates;
-// LEXICAL ANALYSER
+
+
+typedef enum TokenType TokenType;
+
+typedef enum CharacterType CharacterType;
 
 typedef struct TwinBufferArray TwinBufferArray;
 
-typedef TwinBufferArray * twinBufferArray;
+typedef TwinBufferArray *twinBufferArray;
 
 typedef struct TwinBuffer TwinBuffer;
 
-typedef TwinBuffer * twinBuffer;
+typedef TwinBuffer *twinBuffer;
 
 struct TwinBufferArray
 {
@@ -32,17 +34,11 @@ struct TwinBufferArray
     char buffer[BUFFER_SIZE * 2 + 2];
 };
 
-
-
 struct TwinBuffer
 {
     int lineNo, begin, forward, state;
     twinBufferArray bufferArray;
 };
-
-
-// DECLARATIONS AND GLOBAL VARIABLES
-
 
 struct SymbolTableNode
 {
@@ -50,8 +46,18 @@ struct SymbolTableNode
     struct SymbolTableNode *next;
 };
 
+struct SymbolTableEntry
+{
+    char *lexeme;
+    // INTVALUE -> NUM
+    int intValue;
+    int lineNo;
+    // DOUBLEVALUE -> RNUM
+    double doubleValue;
+    enum Tokentype tokenType;
+};
 
-typedef enum Tokentype
+enum Tokentype
 {
     CARRIAGE_RETURN,
     TK_ASSIGNOP,
@@ -121,20 +127,9 @@ typedef enum Tokentype
     TK_EPS,
     TK_EOF,
     LEXICAL_ERROR
-} Tokentype;
-
-struct SymbolTableEntry
-{
-    char *lexeme;
-    // INTVALUE -> NUM
-    int intValue;
-    int lineNo;
-    // DOUBLEVALUE -> RNUM
-    double doubleValue;
-    enum Tokentype tokenType;
 };
 
-typedef enum CharacterType
+enum CharacterType
 {
     CT_LETTER_LOWER_EXCEPT_ID_LETTER,
     CT_ID_DIGIT,
@@ -173,29 +168,7 @@ typedef enum CharacterType
     CT_CARRIAGE_RETURN,
     CT_EOF,
     CT_HASH
-} CharacterType;
+};
 
-// FUNCTION DECLARATIONS
-void getToken(struct SymbolTableEntry *symbolTableEntry);
-int getNextState(int currentState, int character);
-
-
-extern struct SymbolTableNode *symbolTable[HASH_MAP_SIZE];
-
-void insertAllKeywords();
-void printSymbolTable();
-
-void changeForward(twinBuffer *LA, int flag);
-
-const char *CharacterTypeToString(enum CharacterType type);
-const char *TokenToString(int token);
-
-extern CharacterType characterTypeMap[129];
-
-FILE *readTestFile(char *file_path);
-twinBufferArray initialiseTwinBuffer(FILE *file);
-twinBuffer *initialiseLA(twinBufferArray bufferArray);
-int readIntoBuffer(twinBufferArray bufferArray);
-struct SymbolTableEntry *scanToken(twinBuffer *LA);
 
 #endif

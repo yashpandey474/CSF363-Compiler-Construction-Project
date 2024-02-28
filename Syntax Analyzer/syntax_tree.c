@@ -10,7 +10,6 @@
 
 // declaration of function to fetch rule from the predictive parsing table
 // add its definition
-struct input_structure fetch_rule();
 
 // structure for the tree node
 
@@ -130,7 +129,7 @@ struct tree_node *repeated_add(struct tree_node *parent, struct input_structure 
         printf("Error: The input does not match the first non-terminal found\n");
         printf("Non-terminal entered: %s\n", NonTerminalToString(input.nonterminal.val));
         printf("Non-terminal found: %s\n", NonTerminalToString(parent->data.val));
-        return NULL;
+        return nextNonTerminal;
     }
 
     for (int var = 8; var >= 0; var -= 1)
@@ -175,29 +174,7 @@ struct tree_node *add_to_tree(struct Variable nt, int a, struct ParsingTable *pt
     return parent;
 }
 
-void printTree(struct tree_node *parent, int depth)
+void printParseTree(parseTree PT, char *outfile)
 {
-    for (int i = 0; i < depth; i += 1)
-    {
-        printf("\t");
-    }
-    printf("%s ", (parent->data.flag == 1) ? NonTerminalToString(parent->data.val) : TokenToString(parent->data.val));
-
-    struct tree_node *pointer = parent->head;
-    while (pointer != NULL)
-    {
-        printTree(pointer, depth + 1);
-        pointer = pointer->next;
-    }
+    
 }
-
-// int main()
-// { // initialise the root_node which is the NT_PROGRAM node and add the first input_structure to it using repeated_add
-//     struct tree_node *node_to_add_to = create_tree_node((struct Variable){0, 1});
-//     while (node_to_add_to!=NULL)
-//     {
-//         struct input_structure input = fetch_rule();
-//         node_to_add_to = repeated_add(node_to_add_to, input);
-//     }
-//     return 0;
-// }

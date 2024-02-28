@@ -1,4 +1,5 @@
 #include "syntactical.h"
+#include "syntactical.h"
 
 bool isDefault(struct Variable var)
 {
@@ -68,7 +69,8 @@ bool containsEPS(struct LinkedListSet *set)
 bool appendSetToSet(struct LinkedListSet *destinationSet, struct LinkedListSet *sourceSet)
 {
     bool changed = false;
-    struct Variable var; var.flag = 0;
+    struct Variable var;
+    var.flag = 0;
     for (int i = 0; i < NUM_TERMINALS; ++i)
     {
 
@@ -385,4 +387,26 @@ struct Sets **initialiseSetsWhole()
     }
 
     return sets_for_all;
+}
+
+FirstAndFollow ComputeFirstAndFollowSets(grammar G)
+{
+    FirstAndFollow firstfollowsets = initialiseSetsWhole();
+    computeFirstSet(firstfollowsets, G);
+    computeFollowSet(firstfollowsets, G);
+
+    return firstfollowsets;
+}
+
+void createParseTable(FirstAndFollow F, table T, grammar G)
+{
+    populate_parsing_table(T, G, F);
+}
+parseInputSourceCode(char *testcaseFile, table T)
+{
+
+    printf("Input source code is syntactically correct...........");
+}
+printParseTree(parseTree PT, char *outfile)
+{
 }

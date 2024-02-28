@@ -118,15 +118,15 @@ void print_token_list(char *filename)
     FILE *file = readTestFile(filename);
 
     // INITIALISE A TWIN BUFFER
-    struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
+    BufferArray *bufferArray = initialiseTwinBuffer(file);
 
     // INITIALISE LA
-    struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
+    twinBuffer LA = initialiseLA(bufferArray);
 
     // printf("LA INITIALISED\n");
 
     // START SCANNING
-    readIntoBuffer(twinBuffer);
+    readIntoBuffer(bufferArray);
 
     // printf("READ INPUT\n");
 
