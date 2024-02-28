@@ -172,6 +172,6 @@ void print_timing_info(clock_t start_time, clock_t end_time)
     total_CPU_time = (double)(end_time - start_time);
     total_CPU_time_in_seconds = total_CPU_time / CLOCKS_PER_SEC;
 
-    printf("Total CPU time: %f\n", total_CPU_time);
-    printf("Total CPU time in seconds: %f\n", total_CPU_time_in_seconds);
+    printf("Total CPU time: %f μs\n", total_CPU_time);
+    printf("Time in seconds: %f s\n", total_CPU_time_in_seconds);
 }
