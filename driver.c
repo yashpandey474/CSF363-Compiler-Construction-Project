@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
             printf("Exiting...\n");
             break;
         case 1:
-            remove_comments(argv[1]);
+            remove_comments(argv[1], "outputcomments.txt");
             break;
         case 2:
             print_token_list(argv[1]);
@@ -54,10 +54,9 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-void remove_comments(char *filename)
+void remove_comments(char *testcasefile, char *cleanFile)
 {
-    FILE *file = fopen(filename, "r");
+    FILE *file = fopen(testcasefile, "r");
     if (file == NULL)
     {
         perror("Error opening file");
@@ -65,7 +64,7 @@ void remove_comments(char *filename)
     }
 
     // Open an additional file for writing the output
-    FILE *outputFile = fopen("commentremove.txt", "w");
+    FILE *outputFile = fopen(cleanFile, "w");
     if (outputFile == NULL)
     {
         perror("Error opening output file");

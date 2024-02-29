@@ -18,11 +18,13 @@
 
 typedef struct TwinBufferArray TwinBufferArray;
 
-typedef TwinBufferArray * twinBufferArray;
+typedef TwinBufferArray *twinBufferArray;
 
 typedef struct TwinBuffer TwinBuffer;
 
-typedef TwinBuffer * twinBuffer;
+typedef TwinBuffer* twinBuffer;
+
+typedef struct SymbolTableEntry *tokenInfo;
 
 struct TwinBufferArray
 {
@@ -32,24 +34,19 @@ struct TwinBufferArray
     char buffer[BUFFER_SIZE * 2 + 2];
 };
 
-
-
 struct TwinBuffer
 {
     int lineNo, begin, forward, state;
     twinBufferArray bufferArray;
 };
 
-
 // DECLARATIONS AND GLOBAL VARIABLES
-
 
 struct SymbolTableNode
 {
     struct SymbolTableEntry *entry;
     struct SymbolTableNode *next;
 };
-
 
 typedef enum Tokentype
 {
@@ -178,7 +175,6 @@ typedef enum CharacterType
 // FUNCTION DECLARATIONS
 void getToken(struct SymbolTableEntry *symbolTableEntry);
 int getNextState(int currentState, int character);
-
 
 extern struct SymbolTableNode *symbolTable[HASH_MAP_SIZE];
 
