@@ -181,7 +181,7 @@ extern struct SymbolTableNode *symbolTable[HASH_MAP_SIZE];
 void insertAllKeywords();
 void printSymbolTable();
 
-void changeForward(twinBuffer *LA, int flag);
+void changeForward(twinBuffer LA, int flag);
 
 const char *CharacterTypeToString(enum CharacterType type);
 const char *TokenToString(int token);

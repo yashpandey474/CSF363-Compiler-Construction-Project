@@ -13,7 +13,6 @@
 #define FINAL_STATE_OFFSET NUM_NON_ACCEPT_STATES + 1 // this is same as NON ACCEPT STATES + 1
 #define MAX_LEXEME_SIZE 100
 
-
 typedef enum TokenType TokenType;
 
 typedef enum CharacterType CharacterType;
@@ -25,6 +24,8 @@ typedef TwinBufferArray *twinBufferArray;
 typedef struct TwinBuffer TwinBuffer;
 
 typedef TwinBuffer *twinBuffer;
+
+typedef struct SymbolTableEntry *tokenInfo;
 
 struct TwinBufferArray
 {
@@ -169,6 +170,5 @@ enum CharacterType
     CT_EOF,
     CT_HASH
 };
-
 
 #endif
