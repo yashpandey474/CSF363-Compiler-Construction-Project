@@ -22,7 +22,7 @@ typedef TwinBufferArray *twinBufferArray;
 
 typedef struct TwinBuffer TwinBuffer;
 
-typedef TwinBuffer* twinBuffer;
+typedef TwinBuffer *twinBuffer;
 
 typedef struct SymbolTableEntry *tokenInfo;
 
@@ -191,7 +191,7 @@ extern CharacterType characterTypeMap[129];
 FILE *readTestFile(char *file_path);
 twinBufferArray initialiseTwinBuffer(FILE *file);
 twinBuffer *initialiseLA(twinBufferArray bufferArray);
-int readIntoBuffer(twinBufferArray bufferArray);
-struct SymbolTableEntry *scanToken(twinBuffer *LA);
+int getStream(twinBufferArray bufferArray);
+tokenInfo getNextToken(twinBuffer LA);
 
 #endif

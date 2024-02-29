@@ -125,7 +125,7 @@ void print_token_list(char *filename)
     // printf("LA INITIALISED\n");
 
     // START SCANNING
-    readIntoBuffer(bufferArray);
+    getStream(bufferArray);
 
     // printf("READ INPUT\n");
 
@@ -141,7 +141,7 @@ void print_token_list(char *filename)
         return;
     }
 
-    while ((token = scanToken(LA)))
+    while ((token = getNextToken(LA)))
     {
         if (token->tokenType == LEXICAL_ERROR)
         {

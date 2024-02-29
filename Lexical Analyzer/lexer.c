@@ -112,7 +112,7 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
     return a;
 }
 
-int readIntoBuffer(twinBufferArray bufferArray)
+int getStream(twinBufferArray bufferArray)
 {
     char *buffer;
     if (bufferArray->readingFirst)
@@ -406,7 +406,7 @@ tokenInfo getNextToken(twinBuffer LA)
             if ((LA->forward % (BUFFER_SIZE * 2 + 2)) == BUFFER_SIZE || (LA->forward % (BUFFER_SIZE * 2 + 2)) == (2 * BUFFER_SIZE + 1))
             {
                 // RELOAD OTHER BUFER
-                readIntoBuffer(LA->bufferArray);
+                getStream(LA->bufferArray);
                 changeForward(LA, 1);
                 // printf("RELOADED BUFFER\n");
 
@@ -551,7 +551,7 @@ twinBufferinitialiseLA(twinBufferArray bufferArray)
 //     // printf("LA INITIALISED\n");
 
 //     // START SCANNING
-//     readIntoBuffer(bufferArray);
+//     getStream(bufferArray);
 
 //     // printf("READ INPUT\n");
 
@@ -560,7 +560,7 @@ twinBufferinitialiseLA(twinBufferArray bufferArray)
 
 //     // printf("STARTING SCANNING\n");
 
-//     while ((token = scanToken(LA)))
+//     while ((token = getNextToken(LA)))
 //     {
 //         // printf("HU");
 //         printf("(%s : %s) \n", TokenToString(token->tokenType), token->lexeme);

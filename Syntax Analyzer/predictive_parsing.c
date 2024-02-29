@@ -248,9 +248,9 @@ int predictive_parsing(struct SymbolTableEntry *token, struct ParsingTable *pt, 
         // struct Variable *arr = pt->table[X.val][a];
         struct Variable topStack = pop(st);
 
-
-        //IF A TERMINAL
-        if (topStack.flag == 0){
+        // IF A TERMINAL
+        if (topStack.flag == 0)
+        {
             topStack.
         }
 
@@ -345,7 +345,7 @@ int main()
     struct Sets **sets_for_all = initialiseSetsWhole();
     struct ParsingTable *PT = (struct ParsingTable *)malloc(sizeof(struct ParsingTable));
 
-    readIntoBuffer(bufferArray);
+    getStream(bufferArray);
     printf("READ INPUT\n");
     computeFirstSet(sets_for_all, productions);
     printf("FIRST SET COMPUTED\n");
@@ -369,7 +369,7 @@ int main()
 
     int res = 0;
     bool skip_error = false;
-    while ((token = scanToken(LA)))
+    while ((token = getNextToken(LA)))
     {
         if (token->tokenType == LEXICAL_ERROR)
         {
