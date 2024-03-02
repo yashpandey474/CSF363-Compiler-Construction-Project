@@ -678,6 +678,18 @@ struct stack *initialiseStack()
     return stack;
 }
 
+FirstAndFollow computeFirstAndFollow(struct GrammarRule *productions)
+{
+    FirstAndFollow sets = initialiseSetsWhole();
+    computeFirstSet(sets, productions);
+    // printf("FIRST SET COMPUTED\n");
+
+    computeFollowSet(sets, productions);
+    // printf("FOLLOW SET COMPUTED\n");
+
+    return sets;
+}
+
 int main()
 {
 
@@ -703,16 +715,13 @@ int main()
     // for (int i=0;i<NUM_NON_TERMINALS;i++)
     //     G.productions[i] = productions[i];
 
-    struct Sets **sets_for_all = initialiseSetsWhole();
+    FirstAndFollow sets = computeFirstAndFollow(G.productions);
     struct ParsingTable *PT = (struct ParsingTable *)malloc(sizeof(struct ParsingTable));
 
     getStream(bufferArray);
     printf("READ INPUT\n");
-    computeFirstSet(sets_for_all, G.productions);
-    printf("FIRST SET COMPUTED\n");
-    computeFollowSet(sets_for_all, G.productions);
-    printf("FOLLOW SET COMPUTED\n");
-    createParseTable(PT, G.productions, sets_for_all, synchSet);
+
+    createParseTable(PT, G.productions, sets, synchSet);
     printf("PARSING TABLE POPULATED\n");
     // printParsingTable(PT);
 
@@ -726,7 +735,7 @@ int main()
         printf("Error opening file!\n");
         return 1;
     }
-    printFFSetsTable(cfile, sets_for_all);
+    printFFSetsTable(cfile, sets);
     fclose(cfile);
 
     int res = 0;
