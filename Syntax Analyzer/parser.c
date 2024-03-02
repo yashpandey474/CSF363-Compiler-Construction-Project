@@ -667,7 +667,7 @@ void insert(enum NonTerminals nt, enum Tokentype terminal, struct Variable *rule
     PT->table[(int)(nt)][(int)terminal] = rule;
 }
 
-void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal, int *synchSet)
+void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal, int *synchSet, int defaultSynchSetSize)
 {
     // SYN INDICATING RULE
     struct Variable *rule = (struct Variable *)malloc(sizeof(struct Variable));
@@ -684,18 +684,18 @@ void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal
     }
 
     // FOR ALL IN DEFAULT SYNC SET
-    for (int i = 0; i < sizeof(synchSet) / sizeof(synchSet[0]); i += 1)
+    for (int i = 0; i < defaultSynchSetSize; i += 1)
     {
         insert(nonTerminal, synchSet[i], rule, PT);
     }
 }
 
-void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, struct Sets **sets_for_all, int *synchSet)
+void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, struct Sets **sets_for_all, int *synchSet, int defaultSynchSetSize)
 {
     for (int nt = 0; nt < NUM_NON_TERMINALS; nt++)
     {
         // ADD THE SYN INDICATOR FOR ALL TERMINALS IN FOLLOW OF NT
-        addSyn(PT, sets_for_all, nt, synchSet);
+        addSyn(PT, sets_for_all, nt, synchSet, defaultSynchSetSize);
 
         for (int i = 0; i < productions[nt].numProductions; i++)
         {
@@ -907,8 +907,6 @@ bool isEmptyStack(struct stack *st)
 
 struct Variable *peek(struct stack *st)
 {
-    struct Variable *stackBottom;
-    stackBottom->val = -1;
 
     if (!isEmptyStack(st))
     {
@@ -917,7 +915,7 @@ struct Variable *peek(struct stack *st)
     else
     {
         printf("Stack is empty\n");
-        return stackBottom;
+        return NULL;
     }
 }
 
@@ -932,7 +930,7 @@ bool isFull(struct stack *st)
     if (st->top == st->MAX - 1)
     {
         st->MAX += 128;
-        st->stack = (struct Variable *)realloc(st->stack, 2 * st->MAX * sizeof(struct Variable));
+        st->stack = (struct Variable **)realloc(st->stack, 2 * st->MAX * sizeof(struct Variable *));
         return true;
     }
     return false;
@@ -946,7 +944,7 @@ void push(struct stack *st, struct Variable *data)
     st->stack[++st->top] = data;
 }
 
-struct Variabl *pop(struct stack *st)
+struct Variable *pop(struct stack *st)
 {
 
     if (isEmptyStack(st))
@@ -1007,7 +1005,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // SYN TOKEN; POP THE NONTERMINAL
         // printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
 
-        struct Variable topStackpop(st);
+        pop(st);
 
         // CONTINUE FROM  SYN TOKEN
         return 0;
@@ -1065,7 +1063,7 @@ struct stack *initialiseStack()
 
     stack->MAX = STACK_INITIAL_SIZE;
     stack->top = -1;
-    stack->stack = (struct Variable *)malloc(sizeof(struct Variable) * STACK_INITIAL_SIZE);
+    stack->stack = (struct Variable **)malloc(sizeof(struct Variable *) * STACK_INITIAL_SIZE);
     return stack;
 }
 
@@ -1081,105 +1079,105 @@ FirstAndFollow *computeFirstAndFollow(struct GrammarRule *productions)
     return sets;
 }
 
-int main()
-{
+// int main()
+// {
 
-    int synchSet[] = {
-        TK_ENDRECORD, TK_ENDUNION, TK_SEM, TK_DOT, TK_CL, TK_OP};
+//     int synchSet[] = {
+//         TK_ENDRECORD, TK_ENDUNION, TK_SEM, TK_DOT, TK_CL, TK_OP};
 
-    struct Variable *init = createCopy((struct Variable){NT_PROGRAM, 1});
+//     struct Variable *init = createCopy((struct Variable){NT_PROGRAM, 1});
 
-    struct tree_node *parent = create_tree_node(init);
-    struct tree_node *root_for_later = parent;
-    struct tree_node *node_to_add_to = parent;
-    struct tree_node **parentpointer = (struct tree_node **)malloc(sizeof(struct tree_node *));
-    *parentpointer = node_to_add_to;
-    struct stack *stack = initialiseStack();
-    insertAllKeywords();
-    FILE *file = readTestFile("t2.txt");
+//     struct tree_node *parent = create_tree_node(init);
+//     struct tree_node *root_for_later = parent;
+//     struct tree_node *node_to_add_to = parent;
+//     struct tree_node **parentpointer = (struct tree_node **)malloc(sizeof(struct tree_node *));
+//     *parentpointer = node_to_add_to;
+//     struct stack *stack = initialiseStack();
+//     insertAllKeywords();
+//     FILE *file = readTestFile("t2.txt");
 
-    twinBufferArray bufferArray = initialiseTwinBuffer(file);
-    twinBuffer LA = initialiseLA(bufferArray);
-    struct SymbolTableEntry *token;
+//     twinBufferArray bufferArray = initialiseTwinBuffer(file);
+//     twinBuffer LA = initialiseLA(bufferArray);
+//     struct SymbolTableEntry *token;
 
-    Grammar G = {{1, {{{NT_OTHER_FUNCTIONS, 1}, {NT_MAIN_FUNCTION, 1}}}}, {1, {{{TK_MAIN, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {2, {{{NT_FUNCTION, 1}, {NT_OTHER_FUNCTIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_FUNID, 0}, {NT_INPUT_PAR, 1}, {NT_OUTPUT_PAR, 1}, {TK_SEM, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {1, {{{TK_INPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}}}, {2, {{{TK_OUTPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{NT_DATA_TYPE, 1}, {TK_ID, 0}, {NT_REMAINING_LIST, 1}}}}, {2, {{{NT_PRIMITIVE_DATA_TYPE, 1}}, {{NT_CONSTRUCTED_DATA_TYPE, 1}}}}, {2, {{{TK_INT, 0}}, {{TK_REAL, 0}}}}, {2, {{{NT_A, 1}, {TK_RUID, 0}}, {{TK_RUID, 0}}}}, {2, {{{TK_COMMA, 0}, {NT_PARAMETER_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_TYPE_DEFINITIONS, 1}, {NT_DECLARATIONS, 1}, {NT_OTHER_STMTS, 1}, {NT_RETURN_STMT, 1}}}}, {3, {{{NT_TYPE_DEFINITION, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{NT_DEFINETYPE_STMT, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_RECORD, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDRECORD, 0}}, {{TK_UNION, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDUNION, 0}}}}, {1, {{{NT_FIELD_DEFINITION, 1}, {NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_FIELDID, 0}, {TK_SEM, 0}}}}, {2, {{{NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_DECLARATION, 1}, {NT_DECLARATIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_ID, 0}, {NT_GLOBAL_OR_NOT, 1}, {TK_SEM, 0}}}}, {2, {{{TK_COLON, 0}, {TK_GLOBAL, 0}}, {{TK_EPS, 0}}}}, {2, {{{NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {5, {{{NT_ASSIGNMENT_STMT, 1}}, {{NT_ITERATIVE_STMT, 1}}, {{NT_CONDITIONAL_STMT, 1}}, {{NT_IO_STMT, 1}}, {{NT_FUN_CALL_STMT, 1}}}}, {1, {{{NT_SINGLE_OR_REC_ID, 1}, {TK_ASSIGNOP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_SEM, 0}}}}, {1, {{{TK_ID, 0}, {NT_REC_ID, 1}}}}, {2, {{{TK_DOT, 0}, {TK_FIELDID, 0}, {NT_REC_ID, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_OUTPUT_PARAMETERS, 1}, {TK_CALL, 0}, {TK_FUNID, 0}, {TK_WITH, 0}, {TK_PARAMETERS, 0}, {NT_INPUT_PARAMETERS, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}, {TK_ASSIGNOP, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}}}, {1, {{{TK_WHILE, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {TK_ENDWHILE, 0}}}}, {1, {{{TK_IF, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {TK_THEN, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {NT_NEW3, 1}, {TK_ENDIF, 0}}}}, {2, {{{TK_ELSE, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_READ, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}, {{TK_WRITE, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}}}, {1, {{{NT_TERM, 1}, {NT_NEW5, 1}}}}, {2, {{{NT_OPERATOR, 1}, {NT_TERM, 1}, {NT_NEW5, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_FACTOR, 1}, {NT_NEW6, 1}}}}, {2, {{{NT_OP_H, 1}, {NT_FACTOR, 1}, {NT_NEW6, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_VAR, 1}}, {{TK_OP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_CL, 0}}}}, {2, {{{TK_PLUS, 0}}, {{TK_MINUS, 0}}}}, {2, {{{TK_MUL, 0}}, {{TK_DIV, 0}}}}, {3, {{{TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_LOGICAL_OP, 1}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}, {{NT_VAR, 1}, {NT_RELATIONAL_OP, 1}, {NT_VAR, 1}}, {{TK_NOT, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}}}, {3, {{{NT_SINGLE_OR_REC_ID, 1}}, {{TK_NUM, 0}}, {{TK_RNUM, 0}}}}, {2, {{{TK_AND, 0}}, {{TK_OR, 0}}}}, {6, {{{TK_LT, 0}}, {{TK_LE, 0}}, {{TK_EQ, 0}}, {{TK_GT, 0}}, {{TK_GE, 0}}, {{TK_NE, 0}}}}, {1, {{{TK_RETURN, 0}, {NT_OPTIONAL_RETURN, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_ID, 0}, {NT_MORE_IDS, 1}}}}, {2, {{{TK_COMMA, 0}, {NT_ID_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_DEFINETYPE, 0}, {NT_A, 1}, {TK_RUID, 0}, {TK_AS, 0}, {TK_RUID, 0}}}}, {2, {{{TK_RECORD, 0}}, {{TK_UNION, 0}}}}};
-    // for (int i=0;i<NUM_NON_TERMINALS;i++)
-    //     G.productions[i] = productions[i];
+//     Grammar G = {{1, {{{NT_OTHER_FUNCTIONS, 1}, {NT_MAIN_FUNCTION, 1}}}}, {1, {{{TK_MAIN, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {2, {{{NT_FUNCTION, 1}, {NT_OTHER_FUNCTIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_FUNID, 0}, {NT_INPUT_PAR, 1}, {NT_OUTPUT_PAR, 1}, {TK_SEM, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {1, {{{TK_INPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}}}, {2, {{{TK_OUTPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{NT_DATA_TYPE, 1}, {TK_ID, 0}, {NT_REMAINING_LIST, 1}}}}, {2, {{{NT_PRIMITIVE_DATA_TYPE, 1}}, {{NT_CONSTRUCTED_DATA_TYPE, 1}}}}, {2, {{{TK_INT, 0}}, {{TK_REAL, 0}}}}, {2, {{{NT_A, 1}, {TK_RUID, 0}}, {{TK_RUID, 0}}}}, {2, {{{TK_COMMA, 0}, {NT_PARAMETER_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_TYPE_DEFINITIONS, 1}, {NT_DECLARATIONS, 1}, {NT_OTHER_STMTS, 1}, {NT_RETURN_STMT, 1}}}}, {3, {{{NT_TYPE_DEFINITION, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{NT_DEFINETYPE_STMT, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_RECORD, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDRECORD, 0}}, {{TK_UNION, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDUNION, 0}}}}, {1, {{{NT_FIELD_DEFINITION, 1}, {NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_FIELDID, 0}, {TK_SEM, 0}}}}, {2, {{{NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_DECLARATION, 1}, {NT_DECLARATIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_ID, 0}, {NT_GLOBAL_OR_NOT, 1}, {TK_SEM, 0}}}}, {2, {{{TK_COLON, 0}, {TK_GLOBAL, 0}}, {{TK_EPS, 0}}}}, {2, {{{NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {5, {{{NT_ASSIGNMENT_STMT, 1}}, {{NT_ITERATIVE_STMT, 1}}, {{NT_CONDITIONAL_STMT, 1}}, {{NT_IO_STMT, 1}}, {{NT_FUN_CALL_STMT, 1}}}}, {1, {{{NT_SINGLE_OR_REC_ID, 1}, {TK_ASSIGNOP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_SEM, 0}}}}, {1, {{{TK_ID, 0}, {NT_REC_ID, 1}}}}, {2, {{{TK_DOT, 0}, {TK_FIELDID, 0}, {NT_REC_ID, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_OUTPUT_PARAMETERS, 1}, {TK_CALL, 0}, {TK_FUNID, 0}, {TK_WITH, 0}, {TK_PARAMETERS, 0}, {NT_INPUT_PARAMETERS, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}, {TK_ASSIGNOP, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}}}, {1, {{{TK_WHILE, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {TK_ENDWHILE, 0}}}}, {1, {{{TK_IF, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {TK_THEN, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {NT_NEW3, 1}, {TK_ENDIF, 0}}}}, {2, {{{TK_ELSE, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_READ, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}, {{TK_WRITE, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}}}, {1, {{{NT_TERM, 1}, {NT_NEW5, 1}}}}, {2, {{{NT_OPERATOR, 1}, {NT_TERM, 1}, {NT_NEW5, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_FACTOR, 1}, {NT_NEW6, 1}}}}, {2, {{{NT_OP_H, 1}, {NT_FACTOR, 1}, {NT_NEW6, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_VAR, 1}}, {{TK_OP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_CL, 0}}}}, {2, {{{TK_PLUS, 0}}, {{TK_MINUS, 0}}}}, {2, {{{TK_MUL, 0}}, {{TK_DIV, 0}}}}, {3, {{{TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_LOGICAL_OP, 1}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}, {{NT_VAR, 1}, {NT_RELATIONAL_OP, 1}, {NT_VAR, 1}}, {{TK_NOT, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}}}, {3, {{{NT_SINGLE_OR_REC_ID, 1}}, {{TK_NUM, 0}}, {{TK_RNUM, 0}}}}, {2, {{{TK_AND, 0}}, {{TK_OR, 0}}}}, {6, {{{TK_LT, 0}}, {{TK_LE, 0}}, {{TK_EQ, 0}}, {{TK_GT, 0}}, {{TK_GE, 0}}, {{TK_NE, 0}}}}, {1, {{{TK_RETURN, 0}, {NT_OPTIONAL_RETURN, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_ID, 0}, {NT_MORE_IDS, 1}}}}, {2, {{{TK_COMMA, 0}, {NT_ID_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_DEFINETYPE, 0}, {NT_A, 1}, {TK_RUID, 0}, {TK_AS, 0}, {TK_RUID, 0}}}}, {2, {{{TK_RECORD, 0}}, {{TK_UNION, 0}}}}};
+//     // for (int i=0;i<NUM_NON_TERMINALS;i++)
+//     //     G.productions[i] = productions[i];
 
-    FirstAndFollow sets = computeFirstAndFollow(G.productions);
-    struct ParsingTable *PT = (struct ParsingTable *)malloc(sizeof(struct ParsingTable));
+//     FirstAndFollow* sets = computeFirstAndFollow(G.productions);
+//     struct ParsingTable *PT = (struct ParsingTable *)malloc(sizeof(struct ParsingTable));
 
-    getStream(bufferArray);
-    printf("READ INPUT\n");
+//     getStream(bufferArray);
+//     printf("READ INPUT\n");
 
-    createParseTable(PT, G.productions, sets, synchSet);
-    printf("PARSING TABLE POPULATED\n");
-    // printParsingTable(PT);
+//     createParseTable(PT, G.productions, sets, synchSet);
+//     printf("PARSING TABLE POPULATED\n");
+//     // printParsingTable(PT);
 
-    push(stack, createCopy((struct Variable){TK_EOF, 0}));
-    push(stack, init);
+//     push(stack, createCopy((struct Variable){TK_EOF, 0}));
+//     push(stack, init);
 
-    // write to computed_sets.txt
-    FILE *cfile = fopen("computed_sets.txt", "w");
-    if (cfile == NULL)
-    {
-        printf("Error opening file!\n");
-        return 1;
-    }
-    printFFSetsTable(cfile, sets);
-    fclose(cfile);
+//     // write to computed_sets.txt
+//     FILE *cfile = fopen("computed_sets.txt", "w");
+//     if (cfile == NULL)
+//     {
+//         printf("Error opening file!\n");
+//         return 1;
+//     }
+//     printFFSetsTable(cfile, sets);
+//     fclose(cfile);
 
-    int res = 0;
-    bool skip_error = false;
-    while ((token = getNextToken(LA)))
-    {
-        if (token->tokenType == LEXICAL_ERROR)
-        {
-            printf("Line no. %-5d Error: %-30s\n", LA->lineNo, token->lexeme);
-        }
-        if (!(token->tokenType == LEXICAL_ERROR || token->tokenType == TK_COMMENT))
-        {
-            // printf("Stack before:\n");
-            // printStack(stack);
-            printf("PASSED PARENT TO PARSING: %s\n", NonTerminalToString(node_to_add_to->data->val));
-            while ((res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer)) == 0)
-            {
-                if (*parentpointer != NULL)
-                {
-                    node_to_add_to = *parentpointer;
-                }
-                // printf("Stack after:\n");
+//     int res = 0;
+//     bool skip_error = false;
+//     while ((token = getNextToken(LA)))
+//     {
+//         if (token->tokenType == LEXICAL_ERROR)
+//         {
+//             printf("Line no. %-5d Error: %-30s\n", LA->lineNo, token->lexeme);
+//         }
+//         if (!(token->tokenType == LEXICAL_ERROR || token->tokenType == TK_COMMENT))
+//         {
+//             // printf("Stack before:\n");
+//             // printStack(stack);
+//             printf("PASSED PARENT TO PARSING: %s\n", NonTerminalToString(node_to_add_to->data->val));
+//             while ((res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer)) == 0)
+//             {
+//                 if (*parentpointer != NULL)
+//                 {
+//                     node_to_add_to = *parentpointer;
+//                 }
+//                 // printf("Stack after:\n");
 
-                // printStack(stack);
+//                 // printStack(stack);
 
-                // keep doing it basically. youll only go to the next token if there's a valid accepting thing( in which case it returns something)
-            }
+//                 // keep doing it basically. youll only go to the next token if there's a valid accepting thing( in which case it returns something)
+//             }
 
-            if (res == -1)
-            {
-                skip_error = true;
-            }
-            if (res == 1)
-            {
+//             if (res == -1)
+//             {
+//                 skip_error = true;
+//             }
+//             if (res == 1)
+//             {
 
-                skip_error = false;
-            }
-            if (*parentpointer != NULL)
-            {
-                node_to_add_to = *parentpointer;
-            }
-        }
-    }
-    printf("After parsing\n");
-    printStack(stack);
+//                 skip_error = false;
+//             }
+//             if (*parentpointer != NULL)
+//             {
+//                 node_to_add_to = *parentpointer;
+//             }
+//         }
+//     }
+//     printf("After parsing\n");
+//     printStack(stack);
 
-    printTree(parent, 0);
+//     printTree(parent, 0);
 
-    if (onlyContainsEOF(stack))
-    {
-        printf("TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
-    }
-    serialize_tree(root_for_later);
+//     if (onlyContainsEOF(stack))
+//     {
+//         printf("TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
+//     }
+//     serialize_tree(root_for_later);
 
-    return 0;
-}
+//     return 0;
+// }

@@ -19,6 +19,7 @@ bool onlyContainsEOF(struct stack *st);
 bool isFull(struct stack *st);
 void push(struct stack *st, struct Variable *data);
 struct Variable *pop(struct stack *st);
+void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal, int *synchSet);
 int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, twinBuffer LA, struct tree_node *parent, bool skipError, struct tree_node **parentpointer);
 struct stack *initialiseStack();
 void computeFirstSet(struct Sets **sets_for_all, struct Productions *G);

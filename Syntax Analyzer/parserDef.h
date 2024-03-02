@@ -73,7 +73,7 @@ struct GrammarRule
 {
     // enum NonTerminals nonTerminal;
     int numProductions;
-    struct Variable *rules[MAX_NUM_PRODUCTIONS][MAX_VARS];
+    struct Variable rules[MAX_NUM_PRODUCTIONS][MAX_VARS];
 };
 
 typedef struct Grammar
