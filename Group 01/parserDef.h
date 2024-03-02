@@ -7,6 +7,7 @@
 #define NUM_NON_TERMINALS 49 // num productions
 #define SET_SIZE 200
 
+#define STACK_INITIAL_SIZE 128
 struct stack
 {
     struct Variable **stack;
@@ -77,7 +78,7 @@ struct GrammarRule
     int numProductions;
     struct Variable rules[MAX_NUM_PRODUCTIONS][MAX_VARS];
 };
-typedef struct GrammarRule * Productions;
+typedef struct GrammarRule *Productions;
 
 typedef struct Grammar
 {

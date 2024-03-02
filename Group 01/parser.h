@@ -27,3 +27,4 @@ void serialize_tree(struct tree_node *root);
 struct tree_node *create_tree_node(struct Variable *data);
 bool isDefault(struct Variable var);
 struct Sets **initialiseSetsWhole();
+bool containsEPS(struct LinkedListSet *set);

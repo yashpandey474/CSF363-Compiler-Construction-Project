@@ -187,7 +187,6 @@ void inorderTraversal(struct tree_node *node, FILE *outfile)
     if (node == NULL)
         return;
 
-    int isLeaf = node->data->flag == 0;
     if (node->head != NULL)
     {
         inorderTraversal(node->head, outfile);
@@ -483,13 +482,6 @@ const char *NonTerminalToString(enum NonTerminals nonTerminal)
     }
 }
 
-#define STACK_INITIAL_SIZE 128
-struct stack
-{
-    struct Variable **stack;
-    int top;
-    int MAX;
-};
 void printStack(struct stack *st)
 {
     for (int i = 0; i <= st->top; i++)
@@ -514,7 +506,7 @@ bool isEmptyStack(struct stack *st)
 
 struct Variable *peek(struct stack *st)
 {
-    struct Variable *stackBottom;
+    struct Variable *stackBottom = (struct Variable *)malloc(sizeof(struct Variable));
     stackBottom->val = -1;
 
     if (!isEmptyStack(st))
@@ -539,7 +531,7 @@ bool isFull(struct stack *st)
     if (st->top == st->MAX - 1)
     {
         st->MAX += 128;
-        st->stack = (struct Variable *)realloc(st->stack, 2 * st->MAX * sizeof(struct Variable));
+        st->stack = (struct Variable **)realloc(st->stack, 2 * st->MAX * sizeof(struct Variable *));
         return true;
     }
     return false;
@@ -614,7 +606,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // SYN TOKEN; POP THE NONTERMINAL
         // printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
 
-        struct Variable* topStack=pop(st);
+        pop(st);
 
         // CONTINUE FROM  SYN TOKEN
         return 0;
@@ -672,7 +664,7 @@ struct stack *initialiseStack()
 
     stack->MAX = STACK_INITIAL_SIZE;
     stack->top = -1;
-    stack->stack = (struct Variable **)malloc(sizeof(struct Variable*) * STACK_INITIAL_SIZE);
+    stack->stack = (struct Variable **)malloc(sizeof(struct Variable *) * STACK_INITIAL_SIZE);
     return stack;
 }
 
