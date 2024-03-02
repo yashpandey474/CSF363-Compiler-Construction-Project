@@ -154,7 +154,7 @@ void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, 
 void printParsingTable(struct ParsingTable *pt);
 void printFFSetsTable(FILE *cfile, struct Sets **sets_for_all);
 void printRule(enum NonTerminals nt, struct Variable *ruleArray);
-struct tree_node *add_to_tree(struct Variable *nt, struct Variable *rule, struct tree_node *parent);
+struct tree_node *add_to_tree(struct Variable *nt, struct Variable **rule, struct tree_node *parent);
 struct tree_node *create_tree_node(struct Variable *data);
 void printTree(struct tree_node *root, int depth);
 void serialize_tree(struct tree_node *root);

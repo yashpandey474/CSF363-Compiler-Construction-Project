@@ -1,6 +1,5 @@
 #include "Lexical Analyzer/lexer.h"
 #include <stdbool.h>
-
 #include <stdio.h>
 #include <time.h>
 
@@ -15,7 +14,6 @@ int main(int argc, char *argv[])
     clock_t start_time, end_time;
     printf("FIRST and FOLLOW set automated\n");
     printf("Lexical analyzer module developed\n");
-
     do
     {
         printf("\nOptions:\n");

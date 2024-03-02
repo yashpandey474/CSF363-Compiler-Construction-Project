@@ -7,6 +7,13 @@
 #define NUM_NON_TERMINALS 49 // num productions
 #define SET_SIZE 200
 
+struct stack
+{
+    struct Variable **stack;
+    int top;
+    int MAX;
+};
+
 struct Variable
 {
     int val;

@@ -7,6 +7,12 @@
 #define NUM_NON_TERMINALS 49 // num productions
 #define SET_SIZE 200
 
+typedef parseTree parseTree;
+typedef struct tree_node tree_node;
+typedef struct Sets *FirstAndFollow;
+typedef struct ParsingTable *table;
+typedef struct Grammar *grammar;
+
 struct Variable
 {
     int val;
@@ -32,12 +38,6 @@ struct input_structure
     struct Variable *rule;
     int length;
 };
-
-typedef parseTree parseTree;
-typedef struct tree_node tree_node;
-typedef struct Sets *FirstAndFollow;
-typedef struct ParsingTable *table;
-
 
 struct parseTree
 {
@@ -65,8 +65,6 @@ struct Sets
     struct LinkedListSet *followSets;
 };
 
-
-
 struct GrammarRule
 {
     // enum NonTerminals nonTerminal;
@@ -79,7 +77,6 @@ typedef struct Grammar
     struct GrammarRule productions[NUM_NON_TERMINALS];
 } Grammar;
 
-typedef struct Grammar *grammar;
 struct ParsingTable
 {
     struct Variable *table[NUM_NON_TERMINALS][NUM_TERMINALS];

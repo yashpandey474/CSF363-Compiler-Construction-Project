@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <lexerDef.h>
+#include "lexerDef.h"
+#include "parserDef.h"
 #include <stdbool.h>
 #define MAX_NUM_PRODUCTIONS 6
 #define MAX_VARS 9
@@ -21,9 +22,9 @@ void push(struct stack *st, struct Variable *data);
 struct Variable *pop(struct stack *st);
 int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, twinBuffer LA, struct tree_node *parent, bool skipError, struct tree_node **parentpointer);
 struct stack *initialiseStack();
-void computeFirstSet(struct Sets **sets_for_all, struct Productions *G);
-void computeFollowSet(struct Sets **sets_for_all, struct Productions *G);
-void createParseTable(struct ParsingTable *PT, struct Productions *G, struct Sets **sets_for_all, int *synchSet);
+void computeFirstSet(FirstAndFollow *sets_for_all, struct GrammarRule *G);
+void computeFollowSet(FirstAndFollow *sets_for_all, struct GrammarRule *G);
+void createParseTable(struct ParsingTable *PT, struct GrammarRule *G, FirstAndFollow *sets_for_all, int *synchSet);
 void printParsingTable(struct ParsingTable *PT);
 void printFFSetsTable(FILE *file, struct Sets **sets_for_all);
 void insertAllKeywords();
