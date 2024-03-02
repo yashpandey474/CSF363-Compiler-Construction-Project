@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
             printf("Exiting...\n");
             break;
         case 1:
-            remove_comments(argv[1], "commentfreecode.txt");
+            remove_comments(argv[1], "comment_free_code.txt");
             break;
         case 2:
             print_token_list(argv[1]);
