@@ -5,6 +5,225 @@
 #include <string.h>
 #include "../Lexical Analyzer/lexer.h"
 
+struct tree_node *create_tree_node(struct Variable *data)
+{
+    struct tree_node *new_tree_node = (struct tree_node *)malloc(sizeof(struct tree_node));
+    new_tree_node->data = data;
+    new_tree_node->next = NULL;
+    new_tree_node->head = NULL;
+    new_tree_node->parent = NULL;
+    return new_tree_node;
+}
+void serialize_node(struct tree_node *node, FILE *output)
+{
+    if (node == NULL)
+        return;
+
+    // Serialize current node data and its relationships
+    fprintf(output, "{\n");
+    fprintf(output, "  \"current\": \"%p\",\n", (void *)node);
+
+    if (node->data->flag == 1)
+    {
+        fprintf(output, "  \"data\": \"%s\",\n", NonTerminalToString(node->data->val)); // Assuming data can be represented as a string
+    }
+    else
+    {
+        fprintf(output, "  \"data\": \"%s\",\n", TokenToString(node->data->val)); // Assuming data can be represented as a string
+    }
+    if (node->parent != NULL)
+    {
+        fprintf(output, "  \"parent\": \"%p\",\n", (void *)node->parent);
+    }
+    if (node->next != NULL)
+    {
+        fprintf(output, "  \"next\": \"%p\",\n", (void *)node->next);
+    }
+    fprintf(output, "  \"children\": [\n");
+
+    struct tree_node *child = node->head;
+    while (child != NULL)
+    {
+        serialize_node(child, output);
+        child = child->next;
+        if (child != NULL)
+            fprintf(output, ",\n");
+    }
+
+    fprintf(output, "  ]\n");
+    fprintf(output, "}\n");
+}
+
+void serialize_tree(struct tree_node *root)
+{
+    printf("%d", root->data->val);
+    printf("Serializing tree\n");
+    FILE *output = fopen("tree_structure.json", "w");
+    if (output == NULL)
+    {
+        printf("Error opening file\n");
+        return;
+    }
+
+    serialize_node(root, output);
+
+    fclose(output);
+}
+
+// function to add a tree_node to the linkedlist which functions as the children of the parse tree
+// the tree_nodes are added to the head (they are in reverse order)
+void add_tree_node(struct tree_node *parent, struct tree_node *child)
+{
+    child->next = parent->head;
+    parent->head = child;
+    child->parent = parent;
+}
+
+// function to find the next non terminal for a given node
+struct tree_node *nextNonTerminal(struct tree_node *current)
+{
+    if (current->data->flag == 1)
+    {
+        printf("FINDING NEXT NT OF: %s\n", NonTerminalToString(current->data->val));
+    }
+    else
+    {
+        printf("FINDING NEXT NT OF: %s\n", TokenToString(current->data->val));
+    }
+    while (current->next != NULL && current->data->flag == 0)
+    {
+        current = current->next;
+    }
+
+    if (current->data->flag == 1)
+    {
+        printf("RETURNED: %s\n", NonTerminalToString(current->data->val));
+        return current;
+    }
+    while (current->parent != NULL && current->parent->next == NULL)
+    {
+        current = current->parent;
+    }
+    if (current->parent == NULL)
+    {
+        return NULL;
+    }
+    return nextNonTerminal(current->parent->next);
+}
+
+// function which takes the structure described in the first few comments as input and the tree_node where the rule has to be added
+struct tree_node *repeated_add(struct tree_node *parent, struct input_structure input, struct Variable **rule)
+{
+
+    if (parent->data->val != input.nonterminal->val)
+    {
+        printf("Error: The input does not match the first non-terminal found\n");
+        printf("Non-terminal entered: %s\n", NonTerminalToString(input.nonterminal->val));
+        printf("Non-terminal found: %s\n", NonTerminalToString(parent->data->val));
+        return nextNonTerminal;
+    }
+
+    for (int var = 8; var >= 0; var -= 1)
+    {
+        if (rule[var] == NULL)
+        {
+            continue;
+        }
+
+        input.length += 1;
+
+        add_tree_node(parent, create_tree_node(rule[var]));
+    }
+
+    return nextNonTerminal(parent->head);
+}
+// parent = add_to_tree(topStack, a, pt, parent);
+struct tree_node *add_to_tree(struct Variable *nt, struct Variable **rule, struct tree_node *parent)
+{
+    struct input_structure inp;
+
+    printf("NONTERMINAL IN TREE: %s\n", NonTerminalToString(nt->val));
+
+    inp.nonterminal = nt;
+
+    parent = repeated_add(parent, inp, rule);
+
+    if (parent != NULL)
+    {
+        printf("PARENT POINTER; %s\n", NonTerminalToString(parent->data->val));
+    }
+    // printf("TREE RETURNED NEXT NONTERMINAL: %s\n", NonTerminalToString(parent->data->val));
+    return parent;
+}
+
+void printNodeDetails(struct tree_node *node, FILE *outfile)
+{
+    char *parentNodeSymbol = node->parent == NULL ? "ROOT" : node->parent->data->token->lexeme;
+    struct SymbolTableEntry *token = node->data->token;
+    char *lexeme = node->data->flag == 0 ? token->lexeme : "----";
+    int lineNo = token->lineNo;
+    char *tokenName = TokenToString(token->tokenType);
+    char *valueIfNumber;
+    int isLeaf = node->data->flag == 0;
+    char *nodeSymbol = isLeaf ? "LEAF" : NonTerminalToString(token->tokenType);
+
+    if (token->tokenType == TK_RNUM)
+    {
+        fprintf(outfile, "%-20s %-5d %-20s %-20lf %-20s %-3s %-20s\n",
+                lexeme, lineNo, tokenName, token->doubleValue, parentNodeSymbol, isLeaf ? "yes" : "no", "RNUM");
+    }
+    else if (token->tokenType == TK_NUM)
+    {
+        fprintf(outfile, "%-20s %-5d %-20s %-20d %-20s %-3s %-20s\n",
+                lexeme, lineNo, tokenName, token->intValue, parentNodeSymbol, isLeaf ? "yes" : "no", "NUM");
+    }
+    else
+    {
+        fprintf(outfile, "%-20s %-5d %-20s %-20s %-20s %-3s %-20s\n",
+                lexeme, lineNo, tokenName, "-----", parentNodeSymbol, isLeaf ? "yes" : "no", "NON-NUM");
+    }
+}
+
+void inorderTraversal(struct tree_node *node, FILE *outfile)
+{
+    if (node == NULL)
+        return;
+
+    int isLeaf = node->data->flag == 0;
+    if (node->head != NULL)
+    {
+        inorderTraversal(node->head, outfile);
+    }
+
+    // Print the current (parent) node
+    printNodeDetails(node, outfile);
+
+    // For the remaining children
+    struct tree_node *sibling = node->head ? node->head->next : NULL;
+    while (sibling != NULL)
+    {
+        inorderTraversal(sibling, outfile); // Assuming lexeme as the non-terminal symbol.
+        sibling = sibling->next;
+    }
+}
+
+void printParseTree(parseTree *PT, char *outfile)
+{
+    FILE *file = fopen(outfile, "w");
+    if (!file)
+    {
+        printf("Failed to open the file %s for writing.\n", outfile);
+        return;
+    }
+
+    if (PT && PT->root)
+    {
+        inorderTraversal(PT->root, file);
+    }
+
+    fclose(file);
+}
+
 void printRule(enum NonTerminals nt, struct Variable *ruleArray)
 {
 
