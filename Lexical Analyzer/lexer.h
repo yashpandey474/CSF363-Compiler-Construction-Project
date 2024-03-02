@@ -5,14 +5,14 @@
 #include <string.h>
 #ifndef LEXER
 #define LEXER_H
-struct SymbolTableEntry * getToken(struct SymbolTableEntry *symbolTableEntry);
+struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry);
 int getNextState(int currentState, int character);
 void insertAllKeywords();
 void printSymbolTable();
 void changeForward(twinBuffer LA, int flag);
 const char *CharacterTypeToString(enum CharacterType type);
 const char *TokenToString(int token);
-FILE *readTestFile(char *file_path);
+// FILE *readTestFile(char *file_path);
 twinBufferArray initialiseTwinBuffer(FILE *file);
 twinBuffer initialiseLA(twinBufferArray bufferArray);
 int getStream(twinBufferArray bufferArray);

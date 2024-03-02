@@ -11,7 +11,7 @@
 #define NUM_NON_TERMINALS 49 // num productions
 #define SET_SIZE 200
 
-typedef parseTree parseTree;
+typedef struct parseTree parseTree;
 typedef struct tree_node tree_node;
 typedef struct Sets *FirstAndFollow;
 typedef struct ParsingTable *table;

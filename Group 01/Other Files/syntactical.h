@@ -34,7 +34,7 @@ struct input_structure
   int length;
 };
 
-typedef parseTree parseTree;
+typedef struct parseTree parseTree;
 
 typedef struct tree_node tree_node;
 
