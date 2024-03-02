@@ -195,7 +195,6 @@ void print_and_parse_tree(char *filename, FirstAndFollow *sets, struct ParsingTa
     struct tree_node **parentpointer = (struct tree_node **)malloc(sizeof(struct tree_node *));
     *parentpointer = node_to_add_to;
     struct stack *stack = initialiseStack();
-    insertAllKeywords();
     FILE *file = readTestFile("t2.txt");
 
     twinBufferArray bufferArray = initialiseTwinBuffer(file);
@@ -204,9 +203,6 @@ void print_and_parse_tree(char *filename, FirstAndFollow *sets, struct ParsingTa
 
     getStream(bufferArray);
     printf("READ INPUT\n");
-
-    printf("PARSING TABLE POPULATED\n");
-    // printParsingTable(PT);
 
     push(stack, createCopy((struct Variable){TK_EOF, 0}));
     push(stack, init);
