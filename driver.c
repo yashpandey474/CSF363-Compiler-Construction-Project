@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
             print_token_list(argv[1]);
             break;
         case 3:
-            parse_and_print_tree(argv[2], sets, PT, G);
+            print_and_parse_tree(argv[2], sets, PT, G);
             break;
         case 4:
             start_time = clock();
