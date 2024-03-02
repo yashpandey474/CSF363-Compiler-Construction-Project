@@ -1,12 +1,12 @@
-#include "Lexical Analyzer/lexical.h"
+#include "Lexical Analyzer/lexer.h"
 #include <stdbool.h>
 
 #include <stdio.h>
 #include <time.h>
 
-void remove_comments();
-void print_token_list();
-void parse_and_print_tree();
+void remove_comments(char *testcasefile, char *cleanFile);
+void print_token_list(char *filename);
+void parse_and_print_tree(char *filename);
 void print_timing_info(clock_t start_time, clock_t end_time);
 
 int main(int argc, char *argv[])
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
             printf("Exiting...\n");
             break;
         case 1:
-            remove_comments(argv[1], "outputcomments.txt");
+            remove_comments(argv[1], "commentfreecode.txt");
             break;
         case 2:
             print_token_list(argv[1]);
@@ -117,7 +117,7 @@ void print_token_list(char *filename)
     FILE *file = readTestFile(filename);
 
     // INITIALISE A TWIN BUFFER
-    BufferArray *bufferArray = initialiseTwinBuffer(file);
+    twinBufferArray bufferArray = initialiseTwinBuffer(file);
 
     // INITIALISE LA
     twinBuffer LA = initialiseLA(bufferArray);

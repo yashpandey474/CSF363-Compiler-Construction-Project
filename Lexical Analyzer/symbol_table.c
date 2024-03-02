@@ -1,5 +1,5 @@
 // MAKE A HASH TABLE AS THE SYMBOL TABLE
-#include "lexical.h"
+#include "lexer.h"
 #include <stdio.h>
 #include <string.h>
 struct SymbolTableNode *symbolTable[HASH_MAP_SIZE] = {NULL};
@@ -302,7 +302,7 @@ struct SymbolTableEntry *insertTester(char *lexeme, enum Tokentype token)
     return symbolTableEntry;
 }
 
-void getToken(struct SymbolTableEntry *symbolTableEntry)
+struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
 {
     // printf("Inserting %s\n", symbolTableEntry->lexeme);
     char *lexeme = symbolTableEntry->lexeme;
@@ -320,7 +320,9 @@ void getToken(struct SymbolTableEntry *symbolTableEntry)
         int lexeme_hash = hash(lexeme);
         struct SymbolTableNode *next = symbolTable[lexeme_hash];
         symbolTable[lexeme_hash] = createNode(symbolTableEntry, next);
+        return symbolTable[lexeme_hash]->entry;
     }
+    return symbolTableEntry;
 }
 
 void printSymbolTable()

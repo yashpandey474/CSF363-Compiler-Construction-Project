@@ -3,7 +3,7 @@
 // INCLUDE LIBRARIES
 #include <stdio.h>
 #include <string.h>
-#include "lexical.h"
+#include "lexer.h"
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
@@ -255,6 +255,7 @@ struct SymbolTableEntry *takeActions(twinBuffer LA, struct SymbolTableEntry *tok
     {
         return token;
     }
+
     token->lineNo = LA->lineNo;
 
     state -= FINAL_STATE_OFFSET;
@@ -487,6 +488,7 @@ tokenInfo getNextToken(twinBuffer LA)
             // exit(0);
             return token;
         }
+
         // if (character == '<')
         // {
         //     printf("STATE %d\n", LA->state);
@@ -516,10 +518,10 @@ tokenInfo getNextToken(twinBuffer LA)
     return NULL;
 }
 
-twinBufferinitialiseLA(twinBufferArray bufferArray)
+twinBuffer initialiseLA(twinBufferArray bufferArray)
 {
     twinBuffer LA;
-    LA = (twinBuffer)malloc(sizeof(twinBuffer));
+    LA = (twinBuffer)malloc(sizeof(TwinBuffer));
 
     LA->lineNo = 1;
     LA->begin = 0;
@@ -543,7 +545,7 @@ twinBufferinitialiseLA(twinBufferArray bufferArray)
 //     FILE *file = readTestFile("test_program_with_errors.txt");
 
 //     // INITIALISE A TWIN BUFFER
-//     BufferArray *bufferArray = initialiseTwinBuffer(file);
+//     twinBufferArray *bufferArray = initialiseTwinBuffer(file);
 
 //     // INITIALISE LA
 //     twinBuffer LA = initialiseLA(bufferArray);

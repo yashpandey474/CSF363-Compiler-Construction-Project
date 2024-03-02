@@ -1,5 +1,5 @@
 // // 4 ARRAYS: DEFAULT, BASE, CHECK, NEXT
-#include "lexical.h"
+#include "lexer.h"
 
 // copied portion from
 #define STATE_ARRAY_SIZE 89
