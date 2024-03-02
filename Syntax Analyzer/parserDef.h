@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
+#ifndef PARSERDEF
+#define PARSERDEF_H
+
 #define MAX_NUM_PRODUCTIONS 6
 #define MAX_VARS 9
 #define NUM_TERMINALS 67     // including epsilon
@@ -135,3 +139,5 @@ enum NonTerminals
     NT_DEFINETYPE_STMT,
     NT_A
 };
+
+#endif

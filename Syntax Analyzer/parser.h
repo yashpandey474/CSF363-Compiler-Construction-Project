@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "lexerDef.h"
+#include "lexer.h"
 #include "parserDef.h"
 #include <stdbool.h>
+
+#ifndef PARSER
+#define PARSER_H
 #define MAX_NUM_PRODUCTIONS 6
 #define MAX_VARS 9
 #define NUM_TERMINALS 67     // including epsilon
@@ -31,3 +34,5 @@ void insertAllKeywords();
 FILE *readTestFile(const char *filename);
 void printTree(struct tree_node *root, int depth);
 void serialize_tree(struct tree_node *root);
+
+#endif
