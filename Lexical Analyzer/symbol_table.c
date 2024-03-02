@@ -322,6 +322,7 @@ struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
         symbolTable[lexeme_hash] = createNode(symbolTableEntry, next);
         return symbolTable[lexeme_hash]->entry;
     }
+    symbolTableEntry->tokenType=exists->tokenType;
     return symbolTableEntry;
 }
 
