@@ -135,7 +135,6 @@ void print_token_list(char *filename)
     // printf("STARTING SCANNING\n");
     FILE *outputFile = fopen("lexicaltest.txt", "w");
 
-    
     if (outputFile == NULL)
     {
         perror("Error opening output file");
