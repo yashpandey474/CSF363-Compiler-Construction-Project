@@ -2,15 +2,16 @@
 CC=gcc
 
 # Define any compile-time flags
-CFLAGS=-I. -I"./Lexical Analyzer" -Wall
+# Assuming the "Lexical Analyzer" directory is not used anymore based on your description
+CFLAGS=-I. -I"./Group 01" -I"./Group 01/Other Files" -Wall
 
-# Define the source files explicitly, including the path for those in the "Lexical Analyzer" directory
-# Note: Use the actual paths to the source files
-SOURCES=driver.c \
-        "./Lexical Analyzer/symbol_table.c" \
-        "./Lexical Analyzer/transition_table.c" \
-        "./Lexical Analyzer/lexer.c" \
-        "./Syntax Analyzer/parser.c"
+# Define the source files explicitly, including the path for those in the "Group 01" and "Other Files" directory
+SOURCES=./Group\ 01/driver.c \
+        ./Group\ 01/lexer.c \
+        ./Group\ 01/parser.c \
+        ./Group\ 01/Other\ Files/symbol_table.c \
+        ./Group\ 01/Other\ Files/transition_table.c \
+        ./Group\ 01/Other\ Files/parsing_table.c
 
 # Define the executable file name
 EXECUTABLE=stage1exe

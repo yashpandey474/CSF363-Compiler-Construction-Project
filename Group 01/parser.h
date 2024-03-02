@@ -1,12 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <lexerDef.h>
+#include "lexer.h"
 #include <stdbool.h>
-#define MAX_NUM_PRODUCTIONS 6
-#define MAX_VARS 9
-#define NUM_TERMINALS 67     // including epsilon
-#define NUM_NON_TERMINALS 49 // num productions
-#define SET_SIZE 200
+#include "parserDef.h"
 
 const char *TokenToString(int token);
 const char *NonTerminalToString(enum NonTerminals nonTerminal);
@@ -22,7 +18,7 @@ struct Variable *pop(struct stack *st);
 void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal, int *synchSet);
 int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, twinBuffer LA, struct tree_node *parent, bool skipError, struct tree_node **parentpointer);
 struct stack *initialiseStack();
-void computeFirstSet(struct Sets **sets_for_all, struct Productions *G);
+void computeFirstSet(struct Sets **sets_for_all, struct Grammar *G);
 void computeFollowSet(struct Sets **sets_for_all, struct Productions *G);
 void createParseTable(struct ParsingTable *PT, struct Productions *G, struct Sets **sets_for_all, int *synchSet);
 void printParsingTable(struct ParsingTable *PT);

@@ -1,6 +1,6 @@
 // 2D PARSING TABLE
 // NT - T TO RULE
-#include "syntactical.h"
+#include "../parser.h"
 void printRule(enum NonTerminals nt, struct Variable *ruleArray)
 {
 

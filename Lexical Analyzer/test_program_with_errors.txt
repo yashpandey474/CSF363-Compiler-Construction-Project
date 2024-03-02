@@ -1,6 +1,0 @@
-23.45$
-[c4, d3cd6] <--- call _statistics with parameters [2,3,5];
-123.4
-type real : d3cd6 ;
-45.6
-return [d2,c3bcd];
