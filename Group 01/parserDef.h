@@ -38,7 +38,6 @@ typedef struct tree_node tree_node;
 typedef struct Sets *FirstAndFollow;
 typedef struct ParsingTable *table;
 
-
 struct parseTree
 {
     struct tree_node *root;
@@ -64,8 +63,6 @@ struct Sets
     struct LinkedListSet *firstSets;
     struct LinkedListSet *followSets;
 };
-
-
 
 struct GrammarRule
 {
