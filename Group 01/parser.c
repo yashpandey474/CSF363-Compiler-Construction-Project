@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "syntactical.h"
+#include "parser.h"
 #include <string.h>
-#include "../Lexical Analyzer/lexer.h"
 
 struct tree_node *create_tree_node(struct Variable *data)
 {

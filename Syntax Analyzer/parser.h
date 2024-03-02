@@ -34,5 +34,7 @@ void insertAllKeywords();
 FILE *readTestFile(const char *filename);
 void printTree(struct tree_node *root, int depth);
 void serialize_tree(struct tree_node *root);
-
+void print_and_parse_tree(char *filename, FirstAndFollow *sets, struct ParsingTable *PT, Grammar G);
+struct tree_node *create_tree_node(struct Variable *data);
+FirstAndFollow *computeFirstAndFollow(struct GrammarRule *productions);
 #endif

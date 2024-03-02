@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "syntactical.h"
+#include "parser.h"
 #include <string.h>
-#include "../Lexical Analyzer/lexer.h"
 
 bool isDefault(struct Variable var)
 {
@@ -194,7 +193,6 @@ int recomputeSetIndex(struct Variable var)
     }
     return set_index;
 }
-
 
 void computeFollowSet(FirstAndFollow *sets_for_all, struct GrammarRule *productions)
 {

@@ -30,3 +30,4 @@ void insertAllKeywords();
 FILE *readTestFile(const char *filename);
 void printTree(struct tree_node *root, int depth);
 void serialize_tree(struct tree_node *root);
+struct tree_node *create_tree_node(struct Variable *data);
