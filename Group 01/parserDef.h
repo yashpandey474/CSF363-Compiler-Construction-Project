@@ -77,6 +77,7 @@ struct GrammarRule
     int numProductions;
     struct Variable rules[MAX_NUM_PRODUCTIONS][MAX_VARS];
 };
+typedef struct GrammarRule * Productions;
 
 typedef struct Grammar
 {

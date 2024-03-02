@@ -11,7 +11,7 @@ SOURCES=./Group\ 01/driver.c \
         ./Group\ 01/parser.c \
         ./Group\ 01/Other\ Files/symbol_table.c \
         ./Group\ 01/Other\ Files/transition_table.c \
-        ./Group\ 01/Other\ Files/parsing_table.c
+        ./Group\ 01/Other\ Files/ffsets.c
 
 # Define the executable file name
 EXECUTABLE=stage1exe

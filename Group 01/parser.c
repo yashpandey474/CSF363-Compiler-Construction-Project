@@ -119,7 +119,7 @@ struct tree_node *repeated_add(struct tree_node *parent, struct input_structure 
         printf("Error: The input does not match the first non-terminal found\n");
         printf("Non-terminal entered: %s\n", NonTerminalToString(input.nonterminal->val));
         printf("Non-terminal found: %s\n", NonTerminalToString(parent->data->val));
-        return nextNonTerminal;
+        return nextNonTerminal(parent->head);
     }
 
     for (int var = 8; var >= 0; var -= 1)
@@ -161,25 +161,24 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
     struct SymbolTableEntry *token = node->data->token;
     char *lexeme = node->data->flag == 0 ? token->lexeme : "----";
     int lineNo = token->lineNo;
-    char *tokenName = TokenToString(token->tokenType);
-    char *valueIfNumber;
+    const char *tokenName = TokenToString(token->tokenType);
     int isLeaf = node->data->flag == 0;
-    char *nodeSymbol = isLeaf ? "LEAF" : NonTerminalToString(token->tokenType);
+    const char *nodeSymbol = isLeaf ? "LEAF" : NonTerminalToString(token->tokenType);
 
     if (token->tokenType == TK_RNUM)
     {
         fprintf(outfile, "%-20s %-5d %-20s %-20lf %-20s %-3s %-20s\n",
-                lexeme, lineNo, tokenName, token->doubleValue, parentNodeSymbol, isLeaf ? "yes" : "no", "RNUM");
+                lexeme, lineNo, tokenName, token->doubleValue, parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
     }
     else if (token->tokenType == TK_NUM)
     {
         fprintf(outfile, "%-20s %-5d %-20s %-20d %-20s %-3s %-20s\n",
-                lexeme, lineNo, tokenName, token->intValue, parentNodeSymbol, isLeaf ? "yes" : "no", "NUM");
+                lexeme, lineNo, tokenName, token->intValue, parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
     }
     else
     {
         fprintf(outfile, "%-20s %-5d %-20s %-20s %-20s %-3s %-20s\n",
-                lexeme, lineNo, tokenName, "-----", parentNodeSymbol, isLeaf ? "yes" : "no", "NON-NUM");
+                lexeme, lineNo, tokenName, "-----", parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
     }
 }
 
@@ -275,7 +274,7 @@ void insert(enum NonTerminals nt, enum Tokentype terminal, struct Variable *rule
     PT->table[(int)(nt)][(int)terminal] = rule;
 }
 
-void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal, int *synchSet)
+void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal, int *synchSet, int synchSetSize)
 {
     // SYN INDICATING RULE
     struct Variable *rule = (struct Variable *)malloc(sizeof(struct Variable));
@@ -292,18 +291,18 @@ void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal
     }
 
     // FOR ALL IN DEFAULT SYNC SET
-    for (int i = 0; i < sizeof(synchSet) / sizeof(synchSet[0]); i += 1)
+    for (int i = 0; i < synchSetSize; i += 1)
     {
         insert(nonTerminal, synchSet[i], rule, PT);
     }
 }
 
-void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, struct Sets **sets_for_all, int *synchSet)
+void createParseTable(struct ParsingTable *PT, Productions productions, struct Sets **sets_for_all, int *synchSet, int synchSetSize)
 {
     for (int nt = 0; nt < NUM_NON_TERMINALS; nt++)
     {
         // ADD THE SYN INDICATOR FOR ALL TERMINALS IN FOLLOW OF NT
-        addSyn(PT, sets_for_all, nt, synchSet);
+        addSyn(PT, sets_for_all, nt, synchSet, synchSetSize);
 
         for (int i = 0; i < productions[nt].numProductions; i++)
         {
@@ -554,7 +553,7 @@ void push(struct stack *st, struct Variable *data)
     st->stack[++st->top] = data;
 }
 
-struct Variabl *pop(struct stack *st)
+struct Variable *pop(struct stack *st)
 {
 
     if (isEmptyStack(st))
@@ -615,7 +614,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // SYN TOKEN; POP THE NONTERMINAL
         // printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
 
-        struct Variable topStackpop(st);
+        struct Variable* topStack=pop(st);
 
         // CONTINUE FROM  SYN TOKEN
         return 0;
@@ -673,7 +672,7 @@ struct stack *initialiseStack()
 
     stack->MAX = STACK_INITIAL_SIZE;
     stack->top = -1;
-    stack->stack = (struct Variable *)malloc(sizeof(struct Variable) * STACK_INITIAL_SIZE);
+    stack->stack = (struct Variable **)malloc(sizeof(struct Variable*) * STACK_INITIAL_SIZE);
     return stack;
 }
 
@@ -711,7 +710,7 @@ int main()
     printf("FIRST SET COMPUTED\n");
     computeFollowSet(sets_for_all, G.productions);
     printf("FOLLOW SET COMPUTED\n");
-    createParseTable(PT, G.productions, sets_for_all, synchSet);
+    createParseTable(PT, G.productions, sets_for_all, synchSet, sizeof(synchSet) / sizeof(int));
     printf("PARSING TABLE POPULATED\n");
     // printParsingTable(PT);
 
@@ -771,8 +770,6 @@ int main()
     }
     printf("After parsing\n");
     printStack(stack);
-
-    printTree(parent, 0);
 
     if (onlyContainsEOF(stack))
     {

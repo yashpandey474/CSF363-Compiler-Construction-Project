@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "parser.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
