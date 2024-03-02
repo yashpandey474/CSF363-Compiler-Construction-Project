@@ -7,7 +7,7 @@ if __name__ == '__main__':
     fs = sorted(get_data('finalized_sets.txt'))
     cs = sorted(get_data('computed_sets.txt'))
     
-    fs = [x.strip().replace("EPS","TK_EPS").replace(' ','') for x in fs if x.strip()]
+    fs = [x.strip().replace("EPS","TK_EPS").replace("EOF","TK_EOF").replace(' ','') for x in fs if x.strip()]
     cs = [x.strip().replace(' ','') for x in cs if x.strip()]
 
     print(fs, cs)
@@ -24,4 +24,5 @@ if __name__ == '__main__':
             print("fs:", fs[i])
             print("cs:", cs[i])
             exit(1)
+    print("balle balle shaawa shaawa")
     

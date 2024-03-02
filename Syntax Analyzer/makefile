@@ -9,6 +9,7 @@ CFLAGS=-Wall -g
 SOURCES=ffsets.c \
         parsing_table.c \
         predictive_parsing.c \
+        syntax_tree.c\
         ../Lexical\ Analyzer/symbol_table.c \
         ../Lexical\ Analyzer/transition_table.c \
         ../Lexical\ Analyzer/read_input.c

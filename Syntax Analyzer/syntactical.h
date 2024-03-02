@@ -12,6 +12,7 @@ struct Variable
 {
   int val;
   int flag; // 0 FOR TERMINAL AND 1 FOR NONTERMINAL
+  struct SymbolTableEntry* token;
 };
 
 struct LinkedListArray
@@ -26,12 +27,36 @@ struct LinkedListSet
   struct LinkedListArray *linkedList;
 };
 
-void insertAtBeginning(struct LinkedListArray *linkedList, int newData, int flag);
+struct input_structure
+{
+  struct Variable nonterminal;
+  struct Variable *rule;
+  int length;
+};
+
+typedef parseTree *parseTree;
+
+struct parseTree
+{
+  struct tree_node *root;
+};
+
+
+
+struct tree_node
+{
+  struct Variable* data;     // stores the variable that is represented by this node
+  struct tree_node *next;   // stores a pointer to the next child of its parent node (next sibling)
+  struct tree_node *head;   // stores pointer to its first child
+  struct tree_node *parent; // stores a pointer back to its parent node
+};
+
+void insertAtBeginning(struct LinkedListArray *linkedList, struct Variable var);
 struct Node *createLLNode(struct Variable data);
 bool containsEPS(struct LinkedListSet *set);
 bool isDefault(struct Variable var);
 
-    // structure of Linked list node
+// structure of Linked list node
 struct Node
 {
   struct Variable data;
@@ -45,6 +70,9 @@ struct Sets
   struct LinkedListSet *followSets;
 };
 
+typedef struct Sets *FirstAndFollow;
+typedef struct ParsingTable *table;
+
 struct GrammarRule
 {
   // enum NonTerminals nonTerminal;
@@ -52,6 +80,12 @@ struct GrammarRule
   struct Variable rules[MAX_NUM_PRODUCTIONS][MAX_VARS];
 };
 
+typedef struct Grammar
+{
+  struct GrammarRule productions[NUM_NON_TERMINALS];
+} Grammar;
+
+typedef struct Grammar* grammar;
 struct ParsingTable
 {
   struct Variable *table[NUM_NON_TERMINALS][NUM_TERMINALS];
@@ -117,5 +151,9 @@ void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions
 void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *productions);
 void populate_parsing_table(struct ParsingTable *PT, struct GrammarRule *productions, struct Sets **sets_for_all);
 void printParsingTable(struct ParsingTable *pt);
-void printFFSetsTable(FILE* cfile, struct Sets **sets_for_all);
-void printRule(enum NonTerminals nt, struct Variable* ruleArray);
+void printFFSetsTable(FILE *cfile, struct Sets **sets_for_all);
+void printRule(enum NonTerminals nt, struct Variable *ruleArray);
+struct tree_node *add_to_tree(struct Variable nt, int a, struct ParsingTable *pt, struct tree_node *parent);
+struct tree_node *create_tree_node(struct Variable data);
+void printTree(struct tree_node *root, int depth);
+void serialize_tree(struct tree_node *root);

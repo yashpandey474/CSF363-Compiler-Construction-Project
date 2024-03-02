@@ -9,10 +9,7 @@
 #include <time.h>
 #include <stdbool.h>
 // PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
-#define END_OF_FILE_VAL 128
-#define BUFFER_SIZE 150
-#define FINAL_STATE_OFFSET NUM_NON_ACCEPT_STATES + 1 // this is same as NON ACCEPT STATES + 1
-#define MAX_LEXEME_SIZE 100
+
 // TYPICALLY 256 BYTES
 
 // EOF CHARACTERS AT END OF BOTH BUFFERS ALWAYS
@@ -20,15 +17,9 @@
 // FUNCTIONS TO READ "RELOAD" INTO BUFFER FROM A FILE
 
 // CODE TO READ FROM THE BUFFERS CHARACTER BY CHARACTER
-struct TwinBuffer
-{
-    // 0 -> READING SECOND BUFFER, 1 -> READING FIRST BUFFER
-    int readingFirst;
-    FILE *file;
-    char buffer[BUFFER_SIZE * 2 + 2];
-};
+;
 
-void incrementLineNo(struct LexicalAnalyzer *LA)
+void incrementLineNo(twinBuffer LA)
 {
     // printf("\n >> line no : %d ended\n", LA->lineNo);
     LA->lineNo += 1;
@@ -49,13 +40,13 @@ FILE *readTestFile(char *file_path)
     return file;
 }
 
-char *strncustomcpy(struct LexicalAnalyzer *LA) // copy forward to begin in a string
+char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
 {
     // as per the design, forward and begin can never be at the buffer end marker
     // forward - begin is the size of lexemme + eofs if occured
 
     // for (int i=0;i<2*BUFFER_SIZE+2;i++){
-    //     printf("%c", LA->twinBuffer->buffer[i]);
+    //     printf("%c", LA->bufferArray->buffer[i]);
     // }printf("\n");
 
     int startpos = LA->begin;
@@ -113,28 +104,28 @@ char *strncustomcpy(struct LexicalAnalyzer *LA) // copy forward to begin in a st
         {
             la_index = (la_index + 1) % (BUFFER_SIZE * 2 + 2);
         }
-        // printf("%d %c\n",la_index,LA->twinBuffer->buffer[la_index]);
-        a[i] = LA->twinBuffer->buffer[(la_index)];
+        // printf("%d %c\n",la_index,LA->bufferArray->buffer[la_index]);
+        a[i] = LA->bufferArray->buffer[(la_index)];
     }
     a[numofchars] = '\0';
 
     return a;
 }
 
-int readIntoBuffer(struct TwinBuffer *twinBuffer)
+int getStream(twinBufferArray bufferArray)
 {
     char *buffer;
-    if (twinBuffer->readingFirst)
+    if (bufferArray->readingFirst)
     {
-        buffer = twinBuffer->buffer;
+        buffer = bufferArray->buffer;
     }
     else
     {
-        buffer = twinBuffer->buffer + BUFFER_SIZE + 1;
+        buffer = bufferArray->buffer + BUFFER_SIZE + 1;
     }
     // READING ALTERNATE BUFFER
-    twinBuffer->readingFirst = 1 - twinBuffer->readingFirst;
-    size_t read_bytes = fread(buffer, sizeof(char), BUFFER_SIZE, twinBuffer->file);
+    bufferArray->readingFirst = 1 - bufferArray->readingFirst;
+    size_t read_bytes = fread(buffer, sizeof(char), BUFFER_SIZE, bufferArray->file);
 
     // MARK END OF INPUT
     if (read_bytes < BUFFER_SIZE)
@@ -148,30 +139,30 @@ int readIntoBuffer(struct TwinBuffer *twinBuffer)
 }
 
 // CREATE THE BUFFER AND RETURN IT
-struct TwinBuffer *initialiseTwinBuffer(FILE *file)
+twinBufferArray initialiseTwinBuffer(FILE *file)
 {
     // INITIALISE BUFFER
-    struct TwinBuffer *twinBuffer = (struct TwinBuffer *)malloc(sizeof(struct TwinBuffer));
+    twinBufferArray bufferArray = (twinBufferArray)malloc(sizeof(TwinBufferArray));
 
-    twinBuffer->readingFirst = 1;
-    twinBuffer->buffer[BUFFER_SIZE] = EOF;
-    twinBuffer->buffer[2 * BUFFER_SIZE + 1] = EOF;
-    twinBuffer->file = file;
+    bufferArray->readingFirst = 1;
+    bufferArray->buffer[BUFFER_SIZE] = EOF;
+    bufferArray->buffer[2 * BUFFER_SIZE + 1] = EOF;
+    bufferArray->file = file;
 
-    return twinBuffer;
+    return bufferArray;
 }
-void resetBegin(struct LexicalAnalyzer *LA)
+void resetBegin(twinBuffer LA)
 {
     LA->begin = LA->forward;
 }
 
-void returnToStart(struct LexicalAnalyzer *LA)
+void returnToStart(twinBuffer LA)
 {
     LA->state = 0;
     resetBegin(LA);
 }
 
-struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA, bool toIncludeString, char *errorMessage)
+struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, twinBuffer LA, bool toIncludeString, char *errorMessage)
 {
     // printf("Called");
 
@@ -214,7 +205,7 @@ struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, struct 
     return token;
 }
 
-struct SymbolTableEntry *lexicalError(struct SymbolTableEntry *token, struct LexicalAnalyzer *LA)
+struct SymbolTableEntry *lexicalError(struct SymbolTableEntry *token, twinBuffer LA)
 {
 
     if (token->tokenType == TK_ID && strlen(token->lexeme) > MAX_ID_SIZE)
@@ -229,7 +220,7 @@ struct SymbolTableEntry *lexicalError(struct SymbolTableEntry *token, struct Lex
 }
 
 // FUNCTION TO GET CORRESPONDING NUMBER
-void equivalentNumber(struct LexicalAnalyzer *lex, int flag, struct SymbolTableEntry *token)
+void equivalentNumber(twinBuffer lex, int flag, tokenInfo token)
 {
     // printf("EQV NUMS %s\n", token->lexeme);
     if (flag == TK_NUM1 || flag == TK_NUM2)
@@ -243,20 +234,20 @@ void equivalentNumber(struct LexicalAnalyzer *lex, int flag, struct SymbolTableE
         token->doubleValue = atof(token->lexeme);
     }
 }
-void changeForward(struct LexicalAnalyzer *LA, int flag)
+void changeForward(twinBuffer LA, int flag)
 {
     // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
     LA->forward = (LA->forward + flag);
 }
 
-void changeBegin(struct LexicalAnalyzer *LA, int flag)
+void changeBegin(twinBuffer LA, int flag)
 {
     // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
     LA->begin = (LA->begin + flag);
 }
 
 // TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
-struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTableEntry *token)
+struct SymbolTableEntry *takeActions(twinBuffer LA, struct SymbolTableEntry *token)
 {
     // NON FINAL STATE32
     int state = LA->state;
@@ -264,6 +255,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
     {
         return token;
     }
+    token->lineNo = LA->lineNo;
 
     state -= FINAL_STATE_OFFSET;
 
@@ -329,7 +321,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
 
     else if (state == TK_FIELDID || state == TK_RUID)
     {
-        token = getToken(token);
+        getToken(token);
     }
 
     else if (state == TK_ID || state == TK_FUNID)
@@ -337,7 +329,7 @@ struct SymbolTableEntry *takeActions(struct LexicalAnalyzer *LA, struct SymbolTa
         token = lexicalError(token, LA);
         if (token->tokenType != LEXICAL_ERROR)
         {
-            token = getToken(token);
+            getToken(token);
         }
     }
     else if (state == TK_LT1 || state == TK_GT)
@@ -390,7 +382,7 @@ struct SymbolTableEntry *initialiseToken()
     return token;
 }
 
-struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
+tokenInfo getNextToken(twinBuffer LA)
 {
     // INITIALSE TOKEN
     struct SymbolTableEntry *token = initialiseToken();
@@ -404,7 +396,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
     {
 
         // GET CHARACTER CURRENTLY BEING READ
-        character = LA->twinBuffer->buffer[LA->forward % (BUFFER_SIZE * 2 + 2)];
+        character = LA->bufferArray->buffer[LA->forward % (BUFFER_SIZE * 2 + 2)];
 
         // EOF: LAST CHARACTER OF INPUT
         if (character == EOF)
@@ -414,7 +406,7 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
             if ((LA->forward % (BUFFER_SIZE * 2 + 2)) == BUFFER_SIZE || (LA->forward % (BUFFER_SIZE * 2 + 2)) == (2 * BUFFER_SIZE + 1))
             {
                 // RELOAD OTHER BUFER
-                readIntoBuffer(LA->twinBuffer);
+                getStream(LA->bufferArray);
                 changeForward(LA, 1);
                 // printf("RELOADED BUFFER\n");
 
@@ -524,16 +516,16 @@ struct SymbolTableEntry *scanToken(struct LexicalAnalyzer *LA)
     return NULL;
 }
 
-struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer)
+twinBufferinitialiseLA(twinBufferArray bufferArray)
 {
-    struct LexicalAnalyzer *LA;
-    LA = (struct LexicalAnalyzer *)malloc(sizeof(struct LexicalAnalyzer));
+    twinBuffer LA;
+    LA = (twinBuffer)malloc(sizeof(twinBuffer));
 
     LA->lineNo = 1;
     LA->begin = 0;
     LA->forward = 0;
     LA->state = 0;
-    LA->twinBuffer = twinBuffer;
+    LA->bufferArray = bufferArray;
     return LA;
 }
 
@@ -551,15 +543,15 @@ struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer)
 //     FILE *file = readTestFile("test_program_with_errors.txt");
 
 //     // INITIALISE A TWIN BUFFER
-//     struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
+//     BufferArray *bufferArray = initialiseTwinBuffer(file);
 
 //     // INITIALISE LA
-//     struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
+//     twinBuffer LA = initialiseLA(bufferArray);
 
 //     // printf("LA INITIALISED\n");
 
 //     // START SCANNING
-//     readIntoBuffer(twinBuffer);
+//     getStream(bufferArray);
 
 //     // printf("READ INPUT\n");
 
@@ -568,7 +560,7 @@ struct LexicalAnalyzer *initialiseLA(struct TwinBuffer *twinBuffer)
 
 //     // printf("STARTING SCANNING\n");
 
-//     while ((token = scanToken(LA)))
+//     while ((token = getNextToken(LA)))
 //     {
 //         // printf("HU");
 //         printf("(%s : %s) \n", TokenToString(token->tokenType), token->lexeme);

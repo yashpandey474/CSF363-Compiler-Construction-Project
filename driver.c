@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
             printf("Exiting...\n");
             break;
         case 1:
-            remove_comments(argv[1]);
+            remove_comments(argv[1], "outputcomments.txt");
             break;
         case 2:
             print_token_list(argv[1]);
@@ -54,10 +54,9 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-void remove_comments(char *filename)
+void remove_comments(char *testcasefile, char *cleanFile)
 {
-    FILE *file = fopen(filename, "r");
+    FILE *file = fopen(testcasefile, "r");
     if (file == NULL)
     {
         perror("Error opening file");
@@ -65,7 +64,7 @@ void remove_comments(char *filename)
     }
 
     // Open an additional file for writing the output
-    FILE *outputFile = fopen("commentremove.txt", "w");
+    FILE *outputFile = fopen(cleanFile, "w");
     if (outputFile == NULL)
     {
         perror("Error opening output file");
@@ -118,15 +117,15 @@ void print_token_list(char *filename)
     FILE *file = readTestFile(filename);
 
     // INITIALISE A TWIN BUFFER
-    struct TwinBuffer *twinBuffer = initialiseTwinBuffer(file);
+    BufferArray *bufferArray = initialiseTwinBuffer(file);
 
     // INITIALISE LA
-    struct LexicalAnalyzer *LA = initialiseLA(twinBuffer);
+    twinBuffer LA = initialiseLA(bufferArray);
 
     // printf("LA INITIALISED\n");
 
     // START SCANNING
-    readIntoBuffer(twinBuffer);
+    getStream(bufferArray);
 
     // printf("READ INPUT\n");
 
@@ -142,7 +141,7 @@ void print_token_list(char *filename)
         return;
     }
 
-    while ((token = scanToken(LA)))
+    while ((token = getNextToken(LA)))
     {
         if (token->tokenType == LEXICAL_ERROR)
         {
@@ -172,6 +171,6 @@ void print_timing_info(clock_t start_time, clock_t end_time)
     total_CPU_time = (double)(end_time - start_time);
     total_CPU_time_in_seconds = total_CPU_time / CLOCKS_PER_SEC;
 
-    printf("Total CPU time: %f\n", total_CPU_time);
-    printf("Total CPU time in seconds: %f\n", total_CPU_time_in_seconds);
+    printf("Total CPU time: %f μs\n", total_CPU_time);
+    printf("Time in seconds: %f s\n", total_CPU_time_in_seconds);
 }

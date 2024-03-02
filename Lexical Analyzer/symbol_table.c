@@ -143,7 +143,7 @@ const char *CharacterTypeToString(enum CharacterType type)
     }
 }
 
-const char *TokenToString(enum Tokentype token)
+const char *TokenToString(int token)
 {
     switch (token)
     {
@@ -271,9 +271,14 @@ const char *TokenToString(enum Tokentype token)
         return "TK_RUID";
     case DELIMITER:
         return "DELIMITER";
-    case TK_EPS: return "TK_EPS";
-    case TK_EOF: return "TK_EOF";
-    case LEXICAL_ERROR: return "LEXICAL_ERROR";
+    case TK_EPS:
+        return "TK_EPS";
+    case TK_EOF:
+        return "TK_EOF";
+    case LEXICAL_ERROR:
+        return "LEXICAL_ERROR";
+    case -1:
+        return "SYN TOKEN";
 
     default:
         return "non accept state";
@@ -297,7 +302,7 @@ struct SymbolTableEntry *insertTester(char *lexeme, enum Tokentype token)
     return symbolTableEntry;
 }
 
-struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
+void getToken(struct SymbolTableEntry *symbolTableEntry)
 {
     // printf("Inserting %s\n", symbolTableEntry->lexeme);
     char *lexeme = symbolTableEntry->lexeme;
@@ -315,17 +320,6 @@ struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
         int lexeme_hash = hash(lexeme);
         struct SymbolTableNode *next = symbolTable[lexeme_hash];
         symbolTable[lexeme_hash] = createNode(symbolTableEntry, next);
-        return symbolTable[lexeme_hash]->entry;
-    }
-    else
-    {
-        // ignore
-        // return the existing symbol table entry
-
-        // printf("Lexeme %s already exists\n", lexeme);
-        // printf("MAXVERSTAPPEN");
-        // printf("DUM DUM%d\n", exists->tokenType);
-        return exists;
     }
 }
 
