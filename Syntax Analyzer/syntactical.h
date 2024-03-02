@@ -1,4 +1,4 @@
-#include "../Lexical Analyzer/lexical.h"
+#include "../Lexical Analyzer/lexer.h"
 #include <stdbool.h>
 #define MAX_NUM_PRODUCTIONS 6
 #define MAX_VARS 9
@@ -12,7 +12,7 @@ struct Variable
 {
   int val;
   int flag; // 0 FOR TERMINAL AND 1 FOR NONTERMINAL
-  struct SymbolTableEntry* token;
+  struct SymbolTableEntry *token;
 };
 
 struct LinkedListArray
@@ -29,23 +29,23 @@ struct LinkedListSet
 
 struct input_structure
 {
-  struct Variable nonterminal;
+  struct Variable *nonterminal;
   struct Variable *rule;
   int length;
 };
 
-typedef parseTree *parseTree;
+typedef parseTree parseTree;
+
+typedef struct tree_node tree_node;
 
 struct parseTree
 {
   struct tree_node *root;
 };
 
-
-
 struct tree_node
 {
-  struct Variable* data;     // stores the variable that is represented by this node
+  struct Variable *data;    // stores the variable that is represented by this node
   struct tree_node *next;   // stores a pointer to the next child of its parent node (next sibling)
   struct tree_node *head;   // stores pointer to its first child
   struct tree_node *parent; // stores a pointer back to its parent node
@@ -77,7 +77,7 @@ struct GrammarRule
 {
   // enum NonTerminals nonTerminal;
   int numProductions;
-  struct Variable rules[MAX_NUM_PRODUCTIONS][MAX_VARS];
+  struct Variable *rules[MAX_NUM_PRODUCTIONS][MAX_VARS];
 };
 
 typedef struct Grammar
@@ -85,12 +85,13 @@ typedef struct Grammar
   struct GrammarRule productions[NUM_NON_TERMINALS];
 } Grammar;
 
-typedef struct Grammar* grammar;
+typedef struct Grammar *grammar;
 struct ParsingTable
 {
   struct Variable *table[NUM_NON_TERMINALS][NUM_TERMINALS];
   // rule is array of variables of size maxvars
 };
+
 enum NonTerminals
 {
   NT_PROGRAM,
@@ -149,11 +150,11 @@ const char *NonTerminalToString(enum NonTerminals nonTerminal);
 struct Sets **initialiseSetsWhole();
 void computeFirstSet(struct Sets **sets_for_all, struct GrammarRule *productions);
 void computeFollowSet(struct Sets **sets_for_all, struct GrammarRule *productions);
-void populate_parsing_table(struct ParsingTable *PT, struct GrammarRule *productions, struct Sets **sets_for_all);
+void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, struct Sets **sets_for_all, int *synchSet);
 void printParsingTable(struct ParsingTable *pt);
 void printFFSetsTable(FILE *cfile, struct Sets **sets_for_all);
 void printRule(enum NonTerminals nt, struct Variable *ruleArray);
-struct tree_node *add_to_tree(struct Variable nt, int a, struct ParsingTable *pt, struct tree_node *parent);
-struct tree_node *create_tree_node(struct Variable data);
+struct tree_node *add_to_tree(struct Variable *nt, struct Variable *rule, struct tree_node *parent);
+struct tree_node *create_tree_node(struct Variable *data);
 void printTree(struct tree_node *root, int depth);
 void serialize_tree(struct tree_node *root);

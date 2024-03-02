@@ -35,7 +35,7 @@ jobs:
 
     - name: Compare output
       run: |
-        diff commentremove.txt "Test Cases/commentremoval_t2.txt"
+        diff comment_free_code.txt "Test Cases/commentremoval_t2.txt"
         
     - name: Test Lexical Analyser without errors
       run: |

@@ -1,32 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef LEXICAL_H
-#define LEXICAL_H
+
+#ifndef LEXERDEF
+#define LEXERDEF_H
+
 #define HASH_MAP_SIZE 91
 #define MAX_ID_SIZE 20
 #define MAX_FUNID_SIZE 30
 #define NUM_NON_ACCEPT_STATES 29
 #define NUM_STATES 95 // 66 accept states, number of states including accept states
 #define END_OF_FILE_VAL 128
-#define BUFFER_SIZE 150
+#define BUFFER_SIZE 256
 #define FINAL_STATE_OFFSET NUM_NON_ACCEPT_STATES + 1 // this is same as NON ACCEPT STATES + 1
 #define MAX_LEXEME_SIZE 100
-
-typedef enum TokenType TokenType;
-
-typedef enum CharacterType CharacterType;
-
-typedef struct TwinBufferArray TwinBufferArray;
-
-typedef TwinBufferArray *twinBufferArray;
-
-typedef struct TwinBuffer TwinBuffer;
-
-typedef TwinBuffer *twinBuffer;
-
-typedef struct SymbolTableEntry *tokenInfo;
-
 struct TwinBufferArray
 {
     // 0 -> READING SECOND BUFFER, 1 -> READING FIRST BUFFER
@@ -34,30 +21,23 @@ struct TwinBufferArray
     FILE *file;
     char buffer[BUFFER_SIZE * 2 + 2];
 };
+typedef struct TwinBufferArray TwinBufferArray;
+
+typedef TwinBufferArray *twinBufferArray;
 
 struct TwinBuffer
 {
     int lineNo, begin, forward, state;
     twinBufferArray bufferArray;
 };
+typedef struct TwinBuffer TwinBuffer;
 
+typedef TwinBuffer *twinBuffer;
 struct SymbolTableNode
 {
     struct SymbolTableEntry *entry;
     struct SymbolTableNode *next;
 };
-
-struct SymbolTableEntry
-{
-    char *lexeme;
-    // INTVALUE -> NUM
-    int intValue;
-    int lineNo;
-    // DOUBLEVALUE -> RNUM
-    double doubleValue;
-    enum Tokentype tokenType;
-};
-
 enum Tokentype
 {
     CARRIAGE_RETURN,
@@ -129,6 +109,19 @@ enum Tokentype
     TK_EOF,
     LEXICAL_ERROR
 };
+typedef enum TokenType TokenType;
+
+struct SymbolTableEntry
+{
+    char *lexeme;
+    // INTVALUE -> NUM
+    int intValue;
+    int lineNo;
+    // DOUBLEVALUE -> RNUM
+    double doubleValue;
+    enum Tokentype tokenType;
+};
+typedef struct SymbolTableEntry *tokenInfo;
 
 enum CharacterType
 {
@@ -170,5 +163,10 @@ enum CharacterType
     CT_EOF,
     CT_HASH
 };
+typedef enum CharacterType CharacterType;
+
+extern CharacterType characterTypeMap[129];
+
+extern struct SymbolTableNode *symbolTable[HASH_MAP_SIZE];
 
 #endif

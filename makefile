@@ -9,7 +9,7 @@ CFLAGS=-I. -I"./Lexical Analyzer" -Wall
 SOURCES=driver.c \
         "./Lexical Analyzer/symbol_table.c" \
         "./Lexical Analyzer/transition_table.c" \
-        "./Lexical Analyzer/read_input.c"
+        "./Lexical Analyzer/lexer.c"
 
 # Define the executable file name
 EXECUTABLE=stage1exe
