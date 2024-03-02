@@ -1,4 +1,4 @@
-#include "Lexical Analyzer/lexer.h"
+#include "lexer.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
