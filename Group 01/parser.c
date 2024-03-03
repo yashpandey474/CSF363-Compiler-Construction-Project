@@ -511,7 +511,7 @@ struct tree_node *repeated_add(struct tree_node *parent, struct input_structure 
         printf("Error: The input does not match the first non-terminal found\n");
         printf("Non-terminal entered: %s\n", NonTerminalToString(input.nonterminal->val));
         printf("Non-terminal found: %s\n", NonTerminalToString(parent->data->val));
-        return nextNonTerminal;
+        return nextNonTerminal(parent->head);
     }
 
     for (int var = 8; var >= 0; var -= 1)
@@ -554,24 +554,23 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
     char *lexeme = node->data->flag == 0 ? token->lexeme : "----";
     int lineNo = token->lineNo;
     const char *tokenName = TokenToString(token->tokenType);
-    char *valueIfNumber;
-    int isLeaf = node->data->flag == 0;
+
     const char *nodeSymbol = isLeaf ? "LEAF" : NonTerminalToString(node->data->val);
 
     if (token->tokenType == TK_RNUM)
     {
         fprintf(outfile, "%-20s %-5d %-20s %-20lf %-20s %-3s %-20s\n",
-                lexeme, lineNo, tokenName, token->doubleValue, parentNodeSymbol, isLeaf ? "yes" : "no", "RNUM");
+                lexeme, lineNo, tokenName, token->doubleValue, parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
     }
     else if (token->tokenType == TK_NUM)
     {
         fprintf(outfile, "%-20s %-5d %-20s %-20d %-20s %-3s %-20s\n",
-                lexeme, lineNo, tokenName, token->intValue, parentNodeSymbol, isLeaf ? "yes" : "no", "NUM");
+                lexeme, lineNo, tokenName, token->intValue, parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
     }
     else
     {
         fprintf(outfile, "%-20s %-5d %-20s %-20s %-20s %-3s %-20s\n",
-                lexeme, lineNo, tokenName, "-----", parentNodeSymbol, isLeaf ? "yes" : "no", "NON-NUM");
+                lexeme, lineNo, tokenName, "-----", parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
     }
 }
 
