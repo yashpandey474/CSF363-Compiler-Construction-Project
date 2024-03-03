@@ -698,7 +698,7 @@ void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, 
         // ADD THE SYN INDICATOR FOR ALL TERMINALS IN FOLLOW OF NT
         addSyn(PT, sets_for_all, nt, synchSet, defaultSynchSetSize);
 
-        printf("NUM PRODUCTIONS: %d\n", productions[nt].numProductions);
+        // printf("NUM PRODUCTIONS: %d\n", productions[nt].numProductions);
         for (int i = 0; i < productions[nt].numProductions; i++)
         {
             // GET CURRENT RULE
@@ -712,7 +712,7 @@ void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, 
                 while (current != NULL)
                 {
 
-                    printf("ADDING TO PARSE TREE: %d %d", current->data.val, rule[0].val);
+                    // printf("ADDING TO PARSE TREE: %d %d", current->data.val, rule[0].val);
                     insert(nt, current->data.val, rule, PT);
                     current = current->next;
                 }
@@ -1032,6 +1032,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         {
             if (isDefault(pt->table[X->val][a][var]))
             {
+                copyRule[var] = NULL;
                 continue;
             }
 
@@ -1039,7 +1040,9 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
             {
                 break;
             }
+
             struct Variable *copy = createCopy(pt->table[X->val][a][var]);
+            copyRule[var] = copy;
             push(st, copy);
         }
 

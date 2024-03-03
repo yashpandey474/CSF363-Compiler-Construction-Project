@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
     printf("FIRST and FOLLOW set automated\n");
     printf("Lexical,Syntax analyzer module developed\n");
     printf("Parse Tree module developed\n");
-    
+
     if (argc < 3)
     {
         printf("Please provide in format %s <inputfile> <outputfile>\n", argv[0]);
