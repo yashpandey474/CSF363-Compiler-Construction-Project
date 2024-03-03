@@ -471,14 +471,6 @@ struct tree_node *nextNonTerminal(struct tree_node *current)
         return NULL;
     }
 
-    // if (current->data->flag == 1)
-    // {
-    //     printf("FINDING NEXT NT OF: %s\n", NonTerminalToString(current->data->val));
-    // }
-    // else
-    // {
-    //     printf("FINDING NEXT NT OF: %s\n", TokenToString(current->data->val));
-    // }
     while (current->next != NULL && current->data->flag == 0)
     {
         current = current->next;
@@ -486,7 +478,7 @@ struct tree_node *nextNonTerminal(struct tree_node *current)
 
     if (current->data->flag == 1)
     {
-        printf("RETURNED: %s\n", NonTerminalToString(current->data->val));
+        // printf("RETURNED: %s\n", NonTerminalToString(current->data->val));
         return current;
     }
     while (current->parent != NULL && current->parent->next == NULL)
@@ -506,9 +498,9 @@ struct tree_node *repeated_add(struct tree_node *parent, struct Variable *nt, st
 
     if (parent->data->val != nt->val)
     {
-        printf("Error: The input does not match the first non-terminal found\n");
-        printf("Non-terminal entered: %s\n", NonTerminalToString(nt->val));
-        printf("Non-terminal found: %s\n", NonTerminalToString(parent->data->val));
+        // printf("Error: The input does not match the first non-terminal found\n");
+        // printf("Non-terminal entered: %s\n", NonTerminalToString(nt->val));
+        // printf("Non-terminal found: %s\n", NonTerminalToString(parent->data->val));
         return nextNonTerminal(parent->head);
     }
 
@@ -527,13 +519,13 @@ struct tree_node *repeated_add(struct tree_node *parent, struct Variable *nt, st
 // nextParent = add_to_tree(topStack, a, pt, parent);
 struct tree_node *add_to_tree(struct Variable *nt, struct Variable **rule, struct tree_node *parent)
 {
-    printf("NONTERMINAL IN TREE: %s\n", NonTerminalToString(nt->val));
+    // printf("NONTERMINAL IN TREE: %s\n", NonTerminalToString(nt->val));
 
     parent = repeated_add(parent, nt, rule);
 
     if (parent != NULL)
     {
-        printf("PARENT POINTER; %s\n", NonTerminalToString(parent->data->val));
+        // printf("PARENT POINTER; %s\n", NonTerminalToString(parent->data->val));
     }
     // printf("TREE RETURNED NEXT NONTERMINAL: %s\n", NonTerminalToString(parent->data->val));
     return parent;
@@ -544,18 +536,18 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
     // error handling
     if (node == NULL)
     {
-        printf("NULL NODE ENCOUNTERED");
+        // printf("NULL NODE ENCOUNTERED");
         return;
     }
     if (node->data == NULL)
     {
-        printf("DATA IS NULL");
+        // printf("DATA IS NULL");
         return;
     }
     // fields to be printed
     char *parentNodeSymbol = NULL;
     int isLeaf = (node->data->flag == 0);
-    char *nodeSymbol = NULL;
+    char *nodeSymbol = "LEAF";
     char *lexeme = NULL;
     int lineNo = -1;
 
@@ -575,7 +567,6 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
         {
             lexeme = node->data->token->lexeme;
         }
-        nodeSymbol = "LEAF";
     }
     else
     {
@@ -1023,9 +1014,8 @@ struct Variable *createCopy(struct Variable var)
     return copy;
 }
 
-int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, twinBuffer LA, struct tree_node *parent, bool skipError, struct tree_node **parentpointer)
+int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, twinBuffer LA, struct tree_node *parent, bool skipError, struct tree_node **parentpointer, FILE *errors)
 {
-
     enum Tokentype a = token->tokenType;
     struct Variable *X = st->stack[st->top];
 
@@ -1034,7 +1024,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     // BOTH ARE TERMINALS
     if (X->val == a && X->flag == 0)
     {
-        printf("POPPED TERMINAL: %s\n", TokenToString(X->val));
+        // printf(rrors, "POPPED TERMINAL: %s\n", TokenToString(X->val));
 
         // TOKEN BEING SET [NO ERROR]
         X->token = token;
@@ -1047,10 +1037,9 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     else if (X->flag == 0)
     {
         // CALL ERROR FUNCTION
-        printf("Line no. %-5d Error: The token %s for lexeme %s  does not match with the expected token %s\n", LA->lineNo, TokenToString(a), token->lexeme, TokenToString(X->val));
+        fprintf(errors, "Line no. %-5d Error: The token %s for lexeme %s  does not match with the expected token %s\n", LA->lineNo, TokenToString(a), token->lexeme, TokenToString(X->val));
 
         // TOKEN NOT BEING SET
-        X->token = token;
 
         pop(st);
         return 0;
@@ -1060,7 +1049,8 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     else if (pt->table[X->val][a] == NULL)
     {
         if (!skipError)
-            printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X->val));
+            fprintf(errors, "Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X->val));
+
         // go and get the next token
 
         // DISCARD INPUT UNTIL SYN OR VALID
@@ -1071,7 +1061,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     {
         // SYN TOKEN; POP THE NONTERMINAL
         // printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
-        printf("synch encountered");
+        // printf("Synch Encountered for NT: %s TOKEN: %s\n", NonTerminalToString(X->val), TokenToString(a));
 
         // TOKEN NOT BEING SET
         pop(st);
@@ -1108,17 +1098,17 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
             push(st, copy);
         }
 
-        printf("While passing to add to tree stack was\n");
-        printStack(st);
+        // printf("While passing to add to tree stack was\n");
+        // printStack(st);
 
         // PASS TO TREE & GET CURRENT NODE`
         parent = add_to_tree(topStack, copyRule, parent);
         *parentpointer = parent;
 
-        if (parent != NULL)
-        {
-            printf("RETURNED PARENT: %s\n", NonTerminalToString(parent->data->val));
-        }
+        // if (parent != NULL)
+        // {
+        //     // printf("RETURNED PARENT: %s\n", NonTerminalToString(parent->data->val));
+        // }
 
         return 0;
     }
@@ -1166,59 +1156,45 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
 {
     struct Variable *init = createCopy((struct Variable){NT_PROGRAM, 1});
     parseTree *tree = create_tree(init);
+
     struct tree_node *node_to_add_to = tree->root;
     struct tree_node **parentpointer = (struct tree_node **)malloc(sizeof(struct tree_node *));
     *parentpointer = node_to_add_to;
+
     struct stack *stack = initialiseStack();
     FILE *file = readTestFile(testfile);
-
     twinBufferArray bufferArray = initialiseTwinBuffer(file);
     twinBuffer LA = initialiseLA(bufferArray);
-    struct SymbolTableEntry *token;
 
+    struct SymbolTableEntry *token;
+    int res = 0;
+    bool skip_error = false;
+
+    FILE *errors = fopen("errors.txt", "w");
     getStream(bufferArray);
-    printf("READ INPUT\n");
 
     initialiseStackItems(stack, init);
 
-    // write to computed_sets.txt
-    if (toPrint)
-    {
-        FILE *cfile = fopen("computed_sets.txt", "w");
-        if (cfile == NULL)
-        {
-            printf("Error opening file!\n");
-            return;
-        }
-        printFFSetsTable(cfile, sets);
-        fclose(cfile);
-    }
+    errors = fopen("errors.txt", "a");
 
-    int res = 0;
-    bool skip_error = false;
     while ((token = getNextToken(LA)))
     {
         if (token->tokenType == LEXICAL_ERROR)
         {
             if (toPrint)
-                printf("Line no. %-5d Error: %-30s\n", LA->lineNo, token->lexeme);
+            {
+                fprintf(errors, "Line no. %-5d Error: %-30s\n", LA->lineNo, token->lexeme);
+            }
+            continue;
         }
-        if (!(token->tokenType == LEXICAL_ERROR || token->tokenType == TK_COMMENT))
+        if (!(token->tokenType == TK_COMMENT))
         {
-            // printf("Stack before:\n");
-            // printStack(stack);
-            // printf("PASSED PARENT TO PARSING: %s\n", NonTerminalToString(node_to_add_to->data->val));
-            while ((!isEmptyStack(stack)) && (res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer)) == 0)
+            while ((!isEmptyStack(stack)) && (res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors)) == 0)
             {
                 if (*parentpointer != NULL)
                 {
                     node_to_add_to = *parentpointer;
                 }
-                // printf("Stack after:\n");
-
-                // printStack(stack);
-
-                // keep doing it basically. youll only go to the next token if there's a valid accepting thing( in which case it returns something)
             }
 
             if (res == -1)
@@ -1236,24 +1212,29 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
             }
         }
     }
+    fclose(errors);
 
-    // printf("After parsing\n");
-    // printStack(stack);
+    errors = fopen("errors.txt", "r");
+
+    char error_line[256];
+    while (fgets(error_line, sizeof(error_line), file) != NULL)
+    {
+        printf("%s", error_line);
+    }
+
     if (toPrint)
     {
         printParseTree(tree, outputfile);
-        }
+    }
     if (isEmptyStack(stack))
     {
-        printf("STACK EMPTY. ERROR!");
+        printf("\nTHIS CODE IS SYNTACTICALLY INCORRECT.\n");
     }
 
     if (onlyContainsEOF(stack))
     {
         printf("KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
     }
-
-    serialize_tree(tree->root);
 
     return;
 }

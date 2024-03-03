@@ -8,23 +8,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <stdbool.h>
-// PARAMETER N = NUMBER OF CHARACTERS READ WITH EACH RELOAD
 
-// TYPICALLY 256 BYTES
-
-// EOF CHARACTERS AT END OF BOTH BUFFERS ALWAYS
-
-// FUNCTIONS TO READ "RELOAD" INTO BUFFER FROM A FILE
-
-// CODE TO READ FROM THE BUFFERS CHARACTER BY CHARACTER
-;
-
-void incrementLineNo(twinBuffer LA)
-{
-    // printf("\n >> line no : %d ended\n", LA->lineNo);
-    LA->lineNo += 1;
-    return;
-}
 
 FILE *readTestFile(char *file_path)
 {
@@ -51,9 +35,13 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
 
     int b = LA->begin;
     int f = LA->forward;
+    int twinBufferSize=2 * BUFFER_SIZE + 2;
     int numchars = 0;
-    b = b % (2 * BUFFER_SIZE + 2);
-    f = f % (2 * BUFFER_SIZE + 2);
+    if (f<=b){
+        
+    }
+    b = b % (twinBufferSize);
+    f = f % (twinBufferSize);
     while (b != f)
     {
         if (LA->bufferArray->buffer[b] != EOF)
@@ -61,7 +49,7 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
             numchars += 1;
         }
         b += 1;
-        b = b % (2 * BUFFER_SIZE + 2);
+        b = b % (twinBufferSize);
     }
 
     char *a = (char *)malloc((numchars + 1) * sizeof(char));
@@ -75,11 +63,11 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
     b = LA->begin;
     for (int i = 0; i < numchars; i++)
     {
-        b = b % (2 * BUFFER_SIZE + 2);
+        b = b % (twinBufferSize);
         if (LA->bufferArray->buffer[b] == EOF)
         {
             b += 1;
-            b = b % (2 * BUFFER_SIZE + 2);
+            b = b % (twinBufferSize);
         }
         a[i] = LA->bufferArray->buffer[b];
         b += 1;

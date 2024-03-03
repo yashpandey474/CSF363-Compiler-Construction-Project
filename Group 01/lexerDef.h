@@ -23,6 +23,7 @@ struct TwinBufferArray
 };
 typedef struct TwinBufferArray TwinBufferArray;
 
+//typedefing the pointer to the array
 typedef TwinBufferArray *twinBufferArray;
 
 struct TwinBuffer
@@ -30,8 +31,10 @@ struct TwinBuffer
     int lineNo, begin, forward, state;
     twinBufferArray bufferArray;
 };
+
 typedef struct TwinBuffer TwinBuffer;
 
+//pointer typedef
 typedef TwinBuffer *twinBuffer;
 struct SymbolTableNode
 {
