@@ -1,19 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#ifndef PARSERDEF
+#define PARSERDEF_H
+
 #define MAX_NUM_PRODUCTIONS 6
 #define MAX_VARS 9
 #define NUM_TERMINALS 67     // including epsilon
 #define NUM_NON_TERMINALS 49 // num productions
 #define SET_SIZE 200
 
-#define STACK_INITIAL_SIZE 128
-struct stack
-{
-    struct Variable **stack;
-    int top;
-    int MAX;
-};
+typedef struct parseTree parseTree;
+typedef struct tree_node tree_node;
+typedef struct Sets *FirstAndFollow;
+typedef struct ParsingTable *table;
+typedef struct Grammar *grammar;
 
 struct Variable
 {
@@ -40,11 +41,6 @@ struct input_structure
     struct Variable *rule;
     int length;
 };
-
-typedef struct parseTree parseTree;
-typedef struct tree_node tree_node;
-typedef struct Sets *FirstAndFollow;
-typedef struct ParsingTable *table;
 
 struct parseTree
 {
@@ -78,14 +74,12 @@ struct GrammarRule
     int numProductions;
     struct Variable rules[MAX_NUM_PRODUCTIONS][MAX_VARS];
 };
-typedef struct GrammarRule *Productions;
 
 typedef struct Grammar
 {
     struct GrammarRule productions[NUM_NON_TERMINALS];
 } Grammar;
 
-typedef struct Grammar *grammar;
 struct ParsingTable
 {
     struct Variable *table[NUM_NON_TERMINALS][NUM_TERMINALS];
@@ -144,3 +138,5 @@ enum NonTerminals
     NT_DEFINETYPE_STMT,
     NT_A
 };
+
+#endif

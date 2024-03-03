@@ -11,7 +11,6 @@ void insertAllKeywords();
 void printSymbolTable();
 void changeForward(twinBuffer LA, int flag);
 const char *CharacterTypeToString(enum CharacterType type);
-FILE *readTestFile(char *file_path);
 twinBufferArray initialiseTwinBuffer(FILE *file);
 twinBuffer initialiseLA(twinBufferArray bufferArray);
 int getStream(twinBufferArray bufferArray);
