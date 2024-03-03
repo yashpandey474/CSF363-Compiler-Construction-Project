@@ -399,6 +399,7 @@ struct Sets **initialiseSetsWhole()
 struct tree_node *create_tree_node(struct Variable *data)
 {
     struct tree_node *new_tree_node = (struct tree_node *)malloc(sizeof(struct tree_node));
+    // data->token = NULL;
     new_tree_node->data = data;
     new_tree_node->next = NULL;
     new_tree_node->head = NULL;
@@ -508,13 +509,13 @@ struct tree_node *nextNonTerminal(struct tree_node *current)
 }
 
 // function which takes the structure described in the first few comments as input and the tree_node where the rule has to be added
-struct tree_node *repeated_add(struct tree_node *parent, struct input_structure input, struct Variable **rule)
+struct tree_node *repeated_add(struct tree_node *parent, struct Variable *nt, struct Variable **rule)
 {
 
-    if (parent->data->val != input.nonterminal->val)
+    if (parent->data->val != nt->val)
     {
         printf("Error: The input does not match the first non-terminal found\n");
-        printf("Non-terminal entered: %s\n", NonTerminalToString(input.nonterminal->val));
+        printf("Non-terminal entered: %s\n", NonTerminalToString(nt->val));
         printf("Non-terminal found: %s\n", NonTerminalToString(parent->data->val));
         return nextNonTerminal(parent->head);
     }
@@ -525,10 +526,6 @@ struct tree_node *repeated_add(struct tree_node *parent, struct input_structure 
         {
             continue;
         }
-
-        input.length += 1;
-
-        printf("IN REPEATED ADD LOOP");
 
         add_tree_node(parent, create_tree_node(rule[var]));
     }
@@ -550,13 +547,10 @@ struct tree_node *add_to_tree(struct Variable *nt, struct Variable **rule, struc
             printf("Variable address while passing %p. Variable value %d\n", (void *)rule[i], rule[i]->val);
         }
     }
-    struct input_structure inp;
 
     printf("NONTERMINAL IN TREE: %s\n", NonTerminalToString(nt->val));
 
-    inp.nonterminal = nt;
-
-    parent = repeated_add(parent, inp, rule);
+    parent = repeated_add(parent, nt, rule);
 
     if (parent != NULL)
     {
@@ -570,26 +564,20 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
 {
     if (node == NULL)
     {
+        printf("NULL NODE ENCOUNTERED");
         return;
     }
     if (node->data == NULL)
     {
-        printf("NULL DATA in node\n");
+        printf("DATA IS NULL");
+        return;
     }
 
     char *parentNodeSymbol = NULL;
-    int isLeaf = node->data->flag == 0;
+    int isLeaf = (node->data->flag == 0);
     char *nodeSymbol = NULL;
     char *lexeme = NULL;
-
-    // SEG FAULT IN THIS LINE: TOKEN IS NOT SET
-
     int lineNo = -1;
-
-    if (node->data->token)
-    {
-        lineNo = node->data->token->lineNo;
-    }
 
     if (node->parent == NULL)
     {
@@ -598,79 +586,79 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
     }
     else
     {
-        parentNodeSymbol = node->parent->data->token->lexeme;
-        fprintf(outfile, "PARENT: %d  ACTUAL %d\n", node->parent->data->token->tokenType, node->data->token->tokenType);
-    }
-
-    if (node->data->flag == 0)
-    {
-        lexeme = node->data->token->lexeme;
-    }
-    else
-    {
-        lexeme = (char *)malloc(5 * sizeof(char));
-        strcpy(lexeme, "----");
-        // lexeme = NonTerminalToString(node->data->val);
+        parentNodeSymbol = NonTerminalToString(node->parent->data->val);
     }
 
     if (isLeaf)
     {
-        nodeSymbol = (char *)malloc(5 * sizeof(char));
-        strcpy(nodeSymbol, "LEAF");
+        if (node->data->token != NULL)
+        {
+            lexeme = node->data->token->lexeme;
+        }
+        nodeSymbol = "LEAF";
     }
     else
     {
+        nodeSymbol = (char *)malloc(20 * sizeof(char));
         nodeSymbol = NonTerminalToString(node->data->val);
     }
 
+    if (node->data->token == NULL)
+    {
+        // its not assigned a token
+        fprintf(outfile, "(Lexeme Current Node)%-20s (Line No)%-5d (Token Name)%-20s (Value if number)%-20s (Parent Node Symbol)%-20s (IS leaf node)%-3s (Node symbol)%-20s\n",
+                "-----", lineNo, isLeaf ? TokenToString(node->data->val) : "-----", "-----", parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
+        return;
+    }
+
+    lineNo = node->data->token->lineNo;
+
     if (node->data->token->tokenType == TK_RNUM)
     {
-        fprintf(outfile, "%-20s %-5d %-20s %-20lf %-20s %-3s %-20s\n",
-                lexeme, lineNo, TokenToString(node->data->token->tokenType), node->data->token->doubleValue, parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
+        fprintf(outfile, "(Lexeme Current Node)%-20s (Line No)%-5d (Token Name)%-20s (Value if number)%-20lf (Parent Node Symbol)%-20s (IS leaf node)%-3s (Node symbol)%-20s\n",
+                lexeme, lineNo, TokenToString(node->data->token->tokenType), node->data->token->doubleValue, parentNodeSymbol, "yes", nodeSymbol);
     }
     else if (node->data->token->tokenType == TK_NUM)
     {
-        fprintf(outfile, "%-20s %-5d %-20s %-20d %-20s %-3s %-20s\n",
-                lexeme, lineNo, TokenToString(node->data->token->tokenType), node->data->token->intValue, parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
+        fprintf(outfile, "(Lexeme Current Node)%-20s (Line No)%-5d (Token Name)%-20s (Value if number)%-20d (Parent Node Symbol)%-20s (IS leaf node)%-3s (Node symbol)%-20s\n",
+                lexeme, lineNo, TokenToString(node->data->token->tokenType), node->data->token->intValue, parentNodeSymbol, "yes", nodeSymbol);
     }
     else
     {
-        fprintf(outfile, "%-20s %-5d %-20s %-20s %-20s %-3s %-20s\n",
-                lexeme, lineNo, TokenToString(node->data->token->tokenType), "-----", parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
+        fprintf(outfile, "(Lexeme Current Node)%-20s (Line No)%-5d (Token Name)%-20s (Value if number)%-20s (Parent Node Symbol)%-20s (IS leaf node)%-3s (Node symbol)%-20s\n",
+                lexeme, lineNo, TokenToString(node->data->token->tokenType), "-----", parentNodeSymbol, "yes", nodeSymbol);
     }
 }
 
 void inorderTraversal(struct tree_node *node, FILE *outfile)
 {
-    printf("IN FUNCTION");
     if (node == NULL)
     {
-        printf("NULL NODE ENCOUNTERED");
+        // printf("NULL NODE ENCOUNTERED");
         return;
     }
 
     if (node->head != NULL)
     {
-        printf("RECURSING");
+        // printf("RECURSING");
         inorderTraversal(node->head, outfile);
     }
 
     // // Print the current (parent) node
-    printf("PRINTING NODE DETAILS!");
     printNodeDetails(node, outfile);
 
     // For the remaining children
     struct tree_node *sibling = node->head ? node->head->next : NULL;
     while (sibling != NULL)
     {
-        if (sibling->data->flag)
-        {
-            printf("SIBLING VAL: %s\n", NonTerminalToString(sibling->data->val));
-        }
-        else
-        {
-            printf("SIBLING VAL: %s\n", TokenToString(sibling->data->val));
-        }
+        // if (sibling->data->flag)
+        // {
+        //     printf("SIBLING VAL: %s\n", NonTerminalToString(sibling->data->val));
+        // }
+        // else
+        // {
+        //     printf("SIBLING VAL: %s\n", TokenToString(sibling->data->val));
+        // }
         inorderTraversal(sibling, outfile); // Assuming lexeme as the non-terminal symbol.
         sibling = sibling->next;
     }
@@ -690,12 +678,12 @@ void printParseTree(parseTree *PT, char *outfile)
 
         if (PT->root)
         {
-            printf("STARTING INORDER TRAVERSAL\n");
+            // printf("STARTING INORDER TRAVERSAL\n");
             inorderTraversal(PT->root, file);
         }
         else
         {
-            printf("ROOT IS NULL");
+            // printf("ROOT IS NULL");
         }
     }
 
@@ -854,7 +842,7 @@ void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, 
     return;
 }
 
-const char *NonTerminalToString(enum NonTerminals nonTerminal)
+char *NonTerminalToString(enum NonTerminals nonTerminal)
 {
     switch (nonTerminal)
     {
@@ -1050,6 +1038,7 @@ struct Variable *createCopy(struct Variable var)
     struct Variable *copy = (struct Variable *)malloc(sizeof(struct Variable));
     copy->flag = var.flag;
     copy->val = var.val;
+    copy->token = NULL;
     // no need ot token
     return copy;
 }
@@ -1058,8 +1047,8 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
 {
 
     enum Tokentype a = token->tokenType;
-
     struct Variable *X = st->stack[st->top];
+
     printf("Variable address popped %p, Variable %d\n", (void *)X, X->val);
 
     // BOTH ARE TERMINALS
@@ -1081,6 +1070,8 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         printf("Line no. %-5d Error: The token %s for lexeme %s  does not match with the expected token %s\n", LA->lineNo, TokenToString(a), token->lexeme, TokenToString(X->val));
 
         // TOKEN NOT BEING SET
+        X->token = token;
+
         pop(st);
         return 0;
     }
@@ -1113,13 +1104,6 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // GET THE RULE
         // struct Variable *arr = pt->table[X.val][a];
         struct Variable *topStack = pop(st);
-
-        // ASSIGN THE TOKEN [ONLY WHEN NO ERROR]
-        topStack->token = token;
-
-        // printf("Pushing rule ");
-        // printRule(topStack.val, arr);
-
         struct Variable **copyRule = (struct Variable **)malloc(sizeof(struct Variable *) * 9);
         int var = 8;
         for (; var >= 0; var -= 1)
@@ -1137,6 +1121,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
 
             if (pt->table[X->val][a][var].val == TK_EPS && pt->table[X->val][a][var].flag == 0)
             {
+                // copy->token = token;
                 break;
             }
 
@@ -1269,7 +1254,7 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     // printf("After parsing\n");
     // printStack(stack);
 
-    printParseTree(tree, "outputparsetree.txt");
+    printParseTree(tree, outputfile);
 
     if (isEmptyStack(stack))
     {
@@ -1286,18 +1271,18 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     return;
 }
 
-int main()
-{
+// int main()
+// {
 
-    insertAllKeywords();
-    int synchSet[] = {
-        TK_ENDRECORD, TK_ENDUNION, TK_SEM, TK_DOT, TK_CL, TK_OP};
-    Grammar G = {{{1, {{{NT_OTHER_FUNCTIONS, 1}, {NT_MAIN_FUNCTION, 1}}}}, {1, {{{TK_MAIN, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {2, {{{NT_FUNCTION, 1}, {NT_OTHER_FUNCTIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_FUNID, 0}, {NT_INPUT_PAR, 1}, {NT_OUTPUT_PAR, 1}, {TK_SEM, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {1, {{{TK_INPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}}}, {2, {{{TK_OUTPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{NT_DATA_TYPE, 1}, {TK_ID, 0}, {NT_REMAINING_LIST, 1}}}}, {2, {{{NT_PRIMITIVE_DATA_TYPE, 1}}, {{NT_CONSTRUCTED_DATA_TYPE, 1}}}}, {2, {{{TK_INT, 0}}, {{TK_REAL, 0}}}}, {2, {{{NT_A, 1}, {TK_RUID, 0}}, {{TK_RUID, 0}}}}, {2, {{{TK_COMMA, 0}, {NT_PARAMETER_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_TYPE_DEFINITIONS, 1}, {NT_DECLARATIONS, 1}, {NT_OTHER_STMTS, 1}, {NT_RETURN_STMT, 1}}}}, {3, {{{NT_TYPE_DEFINITION, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{NT_DEFINETYPE_STMT, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_RECORD, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDRECORD, 0}}, {{TK_UNION, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDUNION, 0}}}}, {1, {{{NT_FIELD_DEFINITION, 1}, {NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_FIELDID, 0}, {TK_SEM, 0}}}}, {2, {{{NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_DECLARATION, 1}, {NT_DECLARATIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_ID, 0}, {NT_GLOBAL_OR_NOT, 1}, {TK_SEM, 0}}}}, {2, {{{TK_COLON, 0}, {TK_GLOBAL, 0}}, {{TK_EPS, 0}}}}, {2, {{{NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {5, {{{NT_ASSIGNMENT_STMT, 1}}, {{NT_ITERATIVE_STMT, 1}}, {{NT_CONDITIONAL_STMT, 1}}, {{NT_IO_STMT, 1}}, {{NT_FUN_CALL_STMT, 1}}}}, {1, {{{NT_SINGLE_OR_REC_ID, 1}, {TK_ASSIGNOP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_SEM, 0}}}}, {1, {{{TK_ID, 0}, {NT_REC_ID, 1}}}}, {2, {{{TK_DOT, 0}, {TK_FIELDID, 0}, {NT_REC_ID, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_OUTPUT_PARAMETERS, 1}, {TK_CALL, 0}, {TK_FUNID, 0}, {TK_WITH, 0}, {TK_PARAMETERS, 0}, {NT_INPUT_PARAMETERS, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}, {TK_ASSIGNOP, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}}}, {1, {{{TK_WHILE, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {TK_ENDWHILE, 0}}}}, {1, {{{TK_IF, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {TK_THEN, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {NT_NEW3, 1}, {TK_ENDIF, 0}}}}, {2, {{{TK_ELSE, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_READ, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}, {{TK_WRITE, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}}}, {1, {{{NT_TERM, 1}, {NT_NEW5, 1}}}}, {2, {{{NT_OPERATOR, 1}, {NT_TERM, 1}, {NT_NEW5, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_FACTOR, 1}, {NT_NEW6, 1}}}}, {2, {{{NT_OP_H, 1}, {NT_FACTOR, 1}, {NT_NEW6, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_VAR, 1}}, {{TK_OP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_CL, 0}}}}, {2, {{{TK_PLUS, 0}}, {{TK_MINUS, 0}}}}, {2, {{{TK_MUL, 0}}, {{TK_DIV, 0}}}}, {3, {{{TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_LOGICAL_OP, 1}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}, {{NT_VAR, 1}, {NT_RELATIONAL_OP, 1}, {NT_VAR, 1}}, {{TK_NOT, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}}}, {3, {{{NT_SINGLE_OR_REC_ID, 1}}, {{TK_NUM, 0}}, {{TK_RNUM, 0}}}}, {2, {{{TK_AND, 0}}, {{TK_OR, 0}}}}, {6, {{{TK_LT, 0}}, {{TK_LE, 0}}, {{TK_EQ, 0}}, {{TK_GT, 0}}, {{TK_GE, 0}}, {{TK_NE, 0}}}}, {1, {{{TK_RETURN, 0}, {NT_OPTIONAL_RETURN, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_ID, 0}, {NT_MORE_IDS, 1}}}}, {2, {{{TK_COMMA, 0}, {NT_ID_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_DEFINETYPE, 0}, {NT_A, 1}, {TK_RUID, 0}, {TK_AS, 0}, {TK_RUID, 0}}}}, {2, {{{TK_RECORD, 0}}, {{TK_UNION, 0}}}}}};
-    FirstAndFollow *sets = computeFirstAndFollow(G.productions);
-    printf("FIRST and FOLLOW set automated\n");
-    printf("Lexical analyzer module developed\n");
-    struct ParsingTable *PT = (struct ParsingTable *)malloc(sizeof(struct ParsingTable));
-    createParseTable(PT, G.productions, sets, synchSet, sizeof(synchSet) / sizeof(synchSet[0]));
+//     insertAllKeywords();
+//     int synchSet[] = {
+//         TK_ENDRECORD, TK_ENDUNION, TK_SEM, TK_DOT, TK_CL, TK_OP};
+//     Grammar G = {{{1, {{{NT_OTHER_FUNCTIONS, 1}, {NT_MAIN_FUNCTION, 1}}}}, {1, {{{TK_MAIN, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {2, {{{NT_FUNCTION, 1}, {NT_OTHER_FUNCTIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_FUNID, 0}, {NT_INPUT_PAR, 1}, {NT_OUTPUT_PAR, 1}, {TK_SEM, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {1, {{{TK_INPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}}}, {2, {{{TK_OUTPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{NT_DATA_TYPE, 1}, {TK_ID, 0}, {NT_REMAINING_LIST, 1}}}}, {2, {{{NT_PRIMITIVE_DATA_TYPE, 1}}, {{NT_CONSTRUCTED_DATA_TYPE, 1}}}}, {2, {{{TK_INT, 0}}, {{TK_REAL, 0}}}}, {2, {{{NT_A, 1}, {TK_RUID, 0}}, {{TK_RUID, 0}}}}, {2, {{{TK_COMMA, 0}, {NT_PARAMETER_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_TYPE_DEFINITIONS, 1}, {NT_DECLARATIONS, 1}, {NT_OTHER_STMTS, 1}, {NT_RETURN_STMT, 1}}}}, {3, {{{NT_TYPE_DEFINITION, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{NT_DEFINETYPE_STMT, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_RECORD, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDRECORD, 0}}, {{TK_UNION, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDUNION, 0}}}}, {1, {{{NT_FIELD_DEFINITION, 1}, {NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_FIELDID, 0}, {TK_SEM, 0}}}}, {2, {{{NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_DECLARATION, 1}, {NT_DECLARATIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_ID, 0}, {NT_GLOBAL_OR_NOT, 1}, {TK_SEM, 0}}}}, {2, {{{TK_COLON, 0}, {TK_GLOBAL, 0}}, {{TK_EPS, 0}}}}, {2, {{{NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {5, {{{NT_ASSIGNMENT_STMT, 1}}, {{NT_ITERATIVE_STMT, 1}}, {{NT_CONDITIONAL_STMT, 1}}, {{NT_IO_STMT, 1}}, {{NT_FUN_CALL_STMT, 1}}}}, {1, {{{NT_SINGLE_OR_REC_ID, 1}, {TK_ASSIGNOP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_SEM, 0}}}}, {1, {{{TK_ID, 0}, {NT_REC_ID, 1}}}}, {2, {{{TK_DOT, 0}, {TK_FIELDID, 0}, {NT_REC_ID, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_OUTPUT_PARAMETERS, 1}, {TK_CALL, 0}, {TK_FUNID, 0}, {TK_WITH, 0}, {TK_PARAMETERS, 0}, {NT_INPUT_PARAMETERS, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}, {TK_ASSIGNOP, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}}}, {1, {{{TK_WHILE, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {TK_ENDWHILE, 0}}}}, {1, {{{TK_IF, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {TK_THEN, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {NT_NEW3, 1}, {TK_ENDIF, 0}}}}, {2, {{{TK_ELSE, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_READ, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}, {{TK_WRITE, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}}}, {1, {{{NT_TERM, 1}, {NT_NEW5, 1}}}}, {2, {{{NT_OPERATOR, 1}, {NT_TERM, 1}, {NT_NEW5, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_FACTOR, 1}, {NT_NEW6, 1}}}}, {2, {{{NT_OP_H, 1}, {NT_FACTOR, 1}, {NT_NEW6, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_VAR, 1}}, {{TK_OP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_CL, 0}}}}, {2, {{{TK_PLUS, 0}}, {{TK_MINUS, 0}}}}, {2, {{{TK_MUL, 0}}, {{TK_DIV, 0}}}}, {3, {{{TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_LOGICAL_OP, 1}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}, {{NT_VAR, 1}, {NT_RELATIONAL_OP, 1}, {NT_VAR, 1}}, {{TK_NOT, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}}}, {3, {{{NT_SINGLE_OR_REC_ID, 1}}, {{TK_NUM, 0}}, {{TK_RNUM, 0}}}}, {2, {{{TK_AND, 0}}, {{TK_OR, 0}}}}, {6, {{{TK_LT, 0}}, {{TK_LE, 0}}, {{TK_EQ, 0}}, {{TK_GT, 0}}, {{TK_GE, 0}}, {{TK_NE, 0}}}}, {1, {{{TK_RETURN, 0}, {NT_OPTIONAL_RETURN, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_ID, 0}, {NT_MORE_IDS, 1}}}}, {2, {{{TK_COMMA, 0}, {NT_ID_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_DEFINETYPE, 0}, {NT_A, 1}, {TK_RUID, 0}, {TK_AS, 0}, {TK_RUID, 0}}}}, {2, {{{TK_RECORD, 0}}, {{TK_UNION, 0}}}}}};
+//     FirstAndFollow *sets = computeFirstAndFollow(G.productions);
+//     printf("FIRST and FOLLOW set automated\n");
+//     printf("Lexical analyzer module developed\n");
+//     struct ParsingTable *PT = (struct ParsingTable *)malloc(sizeof(struct ParsingTable));
+//     createParseTable(PT, G.productions, sets, synchSet, sizeof(synchSet) / sizeof(synchSet[0]));
 
-    print_and_parse_tree("t1.txt", "outputparse.txt", sets, PT, G);
-}
+//     print_and_parse_tree("t1.txt", "outputparse.txt", sets, PT, G);
+// }

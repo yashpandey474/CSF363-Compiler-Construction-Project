@@ -8,7 +8,7 @@
 #define PARSER_H
 
 const char *TokenToString(int token);
-const char *NonTerminalToString(enum NonTerminals nonTerminal);
+char *NonTerminalToString(enum NonTerminals nonTerminal);
 struct stack *initialiseStack();
 struct Variable *createCopy(struct Variable var);
 void printStack(struct stack *st);

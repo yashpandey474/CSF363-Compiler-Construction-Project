@@ -172,6 +172,7 @@ int main(int argc, char *argv[])
             break;
         case 3:
             print_and_parse_tree(argv[1], argv[2], sets, PT, G);
+            return 0;
             break;
         case 4:
             start_time = clock();

@@ -3,7 +3,7 @@ CC=gcc
 
 # Define any compile-time flags
 # Assuming the "Lexical Analyzer" directory is not used anymore based on your description
-CFLAGS=-I. -I"./Group 01" -I"./Group 01/Other Files" -Wall
+CFLAGS=-I. -I"./Group 01" -I"./Group 01/Other Files" -Wall -g
 
 # Define the source files explicitly, including the path for those in the "Group 01" and "Other Files" directory
 SOURCES=./Group\ 01/driver.c \
@@ -16,10 +16,10 @@ SOURCES=./Group\ 01/driver.c \
 EXECUTABLE=stage1exe
 
 # Default rule for making the executable
-all: $(EXECUTABLE)
+all: clean $(EXECUTABLE)
 
 # Rule for compiling and linking the executable directly without generating .o files
-$(EXECUTABLE): 
+$(EXECUTABLE):
 	$(CC) $(CFLAGS) $(SOURCES) -o $(EXECUTABLE)
 
 # Define a clean rule
