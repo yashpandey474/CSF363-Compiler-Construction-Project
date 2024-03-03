@@ -1096,7 +1096,6 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     struct Variable *init = createCopy((struct Variable){NT_PROGRAM, 1});
 
     parseTree *tree = create_tree(init);
-    struct tree_node *root_for_later = tree->root;
     struct tree_node *node_to_add_to = tree->root;
     struct tree_node **parentpointer = (struct tree_node **)malloc(sizeof(struct tree_node *));
     *parentpointer = node_to_add_to;
