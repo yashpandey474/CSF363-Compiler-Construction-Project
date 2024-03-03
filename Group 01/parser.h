@@ -30,7 +30,7 @@ FILE *readTestFile(const char *filename);
 void printTree(struct tree_node *root, int depth);
 void printParseTree(parseTree *PT, char *outfile);
 void serialize_tree(struct tree_node *root);
-void print_and_parse_tree(char *filename, FirstAndFollow *sets, struct ParsingTable *PT, Grammar G);
+void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets, struct ParsingTable *PT, Grammar G);
 struct tree_node *create_tree_node(struct Variable *data);
 FirstAndFollow *computeFirstAndFollow(struct GrammarRule *productions);
 void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal, int *synchSet, int defaultSynchSetSize);
