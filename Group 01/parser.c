@@ -975,7 +975,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     // BOTH ARE TERMINALS
     if (X->val == a && X->flag == 0)
     {
-        // printf("POPPED TERMINAL: %s\n", TokenToString(X.val));
+        printf("POPPED TERMINAL: %s\n", TokenToString(X->val));
         X->token = token;
         pop(st);
         return 1;
@@ -1004,7 +1004,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     {
         // SYN TOKEN; POP THE NONTERMINAL
         // printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
-
+        printf("synch encountered");
         pop(st);
 
         // CONTINUE FROM  SYN TOKEN
@@ -1044,6 +1044,8 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
 
         // PASS TO TREE & GET CURRENT NODE
         parent = add_to_tree(topStack, copyRule, parent);
+
+        printf("IN PARSING, GOT PARENT: %s\n", NonTerminalToString(parent->data->val));
         *parentpointer = parent;
 
         if (parent != NULL)
