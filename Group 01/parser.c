@@ -553,10 +553,10 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
     struct SymbolTableEntry *token = node->data->token;
     char *lexeme = node->data->flag == 0 ? token->lexeme : "----";
     int lineNo = token->lineNo;
-    char *tokenName = TokenToString(token->tokenType);
+    const char *tokenName = TokenToString(token->tokenType);
     char *valueIfNumber;
     int isLeaf = node->data->flag == 0;
-    char *nodeSymbol = isLeaf ? "LEAF" : NonTerminalToString(token->tokenType);
+    const char *nodeSymbol = isLeaf ? "LEAF" : NonTerminalToString(node->data->val);
 
     if (token->tokenType == TK_RNUM)
     {

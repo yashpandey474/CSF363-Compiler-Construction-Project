@@ -183,14 +183,22 @@ void print_timing_info(clock_t start_time, clock_t end_time)
     printf("Time in seconds: %f s\n", total_CPU_time_in_seconds);
 }
 
+parseTree *create_tree(struct Variable *init)
+{
+    parseTree *tree = (parseTree *)malloc(sizeof(parseTree));
+
+    tree->root = create_tree_node(init);
+
+    return tree;
+}
 void print_and_parse_tree(char *filename, FirstAndFollow *sets, struct ParsingTable *PT, Grammar G)
 {
 
     struct Variable *init = createCopy((struct Variable){NT_PROGRAM, 1});
 
-    struct tree_node *parent = create_tree_node(init);
-    struct tree_node *root_for_later = parent;
-    struct tree_node *node_to_add_to = parent;
+    parseTree *tree = create_tree(init);
+    struct tree_node *root_for_later = tree->root;
+    struct tree_node *node_to_add_to = tree->root;
     struct tree_node **parentpointer = (struct tree_node **)malloc(sizeof(struct tree_node *));
     *parentpointer = node_to_add_to;
     struct stack *stack = initialiseStack();
@@ -261,7 +269,7 @@ void print_and_parse_tree(char *filename, FirstAndFollow *sets, struct ParsingTa
     // printf("After parsing\n");
     // printStack(stack);
 
-    printParseTree(parent, 0);
+    printParseTree(tree, "outputparsetree.txt");
 
     if (onlyContainsEOF(stack))
     {
