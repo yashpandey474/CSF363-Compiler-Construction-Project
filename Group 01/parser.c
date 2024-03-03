@@ -523,6 +523,8 @@ struct tree_node *repeated_add(struct tree_node *parent, struct input_structure 
 
         input.length += 1;
 
+        printf("IN REPEATED ADD LOOP");
+
         add_tree_node(parent, create_tree_node(rule[var]));
     }
 
@@ -1047,7 +1049,6 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // PASS TO TREE & GET CURRENT NODE
         parent = add_to_tree(topStack, copyRule, parent);
 
-        printf("IN PARSING, GOT PARENT: %s\n", NonTerminalToString(parent->data->val));
         *parentpointer = parent;
 
         if (parent != NULL)
@@ -1081,6 +1082,104 @@ FirstAndFollow *computeFirstAndFollow(struct GrammarRule *productions)
     // printf("FOLLOW SET COMPUTED\n");
 
     return sets;
+}
+
+parseTree *create_tree(struct Variable *init)
+{
+    parseTree *tree = (parseTree *)malloc(sizeof(parseTree));
+
+    tree->root = create_tree_node(init);
+
+    return tree;
+}
+void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets, struct ParsingTable *PT, Grammar G)
+{
+
+    struct Variable *init = createCopy((struct Variable){NT_PROGRAM, 1});
+
+    parseTree *tree = create_tree(init);
+    struct tree_node *root_for_later = tree->root;
+    struct tree_node *node_to_add_to = tree->root;
+    struct tree_node **parentpointer = (struct tree_node **)malloc(sizeof(struct tree_node *));
+    *parentpointer = node_to_add_to;
+    struct stack *stack = initialiseStack();
+    FILE *file = readTestFile(testfile);
+
+    twinBufferArray bufferArray = initialiseTwinBuffer(file);
+    twinBuffer LA = initialiseLA(bufferArray);
+    struct SymbolTableEntry *token;
+
+    getStream(bufferArray);
+    printf("READ INPUT\n");
+
+    push(stack, createCopy((struct Variable){TK_EOF, 0}));
+    push(stack, init);
+
+    // write to computed_sets.txt
+    FILE *cfile = fopen("computed_sets.txt", "w");
+    if (cfile == NULL)
+    {
+        printf("Error opening file!\n");
+        return;
+    }
+    printFFSetsTable(cfile, sets);
+    fclose(cfile);
+
+    int res = 0;
+    bool skip_error = false;
+    while ((token = getNextToken(LA)))
+    {
+        if (token->tokenType == LEXICAL_ERROR)
+        {
+            printf("Line no. %-5d Error: %-30s\n", LA->lineNo, token->lexeme);
+        }
+        if (!(token->tokenType == LEXICAL_ERROR || token->tokenType == TK_COMMENT))
+        {
+            // printf("Stack before:\n");
+            // printStack(stack);
+            // printf("PASSED PARENT TO PARSING: %s\n", NonTerminalToString(node_to_add_to->data->val));
+            while ((res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer)) == 0)
+            {
+                if (*parentpointer != NULL)
+                {
+                    node_to_add_to = *parentpointer;
+                }
+                // printf("Stack after:\n");
+
+                // printStack(stack);
+
+                // keep doing it basically. youll only go to the next token if there's a valid accepting thing( in which case it returns something)
+            }
+
+            if (res == -1)
+            {
+                skip_error = true;
+            }
+            if (res == 1)
+            {
+
+                skip_error = false;
+            }
+            if (*parentpointer != NULL)
+            {
+                node_to_add_to = *parentpointer;
+            }
+        }
+    }
+
+    // printf("After parsing\n");
+    // printStack(stack);
+
+    printParseTree(tree, "outputparsetree.txt");
+
+    if (onlyContainsEOF(stack))
+    {
+        printf("KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
+    }
+
+    // serialize_tree(root_for_later);
+
+    return;
 }
 
 // int main()
