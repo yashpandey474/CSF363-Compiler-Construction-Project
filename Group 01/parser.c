@@ -556,52 +556,81 @@ struct tree_node *add_to_tree(struct Variable *nt, struct Variable **rule, struc
 
 void printNodeDetails(struct tree_node *node, FILE *outfile)
 {
-    char *parentNodeSymbol = node->parent == NULL ? "ROOT" : node->parent->data->token->lexeme;
-    struct SymbolTableEntry *token = node->data->token;
-    char *lexeme = node->data->flag == 0 ? token->lexeme : "----";
-    int lineNo = token->lineNo;
-    const char *tokenName = TokenToString(token->tokenType);
-    int isLeaf = node->data->flag == 0;
-    const char *nodeSymbol = isLeaf ? "LEAF" : NonTerminalToString(node->data->val);
+    if (node == NULL)
+    {
+        return;
+    }
 
-    if (token->tokenType == TK_RNUM)
+    char *parentNodeSymbol = (node->parent == NULL) ? "ROOT" : node->parent->data->token->lexeme;
+
+    char *lexeme = NULL;
+
+    if (node->data->flag == 0)
+    {
+        lexeme = node->data->token->lexeme
+    }
+    else
+    {
+        lexeme = (char *)malloc(5 * sizeof(char));
+        strcpy(lexeme, "----");
+    }
+
+    int lineNo = node->data->token->lineNo;
+    int isLeaf = node->data->flag == 0;
+
+    if (isLeaf)
+    {
+        char *nodeSymbol = (char *)malloc(5 * sizeof(char));
+        strcpy(nodeSymbol, "LEAF");
+    }
+    else
+    {
+        NonTerminalToString(node->data->val);
+    }
+
+    if (node->data->token->tokenType == TK_RNUM)
     {
         fprintf(outfile, "%-20s %-5d %-20s %-20lf %-20s %-3s %-20s\n",
-                lexeme, lineNo, tokenName, token->doubleValue, parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
+                lexeme, lineNo, TokenToString(node->data->token->tokenType), node->data->token->doubleValue, parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
     }
-    else if (token->tokenType == TK_NUM)
+    else if (node->data->token->tokenType == TK_NUM)
     {
         fprintf(outfile, "%-20s %-5d %-20s %-20d %-20s %-3s %-20s\n",
-                lexeme, lineNo, tokenName, token->intValue, parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
+                lexeme, lineNo, TokenToString(node->data->token->tokenType), node->data->token->intValue, parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
     }
     else
     {
         fprintf(outfile, "%-20s %-5d %-20s %-20s %-20s %-3s %-20s\n",
-                lexeme, lineNo, tokenName, "-----", parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
+                lexeme, lineNo, TokenToString(node->data->token->tokenType), "-----", parentNodeSymbol, isLeaf ? "yes" : "no", nodeSymbol);
     }
 }
 
 void inorderTraversal(struct tree_node *node, FILE *outfile)
 {
+    printf("IN FUNCTION");
     if (node == NULL)
+    {
+        printf("NULL NODE ENCOUNTERED");
         return;
+    }
 
-    // int isLeaf = node->data->flag == 0;
     if (node->head != NULL)
     {
+        printf("RECURSING");
         inorderTraversal(node->head, outfile);
     }
 
-    // Print the current (parent) node
+    // // Print the current (parent) node
+    printf("PRINTING NODE DETAILS!");
     printNodeDetails(node, outfile);
 
     // For the remaining children
-    struct tree_node *sibling = node->head ? node->head->next : NULL;
-    while (sibling != NULL)
-    {
-        inorderTraversal(sibling, outfile); // Assuming lexeme as the non-terminal symbol.
-        sibling = sibling->next;
-    }
+    // struct tree_node *sibling = node->head ? node->head->next : NULL;
+    // while (sibling != NULL)
+    // {
+    //     inorderTraversal(sibling, outfile); // Assuming lexeme as the non-terminal symbol.
+    //     sibling = sibling->next;
+    // }
 }
 
 void printParseTree(parseTree *PT, char *outfile)
@@ -615,7 +644,16 @@ void printParseTree(parseTree *PT, char *outfile)
 
     if (PT && PT->root)
     {
-        inorderTraversal(PT->root, file);
+
+        if (PT->root)
+        {
+            printf("STARTING INORDER TRAVERSAL\n");
+            inorderTraversal(PT->root, file);
+        }
+        else
+        {
+            printf("ROOT IS NULL");
+        }
     }
 
     fclose(file);
@@ -1108,7 +1146,6 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
 {
 
     struct Variable *init = createCopy((struct Variable){NT_PROGRAM, 1});
-
     parseTree *tree = create_tree(init);
     struct tree_node *node_to_add_to = tree->root;
     struct tree_node **parentpointer = (struct tree_node **)malloc(sizeof(struct tree_node *));
