@@ -622,14 +622,6 @@ void inorderTraversal(struct tree_node *node, FILE *outfile)
     struct tree_node *sibling = node->head ? node->head->next : NULL;
     while (sibling != NULL)
     {
-        // if (sibling->data->flag)
-        // {
-        //     printf("SIBLING VAL: %s\n", NonTerminalToString(sibling->data->val));
-        // }
-        // else
-        // {
-        //     printf("SIBLING VAL: %s\n", TokenToString(sibling->data->val));
-        // }
         inorderTraversal(sibling, outfile); // Assuming lexeme as the non-terminal symbol.
         sibling = sibling->next;
     }
@@ -651,10 +643,6 @@ void printParseTree(parseTree *PT, char *outfile)
         {
             // printf("STARTING INORDER TRAVERSAL\n");
             inorderTraversal(PT->root, file);
-        }
-        else
-        {
-            // printf("ROOT IS NULL");
         }
     }
 

@@ -9,7 +9,6 @@
 #include <time.h>
 #include <stdbool.h>
 
-
 FILE *readTestFile(char *file_path)
 {
     FILE *file = fopen(file_path, "r");
@@ -23,6 +22,17 @@ FILE *readTestFile(char *file_path)
 
     return file;
 }
+int getSizeOfCustomString(twinBuffer LA)
+{
+    int b = LA->begin;
+    int f = LA->forward;
+    if (f<b){
+        int temp=f;
+        f=b;
+        b=temp;
+    }
+    
+}
 
 char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
 {
@@ -33,24 +43,18 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
     //     printf("%c", LA->bufferArray->buffer[i]);
     // }printf("\n");
 
-    int b = LA->begin;
-    int f = LA->forward;
-    int twinBufferSize=2 * BUFFER_SIZE + 2;
-    int numchars = 0;
-    if (f<=b){
-        
-    }
-    b = b % (twinBufferSize);
-    f = f % (twinBufferSize);
-    while (b != f)
-    {
-        if (LA->bufferArray->buffer[b] != EOF)
-        {
-            numchars += 1;
-        }
-        b += 1;
-        b = b % (twinBufferSize);
-    }
+    int twinBufferSize = 2 * BUFFER_SIZE + 2;
+    int numchars = getSizeOfCustomString(LA);
+
+    // while (b != f)
+    // {
+    //     if (LA->bufferArray->buffer[b] != EOF)
+    //     {
+    //         numchars += 1;
+    //     }
+    //     b += 1;
+    //     b = b % (twinBufferSize);
+    // }
 
     char *a = (char *)malloc((numchars + 1) * sizeof(char));
 
@@ -60,7 +64,7 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
         return "ERR_1010";
     }
 
-    b = LA->begin;
+    int b = LA->begin;
     for (int i = 0; i < numchars; i++)
     {
         b = b % (twinBufferSize);
@@ -116,15 +120,12 @@ twinBufferArray initialiseTwinBuffer(FILE *file)
 
     return bufferArray;
 }
-void resetBegin(twinBuffer LA)
-{
-    LA->begin = LA->forward;
-}
+
 
 void returnToStart(twinBuffer LA)
 {
     LA->state = 0;
-    resetBegin(LA);
+    LA->begin = LA->forward;
 }
 
 struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, twinBuffer LA, bool toIncludeString, char *errorMessage)
@@ -229,7 +230,7 @@ struct SymbolTableEntry *takeActions(twinBuffer LA, struct SymbolTableEntry *tok
     {
         token->lexeme = "%";
         token->tokenType = TK_COMMENT;
-        resetBegin(LA);
+        LA->begin = LA->forward;
         return token;
     }
     // DONT SET TOKEN WHEN DELIMITER
@@ -424,7 +425,7 @@ tokenInfo getNextToken(twinBuffer LA)
                 if (token->tokenType != 0)
                 {
                     // RESET BEGIN
-                    resetBegin(LA);
+                    LA->begin = LA->forward;
                     return token;
                 }
             }
@@ -465,7 +466,7 @@ tokenInfo getNextToken(twinBuffer LA)
         // HAVE TO RETURN
         if (token->tokenType != 0)
         {
-            resetBegin(LA);
+            LA->begin = LA->forward;
             return token;
         }
 
