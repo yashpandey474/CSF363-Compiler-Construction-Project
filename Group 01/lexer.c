@@ -71,7 +71,7 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
         printf("Memory allocation in strncustomcpy failed.");
         return "ERR_1010";
     }
-    
+
     b = LA->begin;
     for (int i = 0; i < numchars; i++)
     {
@@ -82,7 +82,7 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
             b = b % (2 * BUFFER_SIZE + 2);
         }
         a[i] = LA->bufferArray->buffer[b];
-        b+=1;
+        b += 1;
     }
     a[numchars] = '\0';
 
@@ -258,14 +258,14 @@ struct SymbolTableEntry *takeActions(twinBuffer LA, struct SymbolTableEntry *tok
 
         if (state == CARRIAGE_RETURN)
         {
-            incrementLineNo(LA);
+            LA->lineNo += 1;
             // INCREMENT BOTH BEGIN AND FORWARD TO NEXT CHARACTER
-            changeBegin(LA, 1);
+            LA->begin += 1;
             // OUTER WILL INCREMENT FORWARD
         }
         else
         {
-            changeForward(LA, -1);
+            LA->forward -= 1;
         }
 
         // printf("TOOK ACTIONS");
@@ -279,11 +279,11 @@ struct SymbolTableEntry *takeActions(twinBuffer LA, struct SymbolTableEntry *tok
 
     {
         // DECREMENT FORWARD POINTER
-        changeForward(LA, -1);
+        LA->forward -= 1;
     }
     else if (state == TK_RNUM1)
     {
-        changeForward(LA, 1);
+        LA->forward += 1;
     }
     token->lexeme = strncustomcpy(LA);
 
@@ -319,7 +319,7 @@ struct SymbolTableEntry *takeActions(twinBuffer LA, struct SymbolTableEntry *tok
     else
     {
         // INCREMENT FORWARD
-        changeForward(LA, +1);
+        LA->forward += 1;
         token->lexeme = strncustomcpy(LA);
 
         // SET LEXEME
@@ -385,13 +385,13 @@ tokenInfo getNextToken(twinBuffer LA)
             {
                 // RELOAD OTHER BUFER
                 getStream(LA->bufferArray);
-                changeForward(LA, 1);
+                LA->forward += 1;
                 // printf("RELOADED BUFFER\n");
 
                 // IF BOTH ARE AT EOF: INCREMENT BEGIN TOO
                 if (LA->begin == LA->forward)
                 {
-                    changeBegin(LA, 1);
+                    LA->begin += 1;
                 }
                 continue;
             }
@@ -448,7 +448,7 @@ tokenInfo getNextToken(twinBuffer LA)
             setErrorMessage(token, LA, true, "");
 
             // INCREMENT FORWARD BECAUSE CHARACTER IS INVALID; CANNOT RESUME TOKENISATION
-            changeForward(LA, 1);
+            LA->forward += 1;
             return token;
         }
 
@@ -484,7 +484,7 @@ tokenInfo getNextToken(twinBuffer LA)
         // SIZE OF FUN_ID/TK_ID EXCEEDED
 
         // INCREMENT FORWARD
-        changeForward(LA, 1);
+        LA->forward += 1;
     }
 
     return NULL;

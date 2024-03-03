@@ -6,11 +6,7 @@
 
 bool isDefault(struct Variable var)
 {
-    if (var.flag == 0 && var.val == 0)
-    {
-        return true;
-    }
-    return false;
+    return (var.flag == 0 && var.val == 0);
 }
 
 struct Node *createLLNode(struct Variable data)
@@ -66,7 +62,7 @@ bool appendVarToSet(struct LinkedListSet *set, struct Variable element)
 
 bool containsEPS(struct LinkedListSet *set)
 {
-    return (set->booleanArr[TK_EPS] == true);
+    return set->booleanArr[TK_EPS];
 }
 
 bool appendSetToSet(struct LinkedListSet *destinationSet, struct LinkedListSet *sourceSet)
@@ -74,6 +70,7 @@ bool appendSetToSet(struct LinkedListSet *destinationSet, struct LinkedListSet *
     bool changed = false;
     struct Variable var;
     var.flag = 0;
+
     for (int i = 0; i < NUM_TERMINALS; ++i)
     {
 
@@ -267,13 +264,6 @@ void computeFollowSet(FirstAndFollow *sets_for_all, struct GrammarRule *producti
             }
         }
     }
-
-    // PRINT ALL THE FOLLOW SETS NON TERMINALS
-    // removed, now printed to file
-    // for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
-    // {
-    //     printSetWithIndex(sets_for_all[i]->followSets, i, 1, 1);
-    // }
 }
 
 void computeFirstSetNT(struct GrammarRule *productions, struct Sets **sets_for_all, int nonTerminal)
@@ -406,6 +396,8 @@ struct tree_node *create_tree_node(struct Variable *data)
     new_tree_node->parent = NULL;
     return new_tree_node;
 }
+
+// this function was used for generating a visual representation for the graph using the pyvis library
 void serialize_node(struct tree_node *node, FILE *output)
 {
     if (node == NULL)
@@ -479,14 +471,14 @@ struct tree_node *nextNonTerminal(struct tree_node *current)
         return NULL;
     }
 
-    if (current->data->flag == 1)
-    {
-        printf("FINDING NEXT NT OF: %s\n", NonTerminalToString(current->data->val));
-    }
-    else
-    {
-        printf("FINDING NEXT NT OF: %s\n", TokenToString(current->data->val));
-    }
+    // if (current->data->flag == 1)
+    // {
+    //     printf("FINDING NEXT NT OF: %s\n", NonTerminalToString(current->data->val));
+    // }
+    // else
+    // {
+    //     printf("FINDING NEXT NT OF: %s\n", TokenToString(current->data->val));
+    // }
     while (current->next != NULL && current->data->flag == 0)
     {
         current = current->next;
@@ -532,22 +524,9 @@ struct tree_node *repeated_add(struct tree_node *parent, struct Variable *nt, st
 
     return nextNonTerminal(parent->head);
 }
-// parent = add_to_tree(topStack, a, pt, parent);
+// nextParent = add_to_tree(topStack, a, pt, parent);
 struct tree_node *add_to_tree(struct Variable *nt, struct Variable **rule, struct tree_node *parent)
 {
-    printf("Printing variables");
-    for (int i = 0; i < 9; i++)
-    {
-        if (rule[i] == NULL)
-        {
-            break;
-        }
-        else
-        {
-            printf("Variable address while passing %p. Variable value %d\n", (void *)rule[i], rule[i]->val);
-        }
-    }
-
     printf("NONTERMINAL IN TREE: %s\n", NonTerminalToString(nt->val));
 
     parent = repeated_add(parent, nt, rule);
@@ -562,6 +541,7 @@ struct tree_node *add_to_tree(struct Variable *nt, struct Variable **rule, struc
 
 void printNodeDetails(struct tree_node *node, FILE *outfile)
 {
+    // error handling
     if (node == NULL)
     {
         printf("NULL NODE ENCOUNTERED");
@@ -572,7 +552,7 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
         printf("DATA IS NULL");
         return;
     }
-
+    // fields to be printed
     char *parentNodeSymbol = NULL;
     int isLeaf = (node->data->flag == 0);
     char *nodeSymbol = NULL;
@@ -1049,7 +1029,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     enum Tokentype a = token->tokenType;
     struct Variable *X = st->stack[st->top];
 
-    printf("Variable address popped %p, Variable %d\n", (void *)X, X->val);
+    // printf("Variable address popped %p, Variable %d\n", (void *)X, X->val);
 
     // BOTH ARE TERMINALS
     if (X->val == a && X->flag == 0)
@@ -1121,7 +1101,6 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
 
             if (pt->table[X->val][a][var].val == TK_EPS && pt->table[X->val][a][var].flag == 0)
             {
-                // copy->token = token;
                 break;
             }
 
@@ -1134,7 +1113,6 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
 
         // PASS TO TREE & GET CURRENT NODE`
         parent = add_to_tree(topStack, copyRule, parent);
-
         *parentpointer = parent;
 
         if (parent != NULL)
@@ -1178,9 +1156,14 @@ parseTree *create_tree(struct Variable *init)
 
     return tree;
 }
-void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets, struct ParsingTable *PT, Grammar G)
-{
 
+void initialiseStackItems(struct stack *stack, struct Variable *init)
+{
+    push(stack, createCopy((struct Variable){TK_EOF, 0}));
+    push(stack, init);
+}
+void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets, struct ParsingTable *PT, Grammar G, int toPrint)
+{
     struct Variable *init = createCopy((struct Variable){NT_PROGRAM, 1});
     parseTree *tree = create_tree(init);
     struct tree_node *node_to_add_to = tree->root;
@@ -1196,18 +1179,20 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     getStream(bufferArray);
     printf("READ INPUT\n");
 
-    push(stack, createCopy((struct Variable){TK_EOF, 0}));
-    push(stack, init);
+    initialiseStackItems(stack, init);
 
     // write to computed_sets.txt
-    FILE *cfile = fopen("computed_sets.txt", "w");
-    if (cfile == NULL)
+    if (toPrint)
     {
-        printf("Error opening file!\n");
-        return;
+        FILE *cfile = fopen("computed_sets.txt", "w");
+        if (cfile == NULL)
+        {
+            printf("Error opening file!\n");
+            return;
+        }
+        printFFSetsTable(cfile, sets);
+        fclose(cfile);
     }
-    printFFSetsTable(cfile, sets);
-    fclose(cfile);
 
     int res = 0;
     bool skip_error = false;
@@ -1215,7 +1200,8 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     {
         if (token->tokenType == LEXICAL_ERROR)
         {
-            printf("Line no. %-5d Error: %-30s\n", LA->lineNo, token->lexeme);
+            if (toPrint)
+                printf("Line no. %-5d Error: %-30s\n", LA->lineNo, token->lexeme);
         }
         if (!(token->tokenType == LEXICAL_ERROR || token->tokenType == TK_COMMENT))
         {
@@ -1253,9 +1239,10 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
 
     // printf("After parsing\n");
     // printStack(stack);
-
-    printParseTree(tree, outputfile);
-
+    if (toPrint)
+    {
+        printParseTree(tree, outputfile);
+        }
     if (isEmptyStack(stack))
     {
         printf("STACK EMPTY. ERROR!");
@@ -1266,23 +1253,7 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
         printf("KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
     }
 
-    // serialize_tree(root_for_later);
+    serialize_tree(tree->root);
 
     return;
 }
-
-// int main()
-// {
-
-//     insertAllKeywords();
-//     int synchSet[] = {
-//         TK_ENDRECORD, TK_ENDUNION, TK_SEM, TK_DOT, TK_CL, TK_OP};
-//     Grammar G = {{{1, {{{NT_OTHER_FUNCTIONS, 1}, {NT_MAIN_FUNCTION, 1}}}}, {1, {{{TK_MAIN, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {2, {{{NT_FUNCTION, 1}, {NT_OTHER_FUNCTIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_FUNID, 0}, {NT_INPUT_PAR, 1}, {NT_OUTPUT_PAR, 1}, {TK_SEM, 0}, {NT_STMTS, 1}, {TK_END, 0}}}}, {1, {{{TK_INPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}}}, {2, {{{TK_OUTPUT, 0}, {TK_PARAMETER, 0}, {TK_LIST, 0}, {TK_SQL, 0}, {NT_PARAMETER_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{NT_DATA_TYPE, 1}, {TK_ID, 0}, {NT_REMAINING_LIST, 1}}}}, {2, {{{NT_PRIMITIVE_DATA_TYPE, 1}}, {{NT_CONSTRUCTED_DATA_TYPE, 1}}}}, {2, {{{TK_INT, 0}}, {{TK_REAL, 0}}}}, {2, {{{NT_A, 1}, {TK_RUID, 0}}, {{TK_RUID, 0}}}}, {2, {{{TK_COMMA, 0}, {NT_PARAMETER_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_TYPE_DEFINITIONS, 1}, {NT_DECLARATIONS, 1}, {NT_OTHER_STMTS, 1}, {NT_RETURN_STMT, 1}}}}, {3, {{{NT_TYPE_DEFINITION, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{NT_DEFINETYPE_STMT, 1}, {NT_TYPE_DEFINITIONS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_RECORD, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDRECORD, 0}}, {{TK_UNION, 0}, {TK_RUID, 0}, {NT_FIELD_DEFINITIONS, 1}, {TK_ENDUNION, 0}}}}, {1, {{{NT_FIELD_DEFINITION, 1}, {NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_FIELDID, 0}, {TK_SEM, 0}}}}, {2, {{{NT_FIELD_DEFINITION, 1}, {NT_MORE_FIELDS, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_DECLARATION, 1}, {NT_DECLARATIONS, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_TYPE, 0}, {NT_DATA_TYPE, 1}, {TK_COLON, 0}, {TK_ID, 0}, {NT_GLOBAL_OR_NOT, 1}, {TK_SEM, 0}}}}, {2, {{{TK_COLON, 0}, {TK_GLOBAL, 0}}, {{TK_EPS, 0}}}}, {2, {{{NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {5, {{{NT_ASSIGNMENT_STMT, 1}}, {{NT_ITERATIVE_STMT, 1}}, {{NT_CONDITIONAL_STMT, 1}}, {{NT_IO_STMT, 1}}, {{NT_FUN_CALL_STMT, 1}}}}, {1, {{{NT_SINGLE_OR_REC_ID, 1}, {TK_ASSIGNOP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_SEM, 0}}}}, {1, {{{TK_ID, 0}, {NT_REC_ID, 1}}}}, {2, {{{TK_DOT, 0}, {TK_FIELDID, 0}, {NT_REC_ID, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_OUTPUT_PARAMETERS, 1}, {TK_CALL, 0}, {TK_FUNID, 0}, {TK_WITH, 0}, {TK_PARAMETERS, 0}, {NT_INPUT_PARAMETERS, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}, {TK_ASSIGNOP, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}}}, {1, {{{TK_WHILE, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {TK_ENDWHILE, 0}}}}, {1, {{{TK_IF, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {TK_THEN, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}, {NT_NEW3, 1}, {TK_ENDIF, 0}}}}, {2, {{{TK_ELSE, 0}, {NT_STMT, 1}, {NT_OTHER_STMTS, 1}}, {{TK_EPS, 0}}}}, {2, {{{TK_READ, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}, {{TK_WRITE, 0}, {TK_OP, 0}, {NT_VAR, 1}, {TK_CL, 0}, {TK_SEM, 0}}}}, {1, {{{NT_TERM, 1}, {NT_NEW5, 1}}}}, {2, {{{NT_OPERATOR, 1}, {NT_TERM, 1}, {NT_NEW5, 1}}, {{TK_EPS, 0}}}}, {1, {{{NT_FACTOR, 1}, {NT_NEW6, 1}}}}, {2, {{{NT_OP_H, 1}, {NT_FACTOR, 1}, {NT_NEW6, 1}}, {{TK_EPS, 0}}}}, {2, {{{NT_VAR, 1}}, {{TK_OP, 0}, {NT_ARITHMETIC_EXPRESSION, 1}, {TK_CL, 0}}}}, {2, {{{TK_PLUS, 0}}, {{TK_MINUS, 0}}}}, {2, {{{TK_MUL, 0}}, {{TK_DIV, 0}}}}, {3, {{{TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}, {NT_LOGICAL_OP, 1}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}, {{NT_VAR, 1}, {NT_RELATIONAL_OP, 1}, {NT_VAR, 1}}, {{TK_NOT, 0}, {TK_OP, 0}, {NT_BOOLEAN_EXPRESSION, 1}, {TK_CL, 0}}}}, {3, {{{NT_SINGLE_OR_REC_ID, 1}}, {{TK_NUM, 0}}, {{TK_RNUM, 0}}}}, {2, {{{TK_AND, 0}}, {{TK_OR, 0}}}}, {6, {{{TK_LT, 0}}, {{TK_LE, 0}}, {{TK_EQ, 0}}, {{TK_GT, 0}}, {{TK_GE, 0}}, {{TK_NE, 0}}}}, {1, {{{TK_RETURN, 0}, {NT_OPTIONAL_RETURN, 1}, {TK_SEM, 0}}}}, {2, {{{TK_SQL, 0}, {NT_ID_LIST, 1}, {TK_SQR, 0}}, {{TK_EPS, 0}}}}, {1, {{{TK_ID, 0}, {NT_MORE_IDS, 1}}}}, {2, {{{TK_COMMA, 0}, {NT_ID_LIST, 1}}, {{TK_EPS, 0}}}}, {1, {{{TK_DEFINETYPE, 0}, {NT_A, 1}, {TK_RUID, 0}, {TK_AS, 0}, {TK_RUID, 0}}}}, {2, {{{TK_RECORD, 0}}, {{TK_UNION, 0}}}}}};
-//     FirstAndFollow *sets = computeFirstAndFollow(G.productions);
-//     printf("FIRST and FOLLOW set automated\n");
-//     printf("Lexical analyzer module developed\n");
-//     struct ParsingTable *PT = (struct ParsingTable *)malloc(sizeof(struct ParsingTable));
-//     createParseTable(PT, G.productions, sets, synchSet, sizeof(synchSet) / sizeof(synchSet[0]));
-
-//     print_and_parse_tree("t1.txt", "outputparse.txt", sets, PT, G);
-// }

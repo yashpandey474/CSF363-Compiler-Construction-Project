@@ -171,13 +171,13 @@ int main(int argc, char *argv[])
             print_token_list(argv[1]);
             break;
         case 3:
-            print_and_parse_tree(argv[1], argv[2], sets, PT, G);
+            print_and_parse_tree(argv[1], argv[2], sets, PT, G, 1);
             return 0;
             break;
         case 4:
             start_time = clock();
             print_token_list(argv[1]);
-            print_and_parse_tree(argv[1], argv[2], sets, PT, G);
+            print_and_parse_tree(argv[1], argv[2], sets, PT, G, 0);
             end_time = clock();
             print_timing_info(start_time, end_time);
             break;
