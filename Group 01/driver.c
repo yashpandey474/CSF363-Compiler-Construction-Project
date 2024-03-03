@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
         case 4:
             start_time = clock();
             print_token_list(argv[1]);
-            print_and_parse_tree(argv[2], sets, PT, G);
+            print_and_parse_tree(argv[1], argv[2], sets, PT, G);
             end_time = clock();
             print_timing_info(start_time, end_time);
             break;
