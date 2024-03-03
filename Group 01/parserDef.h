@@ -9,6 +9,7 @@
 #define NUM_TERMINALS 67     // including epsilon
 #define NUM_NON_TERMINALS 49 // num productions
 #define SET_SIZE 200
+#define STACK_INITIAL_SIZE 128
 
 typedef struct parseTree parseTree;
 typedef struct tree_node tree_node;

@@ -538,6 +538,18 @@ struct tree_node *repeated_add(struct tree_node *parent, struct input_structure 
 // parent = add_to_tree(topStack, a, pt, parent);
 struct tree_node *add_to_tree(struct Variable *nt, struct Variable **rule, struct tree_node *parent)
 {
+    printf("Printing variables");
+    for (int i = 0; i < 9; i++)
+    {
+        if (rule[i] == NULL)
+        {
+            break;
+        }
+        else
+        {
+            printf("Variable address while passing %p. Variable value %d\n", (void *)rule[i], rule[i]->val);
+        }
+    }
     struct input_structure inp;
 
     printf("NONTERMINAL IN TREE: %s\n", NonTerminalToString(nt->val));
@@ -561,31 +573,50 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
         return;
     }
 
-    char *parentNodeSymbol = (node->parent == NULL) ? "ROOT" : node->parent->data->token->lexeme;
-
+    char *parentNodeSymbol = NULL;
+    int isLeaf = node->data->flag == 0;
+    char *nodeSymbol = NULL;
     char *lexeme = NULL;
+
+    // SEG FAULT IN THIS LINE: TOKEN IS NOT SET
+
+    int lineNo = -1;
+
+    if (node->data->token)
+    {
+        lineNo = node->data->token->lineNo;
+    }
+
+    if (node->parent == NULL)
+    {
+        parentNodeSymbol = (char *)malloc(5 * sizeof(char));
+        strcpy(parentNodeSymbol, "ROOT");
+    }
+    else
+    {
+        parentNodeSymbol = node->parent->data->token->lexeme;
+        fprintf(outfile, "PARENT: %d  ACTUAL %d\n", node->parent->data->token->tokenType, node->data->token->tokenType);
+    }
 
     if (node->data->flag == 0)
     {
-        lexeme = node->data->token->lexeme
+        lexeme = node->data->token->lexeme;
     }
     else
     {
         lexeme = (char *)malloc(5 * sizeof(char));
         strcpy(lexeme, "----");
+        // lexeme = NonTerminalToString(node->data->val);
     }
-
-    int lineNo = node->data->token->lineNo;
-    int isLeaf = node->data->flag == 0;
 
     if (isLeaf)
     {
-        char *nodeSymbol = (char *)malloc(5 * sizeof(char));
+        nodeSymbol = (char *)malloc(5 * sizeof(char));
         strcpy(nodeSymbol, "LEAF");
     }
     else
     {
-        NonTerminalToString(node->data->val);
+        nodeSymbol = NonTerminalToString(node->data->val);
     }
 
     if (node->data->token->tokenType == TK_RNUM)
@@ -625,12 +656,12 @@ void inorderTraversal(struct tree_node *node, FILE *outfile)
     printNodeDetails(node, outfile);
 
     // For the remaining children
-    // struct tree_node *sibling = node->head ? node->head->next : NULL;
-    // while (sibling != NULL)
-    // {
-    //     inorderTraversal(sibling, outfile); // Assuming lexeme as the non-terminal symbol.
-    //     sibling = sibling->next;
-    // }
+    struct tree_node *sibling = node->head ? node->head->next : NULL;
+    while (sibling != NULL)
+    {
+        inorderTraversal(sibling, outfile); // Assuming lexeme as the non-terminal symbol.
+        sibling = sibling->next;
+    }
 }
 
 void printParseTree(parseTree *PT, char *outfile)
@@ -923,7 +954,6 @@ const char *NonTerminalToString(enum NonTerminals nonTerminal)
     }
 }
 
-#define STACK_INITIAL_SIZE 128
 struct stack
 {
     struct Variable **stack;
@@ -1018,13 +1048,18 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     enum Tokentype a = token->tokenType;
 
     struct Variable *X = st->stack[st->top];
+    printf("Variable address popped %p, Variable %d\n", (void *)X, X->val);
 
     // BOTH ARE TERMINALS
     if (X->val == a && X->flag == 0)
     {
         printf("POPPED TERMINAL: %s\n", TokenToString(X->val));
+
+        // TOKEN BEING SET [NO ERROR]
         X->token = token;
+
         pop(st);
+
         return 1;
     }
 
@@ -1032,6 +1067,8 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     {
         // CALL ERROR FUNCTION
         printf("Line no. %-5d Error: The token %s for lexeme %s  does not match with the expected token %s\n", LA->lineNo, TokenToString(a), token->lexeme, TokenToString(X->val));
+
+        // TOKEN NOT BEING SET
         pop(st);
         return 0;
     }
@@ -1043,7 +1080,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
             printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X->val));
         // go and get the next token
 
-        // DISCARD UNTIL SYN OR VALID
+        // DISCARD INPUT UNTIL SYN OR VALID
         return -1;
     }
     // SYN
@@ -1052,6 +1089,8 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // SYN TOKEN; POP THE NONTERMINAL
         // printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
         printf("synch encountered");
+
+        // TOKEN NOT BEING SET
         pop(st);
 
         // CONTINUE FROM  SYN TOKEN
@@ -1063,7 +1102,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // struct Variable *arr = pt->table[X.val][a];
         struct Variable *topStack = pop(st);
 
-        // ASSIGN THE TOKEN
+        // ASSIGN THE TOKEN [ONLY WHEN NO ERROR]
         topStack->token = token;
 
         // printf("Pushing rule ");

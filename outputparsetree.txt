@@ -1,0 +1,7 @@
+PARENT: 59  ACTUAL 59
+_sumN                4     TK_FUNID             -----                _sumN                yes LEAF                
+PARENT: 59  ACTUAL 59
+----                 4     TK_FUNID             -----                _sumN                no  NT_FUNCTION         
+PARENT: 59  ACTUAL 59
+----                 4     TK_FUNID             -----                _sumN                no  NT_OTHER_FUNCTIONS  
+----                 4     TK_FUNID             -----                ROOT                 no  NT_PROGRAM          
