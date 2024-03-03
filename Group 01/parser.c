@@ -580,6 +580,8 @@ void inorderTraversal(struct tree_node *node, FILE *outfile)
 {
     if (node == NULL)
         return;
+
+    // int isLeaf = node->data->flag == 0;
     if (node->head != NULL)
     {
         inorderTraversal(node->head, outfile);
