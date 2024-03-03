@@ -697,6 +697,7 @@ void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, 
         // ADD THE SYN INDICATOR FOR ALL TERMINALS IN FOLLOW OF NT
         addSyn(PT, sets_for_all, nt, synchSet, defaultSynchSetSize);
 
+        printf("NUM PRODUCTIONS: %d\n", productions[nt].numProductions);
         for (int i = 0; i < productions[nt].numProductions; i++)
         {
             // GET CURRENT RULE
@@ -709,6 +710,8 @@ void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, 
 
                 while (current != NULL)
                 {
+
+                    printf("ADDING TO PARSE TREE: %d %d", current->data.val, rule[0].val);
                     insert(nt, current->data.val, rule, PT);
                     current = current->next;
                 }
