@@ -1030,19 +1030,23 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         int var = 8;
         for (; var >= 0; var -= 1)
         {
+
             if (isDefault(pt->table[X->val][a][var]))
             {
                 copyRule[var] = NULL;
                 continue;
             }
 
+            // assign epsilon or anything other than default
+            struct Variable *copy = createCopy(pt->table[X->val][a][var]);
+            copyRule[var] = copy;
+
             if (pt->table[X->val][a][var].val == TK_EPS && pt->table[X->val][a][var].flag == 0)
             {
                 break;
             }
-
-            struct Variable *copy = createCopy(pt->table[X->val][a][var]);
-            copyRule[var] = copy;
+            
+            //MAY NOT PUSH COPY BUT ALWAYS ADD TO RULE
             push(st, copy);
         }
 
