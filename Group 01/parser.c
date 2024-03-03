@@ -473,6 +473,11 @@ void add_tree_node(struct tree_node *parent, struct tree_node *child)
 // function to find the next non terminal for a given node
 struct tree_node *nextNonTerminal(struct tree_node *current)
 {
+    if (current == NULL)
+    {
+        return NULL;
+    }
+
     if (current->data->flag == 1)
     {
         printf("FINDING NEXT NT OF: %s\n", NonTerminalToString(current->data->val));
@@ -1045,15 +1050,15 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
             {
                 break;
             }
-            
-            //MAY NOT PUSH COPY BUT ALWAYS ADD TO RULE
+
+            // MAY NOT PUSH COPY BUT ALWAYS ADD TO RULE
             push(st, copy);
         }
 
         printf("While passing to add to tree stack was\n");
         printStack(st);
 
-        // PASS TO TREE & GET CURRENT NODE
+        // PASS TO TREE & GET CURRENT NODE`
         parent = add_to_tree(topStack, copyRule, parent);
 
         *parentpointer = parent;
@@ -1144,7 +1149,7 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
             // printf("Stack before:\n");
             // printStack(stack);
             // printf("PASSED PARENT TO PARSING: %s\n", NonTerminalToString(node_to_add_to->data->val));
-            while ((res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer)) == 0)
+            while ((!isEmptyStack(stack)) && (res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer)) == 0)
             {
                 if (*parentpointer != NULL)
                 {
@@ -1177,6 +1182,11 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     // printStack(stack);
 
     printParseTree(tree, "outputparsetree.txt");
+
+    if (isEmptyStack(stack))
+    {
+        printf("STACK EMPTY. ERROR!");
+    }
 
     if (onlyContainsEOF(stack))
     {
