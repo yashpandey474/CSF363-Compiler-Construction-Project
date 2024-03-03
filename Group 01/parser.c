@@ -554,7 +554,7 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
     char *lexeme = node->data->flag == 0 ? token->lexeme : "----";
     int lineNo = token->lineNo;
     const char *tokenName = TokenToString(token->tokenType);
-
+    int isLeaf = node->data->flag == 0;
     const char *nodeSymbol = isLeaf ? "LEAF" : NonTerminalToString(node->data->val);
 
     if (token->tokenType == TK_RNUM)
@@ -578,8 +578,6 @@ void inorderTraversal(struct tree_node *node, FILE *outfile)
 {
     if (node == NULL)
         return;
-
-    int isLeaf = node->data->flag == 0;
     if (node->head != NULL)
     {
         inorderTraversal(node->head, outfile);

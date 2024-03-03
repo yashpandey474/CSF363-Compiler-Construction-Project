@@ -225,8 +225,14 @@ int main(int argc, char *argv[])
     int option;
     clock_t start_time, end_time;
     printf("FIRST and FOLLOW set automated\n");
-    printf("Lexical analyzer module developed\n");
-
+    printf("Lexical,Syntax analyzer module developed\n");
+    printf("Parse Tree module developed\n");
+    
+    if (argc < 3)
+    {
+        printf("Please provide in format %s <inputfile> <outputfile>\n", argv[0]);
+        return 1;
+    }
     insertAllKeywords();
     int synchSet[] = {
         TK_ENDRECORD, TK_ENDUNION, TK_SEM, TK_DOT, TK_CL, TK_OP};
