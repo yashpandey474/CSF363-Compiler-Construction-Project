@@ -11,7 +11,7 @@ const char *TokenToString(int token);
 char *NonTerminalToString(enum NonTerminals nonTerminal);
 struct stack *initialiseStack();
 struct Variable *createCopy(struct Variable var);
-void printStack(struct stack *st);
+void printStack(struct stack *st, FILE *errors);
 bool isEmptyStack(struct stack *st);
 struct Variable *peek(struct stack *st);
 bool onlyContainsEOF(struct stack *st);

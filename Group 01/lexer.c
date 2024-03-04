@@ -26,12 +26,13 @@ int getSizeOfCustomString(twinBuffer LA)
 {
     int b = LA->begin;
     int f = LA->forward;
-    if (f<b){
-        int temp=f;
-        f=b;
-        b=temp;
+    if (f < b)
+    {
+        int temp = f;
+        f = b;
+        b = temp;
     }
-    
+    return f - b;
 }
 
 char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
@@ -120,7 +121,6 @@ twinBufferArray initialiseTwinBuffer(FILE *file)
 
     return bufferArray;
 }
-
 
 void returnToStart(twinBuffer LA)
 {

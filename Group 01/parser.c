@@ -919,22 +919,25 @@ struct stack
     int top;
     int MAX;
 };
-void printStack(struct stack *st)
+void printStack(struct stack *st, FILE *errors)
 {
     for (int i = 0; i <= st->top; i++)
     {
 
         if ((st->stack[i])->flag == 1)
         {
-            printf("%s ", NonTerminalToString((st->stack[i])->val));
+            // printf("%s ", NonTerminalToString((st->stack[i])->val));
+            fprintf(errors, "%s ", NonTerminalToString((st->stack[i])->val));
         }
 
         else
         {
-            printf("%s ", TokenToString((st->stack[i])->val));
+            // printf("%s ", TokenToString((st->stack[i])->val));
+            fprintf(errors, "%s ", TokenToString((st->stack[i])->val));
         }
     }
-    printf("\n");
+    // printf("\n");
+    fprintf(errors, "\n");
 }
 bool isEmptyStack(struct stack *st)
 {
@@ -1017,6 +1020,8 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // TOKEN BEING SET [NO ERROR]
         X->token = token;
 
+        // fprintf(errors, "POPPED TOKEN: %s\n", TokenToString(a));
+
         pop(st);
 
         return 1;
@@ -1049,7 +1054,10 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     {
         // SYN TOKEN; POP THE NONTERMINAL
         // printf("Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X.val));
-        // printf("Synch Encountered for NT: %s TOKEN: %s\n", NonTerminalToString(X->val), TokenToString(a));
+
+        // ERROR IF NOT SKIPPING
+        if (!skipError)
+            fprintf(errors, "Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X->val));
 
         // TOKEN NOT BEING SET
         pop(st);
@@ -1062,7 +1070,13 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // GET THE RULE
         // struct Variable *arr = pt->table[X.val][a];
         struct Variable *topStack = pop(st);
+
+        // fprintf(errors, "POPPED NT %s ON TOKEN %s\n", NonTerminalToString(topStack->val), TokenToString(a));
+
         struct Variable **copyRule = (struct Variable **)malloc(sizeof(struct Variable *) * 9);
+
+        // printRule(topStack->val, copyRule);
+
         int var = 8;
         for (; var >= 0; var -= 1)
         {
@@ -1169,6 +1183,7 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     {
         if (token->tokenType == LEXICAL_ERROR)
         {
+            // LEXICAL ERRORS
             if (toPrint)
             {
                 fprintf(errors, "Line no. %-5d Error: %-30s\n", LA->lineNo, token->lexeme);
@@ -1177,6 +1192,10 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
         }
         if (!(token->tokenType == TK_COMMENT))
         {
+
+            // fprintf(errors, "\nSTACK BEFORE PARSING\n");
+            // printStack(stack, errors);
+
             while ((!isEmptyStack(stack)) && (res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors)) == 0)
             {
                 if (*parentpointer != NULL)
@@ -1198,6 +1217,9 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
             {
                 node_to_add_to = *parentpointer;
             }
+
+            // fprintf(errors, "\nSTACK AFTER PARSING\n");
+            // printStack(stack, errors);
         }
     }
     fclose(errors);
