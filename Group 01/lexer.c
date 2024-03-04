@@ -22,20 +22,38 @@ FILE *readTestFile(char *file_path)
 
     return file;
 }
-int getSizeOfCustomString(twinBuffer LA)
+
+int getSizeOfCustomString(lexicalAnalyser LA)
 {
     int b = LA->begin;
     int f = LA->forward;
-    if (f < b)
+    if ((b < BUFFER_SIZE && f < BUFFER_SIZE) || (b > BUFFER_SIZE && f > BUFFER_SIZE))
     {
-        int temp = f;
-        f = b;
-        b = temp;
+        if (b < f)
+        {
+            return f - b;
+        }
+        else
+        {
+            return 2 * BUFFER_SIZE - f + b;
+        }
     }
-    return f - b;
+    else if (b < BUFFER_SIZE && f > BUFFER_SIZE)
+    {
+        return f - b - 1;
+    }
+    else if (b > BUFFER_SIZE && f < BUFFER_SIZE)
+    {
+        return 2 * BUFFER_SIZE + 1 - f + b;
+    }
+    else
+    {
+        printf("Error");
+        return 0;
+    }
 }
 
-char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
+char *strncustomcpy(lexicalAnalyser LA) // copy forward to begin in a string
 {
     // as per the design, forward and begin can never be at the buffer end marker
     // forward - begin is the size of lexemme + eofs if occured
@@ -45,32 +63,37 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
     // }printf("\n");
 
     int twinBufferSize = 2 * BUFFER_SIZE + 2;
-    int numchars = 0;
-    int b = LA->begin;
-    int f = LA->forward;
-    char *a = (char *)malloc((f > b ? f - b + 1 : twinBufferSize - f + b + 1) * sizeof(char));
+    int numchars = getSizeOfCustomString(LA) + 1;
+
+    char *a = (char *)malloc(numchars);
     if (a == NULL)
     {
         printf("Memory allocation in strncustomcpy failed.");
         return "ERR_1010";
     }
-    f %= twinBufferSize;
-    b %= twinBufferSize;
-    for (; b != f; b %= twinBufferSize)
+    int b = LA->begin % twinBufferSize;
+    int f = LA->forward % twinBufferSize;
+    int i = 0;
+    for (; b != f;)
     {
         if (LA->bufferArray->buffer[b] != EOF)
         {
-            numchars++;
-            a[numchars - 1] = LA->bufferArray->buffer[b];
+            a[i] = LA->bufferArray->buffer[b];
+            i++;
+            b += 1;
         }
-        b++;
+        else
+        {
+            b += 1;
+            b %= twinBufferSize;
+        }
     }
-    a[numchars] = '\0';
+    a[numchars - 1] = '\0';
     a = (char *)realloc(a, (numchars) * sizeof(char));
     return a;
 }
 
-int getStream(twinBufferArray bufferArray)
+int getStream(twinBuffer bufferArray)
 {
     char *buffer;
     if (bufferArray->readingFirst)
@@ -97,10 +120,10 @@ int getStream(twinBufferArray bufferArray)
 }
 
 // CREATE THE BUFFER AND RETURN IT
-twinBufferArray initialiseTwinBuffer(FILE *file)
+twinBuffer initialiseTwinBuffer(FILE *file)
 {
     // INITIALISE BUFFER
-    twinBufferArray bufferArray = (twinBufferArray)malloc(sizeof(TwinBufferArray));
+    twinBuffer bufferArray = (twinBuffer)malloc(sizeof(TwinBuffer));
 
     bufferArray->readingFirst = 1;
     bufferArray->buffer[BUFFER_SIZE] = EOF;
@@ -110,13 +133,13 @@ twinBufferArray initialiseTwinBuffer(FILE *file)
     return bufferArray;
 }
 
-void returnToStart(twinBuffer LA)
+void returnToStart(lexicalAnalyser LA)
 {
     LA->state = 0;
     LA->begin = LA->forward;
 }
 
-struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, twinBuffer LA, bool toIncludeString, char *errorMessage)
+struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, lexicalAnalyser LA, bool toIncludeString, char *errorMessage)
 {
     // printf("Called");
 
@@ -159,7 +182,7 @@ struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token, twinBuf
     return token;
 }
 
-struct SymbolTableEntry *lexicalError(struct SymbolTableEntry *token, twinBuffer LA)
+struct SymbolTableEntry *lexicalError(struct SymbolTableEntry *token, lexicalAnalyser LA)
 {
 
     if (token->tokenType == TK_ID && strlen(token->lexeme) > MAX_ID_SIZE)
@@ -174,7 +197,7 @@ struct SymbolTableEntry *lexicalError(struct SymbolTableEntry *token, twinBuffer
 }
 
 // FUNCTION TO GET CORRESPONDING NUMBER
-void equivalentNumber(twinBuffer lex, int flag, tokenInfo token)
+void equivalentNumber(lexicalAnalyser lex, int flag, tokenInfo token)
 {
     // printf("EQV NUMS %s\n", token->lexeme);
     if (flag == TK_NUM1 || flag == TK_NUM2)
@@ -188,20 +211,20 @@ void equivalentNumber(twinBuffer lex, int flag, tokenInfo token)
         token->doubleValue = atof(token->lexeme);
     }
 }
-void changeForward(twinBuffer LA, int flag)
+void changeForward(lexicalAnalyser LA, int flag)
 {
     // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
     LA->forward = (LA->forward + flag);
 }
 
-void changeBegin(twinBuffer LA, int flag)
+void changeBegin(lexicalAnalyser LA, int flag)
 {
     // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
     LA->begin = (LA->begin + flag);
 }
 
 // TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
-struct SymbolTableEntry *takeActions(twinBuffer LA, struct SymbolTableEntry *token)
+struct SymbolTableEntry *takeActions(lexicalAnalyser LA, struct SymbolTableEntry *token)
 {
     // NON FINAL STATE32
     int state = LA->state;
@@ -337,7 +360,7 @@ struct SymbolTableEntry *initialiseToken()
     return token;
 }
 
-tokenInfo getNextToken(twinBuffer LA)
+tokenInfo getNextToken(lexicalAnalyser LA)
 {
     // INITIALSE TOKEN
     struct SymbolTableEntry *token = initialiseToken();
@@ -467,10 +490,10 @@ tokenInfo getNextToken(twinBuffer LA)
     return NULL;
 }
 
-twinBuffer initialiseLA(twinBufferArray bufferArray)
+lexicalAnalyser initialiseLA(twinBuffer bufferArray)
 {
-    twinBuffer LA;
-    LA = (twinBuffer)malloc(sizeof(TwinBuffer));
+    lexicalAnalyser LA;
+    LA = (lexicalAnalyser)malloc(sizeof(LexicalAnalyser));
 
     LA->lineNo = 1;
     LA->begin = 0;
@@ -494,10 +517,10 @@ twinBuffer initialiseLA(twinBufferArray bufferArray)
 //     FILE *file = readTestFile("test_program_with_errors.txt");
 
 //     // INITIALISE A TWIN BUFFER
-//     twinBufferArray *bufferArray = initialiseTwinBuffer(file);
+//     twinBuffer *bufferArray = initialiseTwinBuffer(file);
 
 //     // INITIALISE LA
-//     twinBuffer LA = initialiseLA(bufferArray);
+//     lexicalAnalyser LA = initialiseLA(bufferArray);
 
 //     // printf("LA INITIALISED\n");
 

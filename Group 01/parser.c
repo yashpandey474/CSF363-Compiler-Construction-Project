@@ -680,7 +680,7 @@ void printRule(enum NonTerminals nt, struct Variable *ruleArray)
 
     printf("%s ===> ", NonTerminalToString(nt));
 
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < MAX_VARS; i++)
     {
         if (ruleArray[i].val == 0 && ruleArray[i].flag == 0)
         {
@@ -775,13 +775,15 @@ void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, 
                     insert(nt, current->data.val, rule, PT);
                     current = current->next;
                 }
+
+                continue;
             }
 
             else
             {
 
                 int var = 0;
-                for (; var < 9 && !(isDefault(rule[var])); var += 1)
+                for (; var < MAX_VARS && !(isDefault(rule[var])); var += 1)
                 {
 
                     int set_index = rule[var].val;
@@ -809,7 +811,7 @@ void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, 
                     }
                 }
 
-                if (var == 9 || isDefault(rule[var]))
+                if (var == MAX_VARS || isDefault(rule[var]))
                 {
                     // ADD THE RULE IN FOLLOW OF THE VAR [EPSILON RULE]
                     struct Node *current = sets_for_all[nt]->followSets->linkedList->head;
@@ -879,8 +881,8 @@ char *NonTerminalToString(enum NonTerminals nonTerminal)
         return "NT_ASSIGNMENT_STMT";
     case NT_SINGLE_OR_REC_ID:
         return "NT_SINGLE_OR_REC_ID";
-    case NT_REC_ID:
-        return "NT_REC_ID";
+    // case NT_REC_ID:
+    //     return "NT_REC_ID";
     case NT_FUN_CALL_STMT:
         return "NT_FUN_CALL_STMT";
     case NT_OUTPUT_PARAMETERS:
@@ -891,24 +893,24 @@ char *NonTerminalToString(enum NonTerminals nonTerminal)
         return "NT_ITERATIVE_STMT";
     case NT_CONDITIONAL_STMT:
         return "NT_CONDITIONAL_STMT";
-    case NT_NEW3:
-        return "NT_NEW3";
+    // case NT_NEW3:
+    //     return "NT_NEW3";
     case NT_IO_STMT:
         return "NT_IO_STMT";
     case NT_ARITHMETIC_EXPRESSION:
         return "NT_ARITHMETIC_EXPRESSION";
-    case NT_NEW5:
-        return "NT_NEW5";
-    case NT_TERM:
-        return "NT_TERM";
-    case NT_NEW6:
-        return "NT_NEW6";
+    // case NT_NEW5:
+    //     return "NT_NEW5";
+    // case NT_TERM:
+    //     return "NT_TERM";
+    // case NT_NEW6:
+    //     return "NT_NEW6";
     case NT_FACTOR:
         return "NT_FACTOR";
     case NT_OPERATOR:
         return "NT_OPERATOR";
-    case NT_OP_H:
-        return "NT_OP_H";
+    // case NT_OP_H:
+    //     return "NT_OP_H";
     case NT_BOOLEAN_EXPRESSION:
         return "NT_BOOLEAN_EXPRESSION";
     case NT_VAR:
@@ -1025,7 +1027,7 @@ struct Variable *createCopy(struct Variable var)
     return copy;
 }
 
-int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, twinBuffer LA, struct tree_node *parent, bool skipError, struct tree_node **parentpointer, FILE *errors)
+int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, lexicalAnalyser LA, struct tree_node *parent, bool skipError, struct tree_node **parentpointer, FILE *errors)
 {
     enum Tokentype a = token->tokenType;
     struct Variable *X = st->stack[st->top];
@@ -1055,6 +1057,8 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // TOKEN NOT BEING SET
 
         pop(st);
+
+        // ASSUME ALL TOKENS TO BE IN SYNCH SET OF ALL TOKENS
         return 0;
     }
 
@@ -1094,7 +1098,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
 
         // fprintf(errors, "POPPED NT %s ON TOKEN %s %s\n", NonTerminalToString(topStack->val), TokenToString(a), token->lexeme);
 
-        struct Variable **copyRule = (struct Variable **)malloc(sizeof(struct Variable *) * 9);
+        struct Variable **copyRule = (struct Variable **)malloc(sizeof(struct Variable *) * MAX_VARS);
 
         // printRule(topStack->val, copyRule);
 
@@ -1177,19 +1181,32 @@ void initialiseStackItems(struct stack *stack, struct Variable *init)
 }
 void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets, struct ParsingTable *PT, Grammar G, int toPrint)
 {
+    // VARIABLE FOR THE START SYMBOL
     struct Variable *init = createCopy((struct Variable){NT_PROGRAM, 1});
+
+    // INITIALISE A PARSE TREE
     parseTree *tree = create_tree(init);
 
+    // INITIALLY ADD TO ROOT NODE
     struct tree_node *node_to_add_to = tree->root;
     struct tree_node **parentpointer = (struct tree_node **)malloc(sizeof(struct tree_node *));
     *parentpointer = node_to_add_to;
 
+    // INITIALISE A STACK
     struct stack *stack = initialiseStack();
-    FILE *file = readTestFile(testfile);
-    twinBufferArray bufferArray = initialiseTwinBuffer(file);
-    twinBuffer LA = initialiseLA(bufferArray);
 
+    // READ THE INPUT TEST FILE
+    FILE *file = readTestFile(testfile);
+
+    // TWIN BUFFER
+    twinBuffer bufferArray = initialiseTwinBuffer(file);
+
+    // COMPUNDED DATASTRUCTURE HOLDING THE BUFFER, LINENO, STATE, BEGIN, FORWARD
+    lexicalAnalyser LA = initialiseLA(bufferArray);
+
+    // HOLD CURRENT TOKEN
     struct SymbolTableEntry *token;
+
     int res = 0;
     bool skip_error = false;
 
@@ -1254,12 +1271,25 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     }
     fclose(errors);
 
-    errors = fopen("errors.txt", "r");
-
-    char error_line[256];
-    while (fgets(error_line, sizeof(error_line), file) != NULL)
+    if (toPrint)
     {
-        printf("%s", error_line);
+
+        errors = fopen("errors.txt", "r");
+
+        if (errors == NULL)
+        {
+            printf("Failed to open the file.\n");
+            return;
+        }
+
+        char error_line[256];
+        while (fgets(error_line, sizeof(error_line), errors) != NULL)
+        {
+            printf("%s", error_line);
+        }
+
+        fclose(errors);
+        return;
     }
 
     if (toPrint)
@@ -1275,8 +1305,8 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     {
         printf("KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
     }
-    //if python graph output and serialising is needed
-    // serialize_tree(tree->root);
+    // if python graph output and serialising is needed
+    //  serialize_tree(tree->root);
 
     return;
 }

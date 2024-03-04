@@ -76,6 +76,7 @@ void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal
   }
 }
 
+void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, struct Sets **sets_for_all, int *synchSet, int defaultSynchSetSize)
 {
   for (int nt = 0; nt < NUM_NON_TERMINALS; nt++)
   {
@@ -103,7 +104,7 @@ void addSyn(struct ParsingTable *PT, struct Sets **sets_for_all, int nonTerminal
       {
 
         int var = 0;
-        for (; var < 9 && !(isDefault(rule[var])); var += 1)
+        for (; var < MAX_VARS && !(isDefault(rule[var])); var += 1)
         {
 
           int set_index = rule[var].val;

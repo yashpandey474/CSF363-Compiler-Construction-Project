@@ -3,17 +3,17 @@
 #include <stdlib.h>
 #include "lexerDef.h"
 #include <string.h>
-#ifndef LEXER
+#ifndef LEXER_H
 #define LEXER_H
 struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry);
 int getNextState(int currentState, int character);
 void insertAllKeywords();
 void printSymbolTable();
-void changeForward(twinBuffer LA, int flag);
+void changeForward(lexicalAnalyser LA, int flag);
 const char *CharacterTypeToString(enum CharacterType type);
-twinBufferArray initialiseTwinBuffer(FILE *file);
-twinBuffer initialiseLA(twinBufferArray bufferArray);
-int getStream(twinBufferArray bufferArray);
-tokenInfo getNextToken(twinBuffer LA);
+twinBuffer initialiseTwinBuffer(FILE *file);
+lexicalAnalyser initialiseLA(twinBuffer bufferArray);
+int getStream(twinBuffer bufferArray);
+tokenInfo getNextToken(lexicalAnalyser LA);
 
 #endif

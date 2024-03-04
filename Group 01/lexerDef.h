@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef LEXERDEF
+#ifndef LEXERDEF_H
 #define LEXERDEF_H
 
 #define HASH_MAP_SIZE 91
@@ -14,28 +14,28 @@
 #define BUFFER_SIZE 256
 #define FINAL_STATE_OFFSET NUM_NON_ACCEPT_STATES + 1 // this is same as NON ACCEPT STATES + 1
 #define MAX_LEXEME_SIZE 100
-struct TwinBufferArray
+struct TwinBuffer
 {
     // 0 -> READING SECOND BUFFER, 1 -> READING FIRST BUFFER
     int readingFirst;
     FILE *file;
     char buffer[BUFFER_SIZE * 2 + 2];
 };
-typedef struct TwinBufferArray TwinBufferArray;
-
-//typedefing the pointer to the array
-typedef TwinBufferArray *twinBufferArray;
-
-struct TwinBuffer
-{
-    int lineNo, begin, forward, state;
-    twinBufferArray bufferArray;
-};
-
 typedef struct TwinBuffer TwinBuffer;
 
-//pointer typedef
+// typedefing the pointer to the array
 typedef TwinBuffer *twinBuffer;
+
+struct LexicalAnalyser
+{
+    int lineNo, begin, forward, state;
+    twinBuffer bufferArray;
+};
+
+typedef struct LexicalAnalyser LexicalAnalyser;
+
+// pointer typedef
+typedef LexicalAnalyser *lexicalAnalyser;
 struct SymbolTableNode
 {
     struct SymbolTableEntry *entry;

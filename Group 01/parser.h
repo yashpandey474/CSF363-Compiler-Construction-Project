@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "parserDef.h"
 
-#ifndef PARSER
+#ifndef PARSER_H
 #define PARSER_H
 
 const char *TokenToString(int token);
@@ -18,7 +18,7 @@ bool onlyContainsEOF(struct stack *st);
 bool isFull(struct stack *st);
 void push(struct stack *st, struct Variable *data);
 struct Variable *pop(struct stack *st);
-int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, twinBuffer LA, struct tree_node *parent, bool skipError, struct tree_node **parentpointer, FILE *errors);
+int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt, struct stack *st, lexicalAnalyser LA, struct tree_node *parent, bool skipError, struct tree_node **parentpointer, FILE *errors);
 struct stack *initialiseStack();
 void computeFirstSet(FirstAndFollow *sets_for_all, struct GrammarRule *G);
 void computeFollowSet(FirstAndFollow *sets_for_all, struct GrammarRule *G);
