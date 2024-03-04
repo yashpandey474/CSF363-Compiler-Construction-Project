@@ -16,7 +16,7 @@
 16. <typeDefinition>===>TK_UNION TK_RUID <fieldDefinitions> TK_ENDUNION
 17. <fieldDefinitions>===> <fieldDefinition><fieldDefinition><moreFields>
 18. <fieldDefinition>===> TK_TYPE <fieldType > TK_COLON TK_FIELDID TK_SEM
-19. <fieldtype>===> <primitiveDatatype> | TK_RUID 
+19. <fieldtype>===> <primitiveDatatype> |  <constructedDatatype>
 20. <moreFields>===><fieldDefinition><moreFields> | eps
 21. <declarations> ===> <declaration><declarations>| eps
 22. <declaration>===> TK_TYPE <dataType> TK_COLON TK_ID <global_or_not> TK_SEM
