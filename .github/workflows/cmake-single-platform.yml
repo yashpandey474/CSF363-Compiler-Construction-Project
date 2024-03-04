@@ -27,6 +27,15 @@ jobs:
           cd Group\ 01/
           make
 
+          
+      - name: Test Case 1 (For testing the lexer)
+        run: |
+          cd Group\ 01/
+          printf '2\n0\n' | ./stage1exe "t1.txt" "out.txt"
+          diff lexicaltest.txt "../Test Cases/lexemesandtokens_t1.txt"
+        shell: bash
+
+
       - name: Test case 2
         run: |
           cd Group\ 01/
@@ -35,12 +44,7 @@ jobs:
           diff lexicaltest.txt ../Test\ Cases/lexemesandtokens_t2.txt
         shell: bash
 
-      - name: Test Case 1 (For testing the lexer)
-        run: |
-          cd Group\ 01/
-          printf '2\n0\n' | ./stage1exe "t1.txt" "out.txt"
-          diff lexicaltest.txt "../Test Cases/lexemesandtokens_t1.txt"
-        shell: bash
+
 
       - name: Test Case 3 (Syntactically correct testcase)
         run: |
@@ -82,11 +86,11 @@ jobs:
         run: |
           cd Group\ 01/
           printf '3\n0\n' | ./stage1exe "t6.txt" "output.txt"
-          if [ -s errors.txt ]; then
-              echo "File is not empty."
-          else
+          if [ ! -f errors.txt ] || [ ! -s errors.txt ]; then
               echo "File is empty or does not exist."
               exit 1
+          else
+              echo "Errors reported correctly"
 
           fi
         shell: bash
