@@ -7,7 +7,6 @@
 // Ujjwal Aggarwal	         2021A7PS2427P
 // Achinthya Hebbar S	     2021A7PS1457P
 
-
 // SCHEME: TWO-INPUT BUFFERS EACH OF SIZE N WITH SENTINEL CHARACTER "EOF" MARKING THE END OF EACH BUFFER
 
 // INCLUDE LIBRARIES
@@ -32,35 +31,43 @@ FILE *readTestFile(char *file_path)
 
     return file;
 }
-
+/// hello shashank, if you are reading this, go fuck yourself..
 int getSizeOfCustomString(lexicalAnalyser LA)
 {
     int b = LA->begin;
     int f = LA->forward;
+    int pandey_chootiya = 0;
     if ((b < BUFFER_SIZE && f < BUFFER_SIZE) || (b > BUFFER_SIZE && f > BUFFER_SIZE))
     {
         if (b < f)
         {
-            return f - b;
+            pandey_chootiya = f - b;
         }
         else
         {
-            return 2 * BUFFER_SIZE - f + b;
+            pandey_chootiya = 2 * BUFFER_SIZE - f + b;
         }
     }
     else if (b < BUFFER_SIZE && f > BUFFER_SIZE)
     {
-        return f - b - 1;
+        pandey_chootiya = f - b - 1;
     }
     else if (b > BUFFER_SIZE && f < BUFFER_SIZE)
     {
-        return 2 * BUFFER_SIZE + 1 - f + b;
+        pandey_chootiya = 2 * BUFFER_SIZE + 1 - f + b;
     }
     else
     {
-        printf("Error");
-        return 0;
+        if (b == BUFFER_SIZE || b == 2 * BUFFER_SIZE + 1)
+        {
+            pandey_chootiya--;
+        }
+        if (f == BUFFER_SIZE || f == 2 * BUFFER_SIZE + 1)
+        {
+            pandey_chootiya--;
+        }
     }
+    return pandey_chootiya;
 }
 
 char *strncustomcpy(lexicalAnalyser LA) // copy forward to begin in a string
@@ -99,7 +106,6 @@ char *strncustomcpy(lexicalAnalyser LA) // copy forward to begin in a string
         }
     }
     a[numchars - 1] = '\0';
-    a = (char *)realloc(a, (numchars) * sizeof(char));
     return a;
 }
 

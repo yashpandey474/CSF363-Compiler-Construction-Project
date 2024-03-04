@@ -200,9 +200,10 @@ def print_enum(data):
         non_terminals_list.append(nonterminals[nonterm])
 
     print("enum NonTerminals\n{")
-    for non_terminal in non_terminals_list:
-        print(f"  NT_{non_terminal},")
-    print("  NT_EPS")
+    for i,non_terminal in enumerate(non_terminals_list):
+        print(f"  NT_{non_terminal}",end="")
+        if i!=len(non_terminals_list)-1:
+            print(",")
     print("};")
 
     print(f"\033[93m(non terminals count (eXcluding epsilon): {len(non_terminals_list)})\033[00m")

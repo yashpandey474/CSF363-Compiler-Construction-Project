@@ -538,12 +538,14 @@ struct tree_node *repeated_add(struct tree_node *parent, struct Variable *nt, st
         return nextNonTerminal(parent->head);
     }
 
-    for (int var = 8; var >= 0; var -= 1)
+    for (int var = MAX_VARS - 1; var >= 0; var -= 1)
     {
         if (rule[var] == NULL)
         {
             continue;
         }
+
+        // printf("VAR = %s\n", NonTerminalToString(rule[var]->flag));
 
         add_tree_node(parent, create_tree_node(rule[var]));
     }
@@ -947,8 +949,6 @@ char *NonTerminalToString(enum NonTerminals nonTerminal)
         return "NT_DEFINETYPE_STMT";
     case NT_A:
         return "NT_A";
-    case NT_EPS:
-        return "NT_EPS";
 
     default:
     {
@@ -1121,8 +1121,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
 
         // printRule(topStack->val, copyRule);
 
-        int var = 8;
-        for (; var >= 0; var -= 1)
+        for (int var = MAX_VARS - 1; var >= 0; var -= 1)
         {
 
             if (isDefault(pt->table[X->val][a][var]))
@@ -1178,7 +1177,7 @@ FirstAndFollow *computeFirstAndFollow(struct GrammarRule *productions)
     computeFirstSet(sets, productions);
     // printf("FIRST SET COMPUTED\n");
 
-    // computeFollowSet(sets, productions);
+    computeFollowSet(sets, productions);
     // printf("FOLLOW SET COMPUTED\n");
 
     return sets;
@@ -1198,7 +1197,6 @@ void initialiseStackItems(struct stack *stack, struct Variable *init)
     push(stack, createCopy((struct Variable){TK_EOF, 0}));
     push(stack, init);
 }
-
 
 void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets, struct ParsingTable *PT, Grammar G, int toPrint)
 {
