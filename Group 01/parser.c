@@ -410,10 +410,36 @@ void serialize_node(struct tree_node *node, FILE *output)
     if (node->data->flag == 1)
     {
         fprintf(output, "  \"data\": \"%s\",\n", NonTerminalToString(node->data->val)); // Assuming data can be represented as a string
+        fprintf(output, "  \"isleaf\": \"no\",\n");
     }
     else
     {
         fprintf(output, "  \"data\": \"%s\",\n", TokenToString(node->data->val)); // Assuming data can be represented as a string
+        fprintf(output, "  \"isleaf\": \"yes\",\n");
+    }
+    if (node->data->token != NULL)
+    {
+        fprintf(output, "  \"lexeme\": \"%s\",\n", node->data->token->lexeme);
+        fprintf(output, "  \"lineNo\": \"%d\",\n", node->data->token->lineNo);
+        if (node->data->token->tokenType == TK_RNUM)
+        {
+            fprintf(output, "  \"value\": \"%lf\",\n", node->data->token->doubleValue);
+        }
+        else if (node->data->token->tokenType == TK_NUM)
+        {
+            fprintf(output, "  \"value\": \"%d\",\n", node->data->token->intValue);
+        }
+        else
+        {
+            // value is "-----"
+            fprintf(output, "  \"value\": \"-----\",\n");
+        }
+    }
+    else
+    {
+        fprintf(output, "  \"lexeme\": \"-----\",\n");
+        fprintf(output, "  \"lineNo\": \"-1\",\n");
+        fprintf(output, "  \"value\": \"-----\",\n");
     }
     if (node->parent != NULL)
     {
@@ -1245,6 +1271,7 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     {
         printf("KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
     }
+    serialize_tree(tree->root);
 
     return;
 }
