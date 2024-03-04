@@ -1265,7 +1265,8 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     {
         printf("KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
     }
-    serialize_tree(tree->root);
+    //if python graph output and serialising is needed
+    // serialize_tree(tree->root);
 
     return;
 }
