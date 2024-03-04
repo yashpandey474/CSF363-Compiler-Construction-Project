@@ -11,8 +11,12 @@ Lexical Analyzer/myProgram.dSYM/
 Syntax Analyzer/output.txt
 Syntax Analyzer/grammar2.dSYM/
 Syntax Analyzer/stage2exe.dSYM/
+Group 01/stage1exe.dSYM/
 commentremove.txt
 stage1exe
 stage2exe
 testing.txt
+lexicaltest.txt
+outputcomments.txt
+tree_structure.txt
 *.pyc

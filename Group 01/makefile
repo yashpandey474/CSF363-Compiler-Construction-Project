@@ -6,11 +6,11 @@ CC=gcc
 CFLAGS=-I. -I"./Group 01" -I"./Group 01/Other Files" -Wall -g
 
 # Define the source files explicitly, including the path for those in the "Group 01" and "Other Files" directory
-SOURCES=./Group\ 01/driver.c \
-        ./Group\ 01/lexer.c \
-        ./Group\ 01/parser.c \
-        ./Group\ 01/Other\ Files/symbol_table.c \
-        ./Group\ 01/Other\ Files/transition_table.c 
+SOURCES=driver.c \
+        lexer.c \
+        parser.c \
+        symbol_table.c \
+        transition_table.c 
 
 # Define the executable file name
 EXECUTABLE=stage1exe
