@@ -1035,7 +1035,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
     // BOTH ARE TERMINALS
     if (X->val == a && X->flag == 0)
     {
-        // printf(rrors, "POPPED TERMINAL: %s\n", TokenToString(X->val));
+        // printf( "POPPED TERMINAL: %s\n", TokenToString(X->val));
 
         // TOKEN BEING SET [NO ERROR]
         X->token = token;
@@ -1077,8 +1077,9 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
 
         // ERROR IF NOT SKIPPING
         if (!skipError)
+        {
             fprintf(errors, "Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X->val));
-
+        }
         // TOKEN NOT BEING SET
         pop(st);
 
@@ -1091,7 +1092,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         // struct Variable *arr = pt->table[X.val][a];
         struct Variable *topStack = pop(st);
 
-        // fprintf(errors, "POPPED NT %s ON TOKEN %s\n", NonTerminalToString(topStack->val), TokenToString(a));
+        // fprintf(errors, "POPPED NT %s ON TOKEN %s %s\n", NonTerminalToString(topStack->val), TokenToString(a), token->lexeme);
 
         struct Variable **copyRule = (struct Variable **)malloc(sizeof(struct Variable *) * 9);
 
@@ -1196,6 +1197,15 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
     getStream(bufferArray);
 
     initialiseStackItems(stack, init);
+
+    FILE *cfile = fopen("computed_sets.txt", "w");
+    if (cfile == NULL)
+    {
+        printf("Error opening file!\n");
+        return;
+    }
+    printFFSetsTable(cfile, sets);
+    fclose(cfile);
 
     errors = fopen("errors.txt", "a");
 
