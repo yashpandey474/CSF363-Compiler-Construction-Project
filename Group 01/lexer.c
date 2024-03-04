@@ -48,7 +48,7 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
     int numchars = 0;
     int b = LA->begin;
     int f = LA->forward;
-    char *a = (char *)malloc((twinBufferSize) * sizeof(char));
+    char *a = (char *)malloc((f > b ? f - b + 1 : twinBufferSize - f + b + 1) * sizeof(char));
     if (a == NULL)
     {
         printf("Memory allocation in strncustomcpy failed.");
