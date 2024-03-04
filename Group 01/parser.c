@@ -1308,7 +1308,6 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
         }
 
         fclose(errors);
-        return;
     }
 
     if (toPrint)
