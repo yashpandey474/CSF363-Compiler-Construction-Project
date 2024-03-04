@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
 
     FirstAndFollow *sets = computeFirstAndFollow(G.productions);
     struct ParsingTable *PT = (struct ParsingTable *)malloc(sizeof(struct ParsingTable));
-    // createParseTable(PT, G.productions, sets, synchSet, sizeof(synchSet) / sizeof(synchSet[0]));
+    createParseTable(PT, G.productions, sets, synchSet, sizeof(synchSet) / sizeof(synchSet[0]));
 
     printf("INITILISATION COMPLETED");
     // printParsingTable(PT);

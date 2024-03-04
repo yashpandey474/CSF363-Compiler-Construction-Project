@@ -1198,6 +1198,8 @@ void initialiseStackItems(struct stack *stack, struct Variable *init)
     push(stack, createCopy((struct Variable){TK_EOF, 0}));
     push(stack, init);
 }
+
+
 void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets, struct ParsingTable *PT, Grammar G, int toPrint)
 {
     // VARIABLE FOR THE START SYMBOL
