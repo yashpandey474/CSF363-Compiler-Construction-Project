@@ -10,48 +10,81 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up environment
-      run: |
-        lsb_release -a
-        sudo apt update
-        sudo apt install -y gcc-11 g++-11 make
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100
-        gcc --version
-        g++ --version
+      - name: Set up environment
+        run: |
+          lsb_release -a
+          sudo apt update
+          sudo apt install -y gcc-11 g++-11 make
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100
+          gcc --version
+          g++ --version
 
-    - name: Directory change
-      run: cd Group\ 01/
+      - name: Change directory and Build project
+        run: |
+          cd Group\ 01/
+          make
 
-    - name: Build project
-      run: make
+      - name: Test case 2
+        run: |
+          cd Group\ 01/
+          printf '1\n2\n0' | ./stage1exe "t2.txt"
+          diff comment_free_code.txt ../Test\ Cases/commentremoval_t2.txt
+          diff lexicaltest.txt ../Test\ Cases/lexemesandtokens_t2.txt
+        shell: bash
 
-    - name: Execute program and remove comments
-      run: |
-        printf '1\n0\n' | ./stage1exe "t2.txt"
-      shell: bash
+      - name: Test Case 1 (For testing the lexer)
+        run: |
+          cd Group\ 01/
+          printf '2\n0\n' | ./stage1exe "t1.txt"
+          diff lexicaltest.txt "../Test Cases/lexemesandtokens_t1.txt"
+        shell: bash
 
-    - name: Compare output
-      run: |
-        diff comment_free_code.txt "../Test Cases/commentremoval_t2.txt"
+      - name: Test Case 3 (Syntactically correct testcase)
+        run: |
+          cd Group\ 01/
+          printf '3\n0\n' | ./stage1exe "t3.txt" "output.txt"
+          if [ -f errors.txt ] && [ -s errors.txt ]; then
+              echo "File is not empty."
+          else
+              echo "File is empty or does not exist."
+              exit 1
+          fi
+        shell: bash
         
-    - name: Test Lexical Analyser without errors
-      run: |
-        printf '2\n0\n' | ./stage1exe "t2.txt"
-      shell: bash
+      - name: Test Case 4 (Syntactically correct testcase)
+        run: |
+          cd Group\ 01/
+          printf '3\n0\n' | ./stage1exe "t4.txt" "output.txt"
+          if [ -f errors.txt ] && [ -s errors.txt ]; then
+              echo "File is not empty."
+          else
+              echo "File is empty or does not exist."
+              exit 1
+          fi
+        shell: bash
+        
+      - name: Test Case 5 (syntactically correct as per the modified grammar)
+        run: |
+          cd Group\ 01/
+          printf '3\n0\n' | ./stage1exe "t5.txt" "output.txt"
+          if [ -f errors.txt ] && [ -s errors.txt ]; then
+              echo "File is not empty."
+          else
+              echo "File is empty or does not exist."
+              exit 1
+          fi
+        shell: bash
 
-    - name: Compare output for T2
-      run: |
-        diff lexicaltest.txt "../Test Cases/lexemesandtokens_t2.txt"
-
-    - name: Test Lexical Analyser with errors
-      run: |
-        printf '2\n0\n' | ./stage1exe "t1.txt"
-      shell: bash
-
-    - name: Compare output for T1
-      run: |
-        diff lexicaltest.txt "../Test Cases/lexemesandtokens_t1.txt"
-      
+      - name: Test Case 6 (Syntactically incorrect testcase)
+        run: |
+          cd Group\ 01/
+          printf '3\n0\n' | ./stage1exe "t6.txt" "output.txt"
+          if [ -s errors.txt ]; then
+              echo "File is not empty."
+          else
+              echo "File is empty or does not exist."
+          fi
+        shell: bash
