@@ -1,3 +1,12 @@
+// GROUP 01
+// NAMES	                 BITS ID
+// ------------------------------------------
+// Agrawal Vansh Anil	     2021A7PS2215P
+// Yash Pandey	             2021A7PS0661P
+// Hardik Gupta 	         2021A7PS2421P
+// Ujjwal Aggarwal	         2021A7PS2427P
+// Achinthya Hebbar S	     2021A7PS1457P
+
 // // 4 ARRAYS: DEFAULT, BASE, CHECK, NEXT
 #include "lexer.h"
 
@@ -8,20 +17,6 @@ int checkState[STATE_ARRAY_SIZE] = {0, 0, 0, 3, 6, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0,
 int defaultArray[NUM_STATES] = {-1, -1, 90, 85, 86, -1, 88, -1, -1, -1, 83, 84, 84, 84, 83, -1, -1, -1, -1, -1, -1, 89, 89, 91, 24, -1, 80, 76, 77, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 int offset[NUM_STATES] = {0, 22, 35, 2, 37, 38, 0, 39, 40, 45, 47, 50, 52, 14, 58, 2, 34, 33, 35, 52, 63, 68, 73, 58, 41, 67, 69, 70, 63, 64, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 CharacterType characterTypeMap[129] = {7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 34, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 31, 7, 36, 7, 25, 21, 7, 29, 30, 19, 17, 11, 18, 14, 20, 5, 5, 1, 1, 1, 1, 1, 1, 5, 5, 13, 12, 9, 10, 8, 7, 26, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 27, 7, 28, 7, 33, 7, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 22, 7, 32, 7, 35};
-
-typedef struct TestCase
-{
-    char input[40];         // Input string for the test case
-    char stopreadingAt[40]; // Expected lexeme output (simplified for illustration)
-    enum Tokentype t;       // Expected token type output (simplified for illustration)
-} TestCase;
-
-TestCase testCases[] = {
-    {"_main@", "_main@", TK_FIELDID},
-    {"@@@@", "@@@", TK_AND},
-    {"_main", "_main", TK_FIELDID},
-    // Add more test cases as needed
-};
 
 int getNextState(int currentState, int character)
 {

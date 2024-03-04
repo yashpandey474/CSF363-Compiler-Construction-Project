@@ -61,8 +61,40 @@ nonterminals = {
     '<idList>': 'ID_LIST',
     '<more_ids>': 'MORE_IDS',
     '<definetypestmt>': 'DEFINETYPE_STMT',
-    '<A>': 'A'
+    '<A>': 'A',
+    '<actualOrRedefined>': 'ACTUAL_OR_REDEFINED',
+    '<typeDefinitions>': 'TYPE_DEFINITIONS',
+    '<actualOrRedefined>': 'ACTUAL_OR_REDEFINED',
+    '<stmts>': 'STMTS',
+    '<otherStmts>': 'OTHER_STMTS',
+    '<stmt>': 'STMT',
+    '<iterativeStmt>': 'ITERATIVE_STMT',
+    '<conditionalStmt>': 'CONDITIONAL_STMT',
+    '<ioStmt>': 'IO_STMT',
+    '<expPrime>': 'EXP_PRIME',
+    '<term>': 'TERM',
+    '<termPrime>': 'TERM_PRIME',
+    '<factor>': 'FACTOR',
+    '<highPrecedenceOperators>': 'HIGH_PRECEDENCE_OPERATORS',
+    '<lowPrecedenceOperators>': 'LOW_PRECEDENCE_OPERATORS',
+    '<logicalOp>': 'LOGICAL_OP',
+    '<relationalOp>': 'RELATIONAL_OP',
+    '<returnStmt>': 'RETURN_STMT',
+    '<idList>': 'ID_LIST',
+    '<more_ids>': 'MORE_IDS',
+    '<A>': 'A',
+    '<oneExpansion>': 'ONE_EXPANSION',
+    '<moreExpansions>': 'MORE_EXPANSIONS',
+    '<fieldType>': 'FIELD_TYPE',
+    '<fieldtype>': 'FIELD_TYPE',
+    '<definetypestmt>': 'DEFINETYPE_STMT',
+    '<elsePart>': 'ELSE_PART',
+    '<outputParameters>': 'OUTPUT_PARAMETERS',
+    '<inputParameters>': 'INPUT_PARAMETERS',
+    '<optionalReturn>': 'OPTIONAL_RETURN',
+    '<option_single_constructed>': 'OPTION_SINGLE_CONSTRUCTED'
 }
+
 
 
 def read_data_from_file(file):
@@ -99,7 +131,7 @@ def process_rule(rule):
     return productions
 
 def print_grammar(data):
-    print("struct GrammarRule productions[NUM_NON_TERMINALS] = {", end="")
+    print("struct GrammarRule productions[NUM_NON_TERMINALS] = {{", end="")
 
     for rule_no, rule in enumerate(data):
         productions = process_rule(rule)
@@ -120,7 +152,7 @@ def print_grammar(data):
         if rule_no != len(data) - 1:
             print(",", end="")
 
-    print("};")
+    print("}};")
 
 def max_num_productions(data):
     max_num = 0

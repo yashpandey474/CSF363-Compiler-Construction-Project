@@ -9,8 +9,8 @@ CFLAGS=-I. -I"./Group 01" -I"./Group 01/Other Files" -Wall -g
 SOURCES=driver.c \
         lexer.c \
         parser.c \
-        Other\ Files/symbol_table.c \
-        Other\ Files/transition_table.c 
+        symbol_table.c \
+        transition_table.c 
 
 # Define the executable file name
 EXECUTABLE=stage1exe

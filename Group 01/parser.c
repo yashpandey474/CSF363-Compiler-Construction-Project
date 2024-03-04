@@ -1,3 +1,12 @@
+// GROUP 01
+// NAMES	                 BITS ID
+// ------------------------------------------
+// Agrawal Vansh Anil	     2021A7PS2215P
+// Yash Pandey	             2021A7PS0661P
+// Hardik Gupta 	         2021A7PS2421P
+// Ujjwal Aggarwal	         2021A7PS2427P
+// Achinthya Hebbar S	     2021A7PS1457P
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -859,12 +868,16 @@ char *NonTerminalToString(enum NonTerminals nonTerminal)
         return "NT_STMTS";
     case NT_TYPE_DEFINITIONS:
         return "NT_TYPE_DEFINITIONS";
+    case NT_ACTUAL_OR_REDEFINED:
+        return "NT_ACTUAL_OR_REDEFINED";
     case NT_TYPE_DEFINITION:
         return "NT_TYPE_DEFINITION";
     case NT_FIELD_DEFINITIONS:
         return "NT_FIELD_DEFINITIONS";
     case NT_FIELD_DEFINITION:
         return "NT_FIELD_DEFINITION";
+    case NT_FIELD_TYPE:
+        return "NT_FIELD_TYPE";
     case NT_MORE_FIELDS:
         return "NT_MORE_FIELDS";
     case NT_DECLARATIONS:
@@ -881,8 +894,12 @@ char *NonTerminalToString(enum NonTerminals nonTerminal)
         return "NT_ASSIGNMENT_STMT";
     case NT_SINGLE_OR_REC_ID:
         return "NT_SINGLE_OR_REC_ID";
-    // case NT_REC_ID:
-    //     return "NT_REC_ID";
+    case NT_OPTION_SINGLE_CONSTRUCTED:
+        return "NT_OPTION_SINGLE_CONSTRUCTED";
+    case NT_ONE_EXPANSION:
+        return "NT_ONE_EXPANSION";
+    case NT_MORE_EXPANSIONS:
+        return "NT_MORE_EXPANSIONS";
     case NT_FUN_CALL_STMT:
         return "NT_FUN_CALL_STMT";
     case NT_OUTPUT_PARAMETERS:
@@ -893,24 +910,24 @@ char *NonTerminalToString(enum NonTerminals nonTerminal)
         return "NT_ITERATIVE_STMT";
     case NT_CONDITIONAL_STMT:
         return "NT_CONDITIONAL_STMT";
-    // case NT_NEW3:
-    //     return "NT_NEW3";
+    case NT_ELSE_PART:
+        return "NT_ELSE_PART";
     case NT_IO_STMT:
         return "NT_IO_STMT";
     case NT_ARITHMETIC_EXPRESSION:
         return "NT_ARITHMETIC_EXPRESSION";
-    // case NT_NEW5:
-    //     return "NT_NEW5";
-    // case NT_TERM:
-    //     return "NT_TERM";
-    // case NT_NEW6:
-    //     return "NT_NEW6";
+    case NT_EXP_PRIME:
+        return "NT_EXP_PRIME";
+    case NT_TERM:
+        return "NT_TERM";
+    case NT_TERM_PRIME:
+        return "NT_TERM_PRIME";
     case NT_FACTOR:
         return "NT_FACTOR";
-    case NT_OPERATOR:
-        return "NT_OPERATOR";
-    // case NT_OP_H:
-    //     return "NT_OP_H";
+    case NT_HIGH_PRECEDENCE_OPERATORS:
+        return "NT_HIGH_PRECEDENCE_OPERATORS";
+    case NT_LOW_PRECEDENCE_OPERATORS:
+        return "NT_LOW_PRECEDENCE_OPERATORS";
     case NT_BOOLEAN_EXPRESSION:
         return "NT_BOOLEAN_EXPRESSION";
     case NT_VAR:
@@ -931,11 +948,13 @@ char *NonTerminalToString(enum NonTerminals nonTerminal)
         return "NT_DEFINETYPE_STMT";
     case NT_A:
         return "NT_A";
+    case NT_EPS:
+        return "NT_EPS";
 
     default:
     {
         char *result = (char *)malloc(50);
-        snprintf(result, 50, "Unknown NonTerminal - %s", TokenToString(nonTerminal));
+        snprintf(result, 50, "Unknown NonTerminal - %d", nonTerminal);
         return result;
     }
     }
@@ -1084,6 +1103,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token, struct ParsingTable *pt
         {
             fprintf(errors, "Line %-5d Error: Invalid token %s encountered with value %s stack top %s\n", LA->lineNo, TokenToString(a), token->lexeme, NonTerminalToString(X->val));
         }
+
         // TOKEN NOT BEING SET
         pop(st);
 

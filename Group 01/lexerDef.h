@@ -41,6 +41,7 @@ struct SymbolTableNode
     struct SymbolTableEntry *entry;
     struct SymbolTableNode *next;
 };
+
 enum Tokentype
 {
     CARRIAGE_RETURN,
@@ -112,6 +113,7 @@ enum Tokentype
     TK_EOF,
     LEXICAL_ERROR
 };
+
 typedef enum TokenType TokenType;
 
 struct SymbolTableEntry

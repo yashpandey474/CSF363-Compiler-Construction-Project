@@ -1,3 +1,12 @@
+// GROUP 01
+// NAMES	                 BITS ID
+// ------------------------------------------
+// Agrawal Vansh Anil	     2021A7PS2215P
+// Yash Pandey	             2021A7PS0661P
+// Hardik Gupta 	         2021A7PS2421P
+// Ujjwal Aggarwal	         2021A7PS2427P
+// Achinthya Hebbar S	     2021A7PS1457P
+
 #include "lexer.h"
 #include <math.h>
 #include <stdio.h>
