@@ -30,7 +30,7 @@ jobs:
       - name: Test case 2
         run: |
           cd Group\ 01/
-          printf '1\n2\n0' | ./stage1exe "t2.txt"
+          printf '1\n2\n0' | ./stage1exe "t2.txt" "out.txt"
           diff comment_free_code.txt ../Test\ Cases/commentremoval_t2.txt
           diff lexicaltest.txt ../Test\ Cases/lexemesandtokens_t2.txt
         shell: bash
@@ -38,7 +38,7 @@ jobs:
       - name: Test Case 1 (For testing the lexer)
         run: |
           cd Group\ 01/
-          printf '2\n0\n' | ./stage1exe "t1.txt"
+          printf '2\n0\n' | ./stage1exe "t1.txt" "out.txt"
           diff lexicaltest.txt "../Test Cases/lexemesandtokens_t1.txt"
         shell: bash
 
