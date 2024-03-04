@@ -36,6 +36,13 @@ struct LinkedListSet
     struct LinkedListArray *linkedList;
 };
 
+struct stack
+{
+    struct Variable **stack;
+    int top;
+    int MAX;
+};
+
 struct input_structure
 {
     struct Variable *nonterminal;
