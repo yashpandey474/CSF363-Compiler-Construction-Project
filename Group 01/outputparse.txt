@@ -23,7 +23,7 @@
 (Lexeme Current Node)-----                (Line No)-1    (Token Name)-----                (Value if number)-----                (Parent Node Symbol)NT_DATA_TYPE         (IS leaf node)no  (Node symbol)NT_PRIMITIVE_DATA_TYPE
 (Lexeme Current Node)-----                (Line No)-1    (Token Name)-----                (Value if number)-----                (Parent Node Symbol)NT_PARAMETER_LIST    (IS leaf node)no  (Node symbol)NT_DATA_TYPE        
 (Lexeme Current Node)-----                (Line No)-1    (Token Name)-----                (Value if number)-----                (Parent Node Symbol)NT_REMAINING_LIST    (IS leaf node)no  (Node symbol)NT_PARAMETER_LIST   
-(Lexeme Current Node)c5]                  (Line No)6     (Token Name)TK_ID                (Value if number)-----                (Parent Node Symbol)NT_PARAMETER_LIST    (IS leaf node)yes (Node symbol)LEAF                
+(Lexeme Current Node)c5                   (Line No)6     (Token Name)TK_ID                (Value if number)-----                (Parent Node Symbol)NT_PARAMETER_LIST    (IS leaf node)yes (Node symbol)LEAF                
 (Lexeme Current Node)-----                (Line No)-1    (Token Name)TK_EPS               (Value if number)-----                (Parent Node Symbol)NT_REMAINING_LIST    (IS leaf node)yes (Node symbol)LEAF                
 (Lexeme Current Node)-----                (Line No)-1    (Token Name)-----                (Value if number)-----                (Parent Node Symbol)NT_PARAMETER_LIST    (IS leaf node)no  (Node symbol)NT_REMAINING_LIST   
 (Lexeme Current Node)]                    (Line No)6     (Token Name)TK_SQR               (Value if number)-----                (Parent Node Symbol)NT_INPUT_PAR         (IS leaf node)yes (Node symbol)LEAF                
@@ -216,7 +216,7 @@
 (Lexeme Current Node)*                    (Line No)12    (Token Name)TK_MUL               (Value if number)-----                (Parent Node Symbol)NT_OP_H              (IS leaf node)yes (Node symbol)LEAF                
 (Lexeme Current Node)-----                (Line No)-1    (Token Name)-----                (Value if number)-----                (Parent Node Symbol)NT_NEW6              (IS leaf node)no  (Node symbol)NT_OP_H             
 (Lexeme Current Node)-----                (Line No)-1    (Token Name)-----                (Value if number)-----                (Parent Node Symbol)NT_TERM              (IS leaf node)no  (Node symbol)NT_NEW6             
-(Lexeme Current Node)8)                   (Line No)12    (Token Name)TK_NUM               (Value if number)8                    (Parent Node Symbol)NT_VAR               (IS leaf node)yes (Node symbol)LEAF                
+(Lexeme Current Node)8                    (Line No)12    (Token Name)TK_NUM               (Value if number)8                    (Parent Node Symbol)NT_VAR               (IS leaf node)yes (Node symbol)LEAF                
 (Lexeme Current Node)-----                (Line No)-1    (Token Name)-----                (Value if number)-----                (Parent Node Symbol)NT_FACTOR            (IS leaf node)no  (Node symbol)NT_VAR              
 (Lexeme Current Node)-----                (Line No)-1    (Token Name)-----                (Value if number)-----                (Parent Node Symbol)NT_NEW6              (IS leaf node)no  (Node symbol)NT_FACTOR           
 (Lexeme Current Node)-----                (Line No)-1    (Token Name)TK_EPS               (Value if number)-----                (Parent Node Symbol)NT_NEW6              (IS leaf node)yes (Node symbol)LEAF                
