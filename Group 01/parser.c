@@ -838,117 +838,116 @@ void createParseTable(struct ParsingTable *PT, struct GrammarRule *productions, 
 
     return;
 }
-
 char *NonTerminalToString(enum NonTerminals nonTerminal)
 {
     switch (nonTerminal)
     {
     case NT_PROGRAM:
-        return "NT_PROGRAM";
+        return "program";
     case NT_MAIN_FUNCTION:
-        return "NT_MAIN_FUNCTION";
+        return "mainFunction";
     case NT_OTHER_FUNCTIONS:
-        return "NT_OTHER_FUNCTIONS";
+        return "otherFunctions";
     case NT_FUNCTION:
-        return "NT_FUNCTION";
+        return "function";
     case NT_INPUT_PAR:
-        return "NT_INPUT_PAR";
+        return "input_par";
     case NT_OUTPUT_PAR:
-        return "NT_OUTPUT_PAR";
+        return "output_par";
     case NT_PARAMETER_LIST:
-        return "NT_PARAMETER_LIST";
+        return "parameter_list";
     case NT_DATA_TYPE:
-        return "NT_DATA_TYPE";
+        return "dataType";
     case NT_PRIMITIVE_DATA_TYPE:
-        return "NT_PRIMITIVE_DATA_TYPE";
+        return "primitiveDatatype";
     case NT_CONSTRUCTED_DATA_TYPE:
-        return "NT_CONSTRUCTED_DATA_TYPE";
+        return "constructedDatatype";
     case NT_REMAINING_LIST:
-        return "NT_REMAINING_LIST";
+        return "remaining_list";
     case NT_STMTS:
-        return "NT_STMTS";
+        return "stmts";
     case NT_TYPE_DEFINITIONS:
-        return "NT_TYPE_DEFINITIONS";
+        return "typeDefinitions";
     case NT_ACTUAL_OR_REDEFINED:
-        return "NT_ACTUAL_OR_REDEFINED";
+        return "actualOrRedefined";
     case NT_TYPE_DEFINITION:
-        return "NT_TYPE_DEFINITION";
+        return "typeDefinition";
     case NT_FIELD_DEFINITIONS:
-        return "NT_FIELD_DEFINITIONS";
+        return "fieldDefinitions";
     case NT_FIELD_DEFINITION:
-        return "NT_FIELD_DEFINITION";
+        return "fieldDefinition";
     case NT_FIELD_TYPE:
-        return "NT_FIELD_TYPE";
+        return "fieldType";
     case NT_MORE_FIELDS:
-        return "NT_MORE_FIELDS";
+        return "moreFields";
     case NT_DECLARATIONS:
-        return "NT_DECLARATIONS";
+        return "declarations";
     case NT_DECLARATION:
-        return "NT_DECLARATION";
+        return "declaration";
     case NT_GLOBAL_OR_NOT:
-        return "NT_GLOBAL_OR_NOT";
+        return "global_or_not";
     case NT_OTHER_STMTS:
-        return "NT_OTHER_STMTS";
+        return "otherStmts";
     case NT_STMT:
-        return "NT_STMT";
+        return "stmt";
     case NT_ASSIGNMENT_STMT:
-        return "NT_ASSIGNMENT_STMT";
+        return "assignmentStmt";
     case NT_SINGLE_OR_REC_ID:
-        return "NT_SINGLE_OR_REC_ID";
+        return "singleOrRecId";
     case NT_OPTION_SINGLE_CONSTRUCTED:
-        return "NT_OPTION_SINGLE_CONSTRUCTED";
+        return "option_single_constructed";
     case NT_ONE_EXPANSION:
-        return "NT_ONE_EXPANSION";
+        return "oneExpansion";
     case NT_MORE_EXPANSIONS:
-        return "NT_MORE_EXPANSIONS";
+        return "moreExpansions";
     case NT_FUN_CALL_STMT:
-        return "NT_FUN_CALL_STMT";
+        return "funCallStmt";
     case NT_OUTPUT_PARAMETERS:
-        return "NT_OUTPUT_PARAMETERS";
+        return "outputParameters";
     case NT_INPUT_PARAMETERS:
-        return "NT_INPUT_PARAMETERS";
+        return "inputParameters";
     case NT_ITERATIVE_STMT:
-        return "NT_ITERATIVE_STMT";
+        return "iterativeStmt";
     case NT_CONDITIONAL_STMT:
-        return "NT_CONDITIONAL_STMT";
+        return "conditionalStmt";
     case NT_ELSE_PART:
-        return "NT_ELSE_PART";
+        return "elsePart";
     case NT_IO_STMT:
-        return "NT_IO_STMT";
+        return "ioStmt";
     case NT_ARITHMETIC_EXPRESSION:
-        return "NT_ARITHMETIC_EXPRESSION";
+        return "arithmeticExpression";
     case NT_EXP_PRIME:
-        return "NT_EXP_PRIME";
+        return "expPrime";
     case NT_TERM:
-        return "NT_TERM";
+        return "term";
     case NT_TERM_PRIME:
-        return "NT_TERM_PRIME";
+        return "termPrime";
     case NT_FACTOR:
-        return "NT_FACTOR";
+        return "factor";
     case NT_HIGH_PRECEDENCE_OPERATORS:
-        return "NT_HIGH_PRECEDENCE_OPERATORS";
+        return "highPrecedenceOperators";
     case NT_LOW_PRECEDENCE_OPERATORS:
-        return "NT_LOW_PRECEDENCE_OPERATORS";
+        return "lowPrecedenceOperators";
     case NT_BOOLEAN_EXPRESSION:
-        return "NT_BOOLEAN_EXPRESSION";
+        return "booleanExpression";
     case NT_VAR:
-        return "NT_VAR";
+        return "var";
     case NT_LOGICAL_OP:
-        return "NT_LOGICAL_OP";
+        return "logicalOp";
     case NT_RELATIONAL_OP:
-        return "NT_RELATIONAL_OP";
+        return "relationalOp";
     case NT_RETURN_STMT:
-        return "NT_RETURN_STMT";
+        return "returnStmt";
     case NT_OPTIONAL_RETURN:
-        return "NT_OPTIONAL_RETURN";
+        return "optionalReturn";
     case NT_ID_LIST:
-        return "NT_ID_LIST";
+        return "idList";
     case NT_MORE_IDS:
-        return "NT_MORE_IDS";
+        return "moreIds";
     case NT_DEFINETYPE_STMT:
-        return "NT_DEFINETYPE_STMT";
+        return "definetypeStmt";
     case NT_A:
-        return "NT_A";
+        return "A";
 
     default:
     {
