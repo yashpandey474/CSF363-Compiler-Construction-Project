@@ -31,7 +31,7 @@
 32. <outputParameters> ===> TK_SQL <idList> TK_SQR TK_ASSIGNOP | eps
 33. <inputParameters>===> TK_SQL <idList> TK_SQR
 34. <iterativeStmt>===> TK_WHILE TK_OP <booleanExpression> TK_CL <stmt> <otherStmts> TK_ENDWHILE
-35. <conditionalStmt>===> TK_IF <booleanExpression> TK_THEN <stmt> <otherStmts> TK_ELSE <otherStmts> TK_ENDIF | TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <elsePart>
+35. <conditionalStmt>===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <elsePart>
 37. <elsePart>===>TK_ELSE <stmt> <otherStmts> TK_ENDIF | TK_ENDIF
 38. <ioStmt>===>TK_READ TK_OP <var> TK_CL TK_SEM | TK_WRITE TK_OP <var> TK_CL TK_SEM
 39. <arithmeticExpression> ===> <term> <expPrime>
