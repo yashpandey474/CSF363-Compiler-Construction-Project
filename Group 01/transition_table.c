@@ -1,11 +1,11 @@
 // GROUP 01
 // NAMES	                 BITS ID
 // ------------------------------------------
-// Agrawal Vansh Anil	     2021A7PS2215P
 // Yash Pandey	             2021A7PS0661P
-// Hardik Gupta 	         2021A7PS2421P
-// Ujjwal Aggarwal	         2021A7PS2427P
 // Achinthya Hebbar S	     2021A7PS1457P
+// Ujjwal Aggarwal	         2021A7PS2427P
+// Hardik Gupta 	         2021A7PS2421P
+// Agrawal Vansh Anil        2021A7PS2215P
 
 // // 4 ARRAYS: DEFAULT, BASE, CHECK, NEXT
 #include "lexer.h"
