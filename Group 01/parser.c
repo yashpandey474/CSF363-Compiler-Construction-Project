@@ -210,8 +210,7 @@ void computeFollowSet(FirstAndFollow *sets_for_all, struct GrammarRule *producti
     appendVarToSet(sets_for_all[NT_PROGRAM]->followSets, eof);
 
     // WHILE THERE IS A CHANGE IN SOMEONE'S FOLLOW SET
-    bool changed = true;
-    bool res = false;
+    bool changed = true, res = false;
     while (changed == true)
     {
         changed = false;
@@ -1179,7 +1178,7 @@ FirstAndFollow *computeFirstAndFollow(struct GrammarRule *productions)
     computeFirstSet(sets, productions);
     // printf("FIRST SET COMPUTED\n");
 
-    computeFollowSet(sets, productions);
+    // computeFollowSet(sets, productions);
     // printf("FOLLOW SET COMPUTED\n");
 
     return sets;

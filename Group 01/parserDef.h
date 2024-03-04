@@ -7,7 +7,7 @@
 #define MAX_NUM_PRODUCTIONS 6
 #define MAX_VARS 8
 #define NUM_TERMINALS 68     // including epsilon
-#define NUM_NON_TERMINALS 57 // num production rules (for unique non terminals)
+#define NUM_NON_TERMINALS 54 // num production rules (for unique non terminals)
 #define SET_SIZE 200
 #define STACK_INITIAL_SIZE 128
 

@@ -12,8 +12,7 @@
 12. <stmts>===> <typeDefinitions> <declarations> <otherStmts> <returnStmt>
 13. <typeDefinitions>===> <actualOrRedefined> <typeDefinitions> | eps
 14. <actualOrRedefined> ===> <typeDefinition> | <definetypestmt>
-15. <typeDefinition>===>TK_RECORD TK_RUID <fieldDefinitions> TK_ENDRECORD
-16. <typeDefinition>===>TK_UNION TK_RUID <fieldDefinitions> TK_ENDUNION
+15. <typeDefinition>===>TK_RECORD TK_RUID <fieldDefinitions> TK_ENDRECORD | TK_UNION TK_RUID <fieldDefinitions> TK_ENDUNION
 17. <fieldDefinitions>===> <fieldDefinition> <fieldDefinition> <moreFields>
 18. <fieldDefinition>===> TK_TYPE <fieldType> TK_COLON TK_FIELDID TK_SEM
 19. <fieldtype>===> <primitiveDatatype> |  <constructedDatatype>
@@ -32,8 +31,7 @@
 32. <outputParameters> ===> TK_SQL <idList> TK_SQR TK_ASSIGNOP | eps
 33. <inputParameters>===> TK_SQL <idList> TK_SQR
 34. <iterativeStmt>===> TK_WHILE TK_OP <booleanExpression> TK_CL <stmt> <otherStmts> TK_ENDWHILE
-35. <conditionalStmt>===> TK_IF <booleanExpression> TK_THEN <stmt> <otherStmts> TK_ELSE <otherStmts> TK_ENDIF
-36. <conditionalStmt>===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <elsePart>
+35. <conditionalStmt>===> TK_IF <booleanExpression> TK_THEN <stmt> <otherStmts> TK_ELSE <otherStmts> TK_ENDIF | TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <elsePart>
 37. <elsePart>===>TK_ELSE <stmt> <otherStmts> TK_ENDIF | TK_ENDIF
 38. <ioStmt>===>TK_READ TK_OP <var> TK_CL TK_SEM | TK_WRITE TK_OP <var> TK_CL TK_SEM
 39. <arithmeticExpression> ===> <term> <expPrime>
@@ -43,9 +41,7 @@
 43. <factor> ===> TK_OP <arithmeticExpression> TK_CL | <var>
 44. <highPrecedenceOperators>===> TK_MUL | TK_DIV
 45. <lowPrecedenceOperators> ===> TK_PLUS | TK_MINUS
-46. <booleanExpression>===>TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP <booleanExpression> TK_CL
-47. <booleanExpression>===> <var> <relationalOp> <var>
-48. <booleanExpression>===> TK_NOT TK_OP <booleanExpression> TK_CL
+46. <booleanExpression>===>TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP <booleanExpression> TK_CL | <var> <relationalOp> <var> | TK_NOT TK_OP <booleanExpression> TK_CL
 49. <var>===> <singleOrRecId> | TK_NUM | TK_RNUM
 50. <logicalOp>===>TK_AND | TK_OR
 51. <relationalOp>===> TK_LT | TK_LE | TK_EQ |TK_GT | TK_GE | TK_NE
