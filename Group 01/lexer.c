@@ -45,40 +45,28 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
     // }printf("\n");
 
     int twinBufferSize = 2 * BUFFER_SIZE + 2;
-    int numchars = getSizeOfCustomString(LA);
-
-    // while (b != f)
-    // {
-    //     if (LA->bufferArray->buffer[b] != EOF)
-    //     {
-    //         numchars += 1;
-    //     }
-    //     b += 1;
-    //     b = b % (twinBufferSize);
-    // }
-
-    char *a = (char *)malloc((numchars + 1) * sizeof(char));
-
+    int numchars = 0;
+    int b = LA->begin;
+    int f = LA->forward;
+    char *a = (char *)malloc((twinBufferSize) * sizeof(char));
     if (a == NULL)
     {
         printf("Memory allocation in strncustomcpy failed.");
         return "ERR_1010";
     }
-
-    int b = LA->begin;
-    for (int i = 0; i < numchars; i++)
+    f %= twinBufferSize;
+    b %= twinBufferSize;
+    for (; b != f; b %= twinBufferSize)
     {
-        b = b % (twinBufferSize);
-        if (LA->bufferArray->buffer[b] == EOF)
+        if (LA->bufferArray->buffer[b] != EOF)
         {
-            b += 1;
-            b = b % (twinBufferSize);
+            numchars++;
+            a[numchars - 1] = LA->bufferArray->buffer[b];
         }
-        a[i] = LA->bufferArray->buffer[b];
-        b += 1;
+        b++;
     }
     a[numchars] = '\0';
-
+    a = (char *)realloc(a, (numchars) * sizeof(char));
     return a;
 }
 

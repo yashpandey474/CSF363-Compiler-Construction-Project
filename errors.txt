@@ -1,0 +1,28 @@
+Line no. 7     Error: The token TK_SQL for lexeme [  does not match with the expected token TK_LIST
+Line no. 8     Error: Variable Identifier is longer than the prescribed length of 20 characters.
+Line no. 8     Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ID
+Line no. 10    Error: Unknown pattern <5000.7>      
+Line 10    Error: Invalid token TK_SEM encountered with value ; stack top NT_ARITHMETIC_EXPRESSION
+Line no. 11    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_CL
+Line no. 13    Error: Unknown pattern <&&>          
+Line 13    Error: Invalid token TK_OP encountered with value ( stack top NT_LOGICAL_OP
+Line 16    Error: Invalid token TK_ELSE encountered with value else stack top NT_REC_ID
+Line 16    Error: Invalid token TK_ELSE encountered with value else stack top NT_NEW6
+Line 16    Error: Invalid token TK_ELSE encountered with value else stack top NT_NEW5
+Line no. 16    Error: The token TK_ELSE for lexeme else  does not match with the expected token TK_SEM
+Line 20    Error: Invalid token TK_END encountered with value end stack top NT_OTHER_STMTS
+Line no. 25    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ASSIGNOP
+Line 25    Error: Invalid token TK_SEM encountered with value ; stack top NT_ARITHMETIC_EXPRESSION
+Line 26    Error: Invalid token TK_TYPE encountered with value type stack top NT_OTHER_STMTS
+Line no. 26    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ASSIGNOP
+Line 26    Error: Invalid token TK_SEM encountered with value ; stack top NT_ARITHMETIC_EXPRESSION
+Line 27    Error: Invalid token TK_TYPE encountered with value type stack top NT_OTHER_STMTS
+Line 27    Error: Invalid token TK_COLON encountered with value : stack top NT_REC_ID
+Line no. 27    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ASSIGNOP
+Line 28    Error: Invalid token TK_TYPE encountered with value type stack top NT_OTHER_STMTS
+Line no. 28    Error: Unknown Symbol <$>            
+Line no. 28    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ASSIGNOP
+Line 28    Error: Invalid token TK_SEM encountered with value ; stack top NT_ARITHMETIC_EXPRESSION
+Line no. 29    Error: Unknown pattern <<-->         
+Line 29    Error: Invalid token TK_NUM encountered with value 1 stack top NT_REC_ID
+Line no. 29    Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ASSIGNOP
