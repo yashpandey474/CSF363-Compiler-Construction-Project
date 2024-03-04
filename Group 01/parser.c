@@ -40,6 +40,7 @@ void insertAtBeginning(struct LinkedListArray *linkedList, struct Variable var)
 
 bool appendVarToSet(struct LinkedListSet *set, struct Variable element)
 {
+    // is this even needed anymore?
     if (element.val == CARRIAGE_RETURN)
     {
         return false;
@@ -92,6 +93,7 @@ bool appendSetToSet(struct LinkedListSet *destinationSet, struct LinkedListSet *
 void fprintSetWithIndex(FILE *cfile, struct LinkedListSet *set, int setIndex, int flag, int firstorfollow)
 {
     char str[10];
+    // firstorfollow is 1 for First and 0 for Follow
     if (firstorfollow)
     {
         strcpy(str, "First");

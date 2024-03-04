@@ -9,7 +9,7 @@ struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry);
 int getNextState(int currentState, int character);
 void insertAllKeywords();
 void printSymbolTable();
-void changeForward(twinBuffer LA, int flag);
+// void changeForward(twinBuffer LA, int flag);
 const char *CharacterTypeToString(enum CharacterType type);
 twinBufferArray initialiseTwinBuffer(FILE *file);
 twinBuffer initialiseLA(twinBufferArray bufferArray);

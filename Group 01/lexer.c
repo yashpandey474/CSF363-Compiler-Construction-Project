@@ -1,6 +1,3 @@
-// SCHEME: TWO-INPUT BUFFERS EACH OF SIZE N WITH SENTINEL CHARACTER "EOF" MARKING THE END OF EACH BUFFER
-
-// INCLUDE LIBRARIES
 #include <stdio.h>
 #include <string.h>
 #include "lexer.h"
@@ -8,6 +5,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <stdbool.h>
+// SCHEME: TWO-INPUT BUFFERS EACH OF SIZE N WITH SENTINEL CHARACTER "EOF" MARKING THE END OF EACH BUFFER
 
 FILE *readTestFile(char *file_path)
 {
@@ -22,52 +20,50 @@ FILE *readTestFile(char *file_path)
 
     return file;
 }
+
 int getSizeOfCustomString(twinBuffer LA)
 {
     int b = LA->begin;
     int f = LA->forward;
-    if (f<b){
-        int temp=f;
-        f=b;
-        b=temp;
+    if ((b < BUFFER_SIZE && f < BUFFER_SIZE) || (b > BUFFER_SIZE && f > BUFFER_SIZE))
+    {
+        if (b < f)
+        {
+            return f - b;
+        }
+        else
+        {
+            return 2 * BUFFER_SIZE - f + b;
+        }
     }
-    
+    else if (b < BUFFER_SIZE && f > BUFFER_SIZE)
+    {
+        return f - b - 1;
+    }
+    else if (b > BUFFER_SIZE && f < BUFFER_SIZE)
+    {
+        return 2 * BUFFER_SIZE + 1 - f + b;
+    }
 }
 
 char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
 {
     // as per the design, forward and begin can never be at the buffer end marker
-    // forward - begin is the size of lexemme + eofs if occured
-
-    // for (int i=0;i<2*BUFFER_SIZE+2;i++){
-    //     printf("%c", LA->bufferArray->buffer[i]);
-    // }printf("\n");
+    // forward - begin is the size of lexeme + eofs if occured
 
     int twinBufferSize = 2 * BUFFER_SIZE + 2;
     int numchars = getSizeOfCustomString(LA);
 
-    // while (b != f)
-    // {
-    //     if (LA->bufferArray->buffer[b] != EOF)
-    //     {
-    //         numchars += 1;
-    //     }
-    //     b += 1;
-    //     b = b % (twinBufferSize);
-    // }
-
     char *a = (char *)malloc((numchars + 1) * sizeof(char));
-
     if (a == NULL)
     {
-        printf("Memory allocation in strncustomcpy failed.");
-        return "ERR_1010";
+        fprintf(stderr, "Error! Memory not allocated.\n");
+        return "";
     }
-
     int b = LA->begin;
     for (int i = 0; i < numchars; i++)
     {
-        b = b % (twinBufferSize);
+        // b = b % (twinBufferSize);
         if (LA->bufferArray->buffer[b] == EOF)
         {
             b += 1;
@@ -76,22 +72,23 @@ char *strncustomcpy(twinBuffer LA) // copy forward to begin in a string
         a[i] = LA->bufferArray->buffer[b];
         b += 1;
     }
-    a[numchars] = '\0';
 
+    a[numchars] = '\0';
     return a;
 }
 
 int getStream(twinBufferArray bufferArray)
 {
-    char *buffer;
-    if (bufferArray->readingFirst)
-    {
-        buffer = bufferArray->buffer;
-    }
-    else
-    {
-        buffer = bufferArray->buffer + BUFFER_SIZE + 1;
-    }
+    char *buffer = bufferArray->readingFirst ? bufferArray->buffer : bufferArray->buffer + BUFFER_SIZE + 1;
+    // if (bufferArray->readingFirst)
+    // {
+    //     buffer = bufferArray->buffer;
+    // }
+    // else
+    // {
+    //     buffer = bufferArray->buffer + BUFFER_SIZE + 1;
+    // }
+
     // READING ALTERNATE BUFFER
     bufferArray->readingFirst = 1 - bufferArray->readingFirst;
     size_t read_bytes = fread(buffer, sizeof(char), BUFFER_SIZE, bufferArray->file);
@@ -120,7 +117,6 @@ twinBufferArray initialiseTwinBuffer(FILE *file)
 
     return bufferArray;
 }
-
 
 void returnToStart(twinBuffer LA)
 {
@@ -200,17 +196,17 @@ void equivalentNumber(twinBuffer lex, int flag, tokenInfo token)
         token->doubleValue = atof(token->lexeme);
     }
 }
-void changeForward(twinBuffer LA, int flag)
-{
-    // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
-    LA->forward = (LA->forward + flag);
-}
+// void changeForward(twinBuffer LA, int flag)
+// {
+//     // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
+//     LA->forward = (LA->forward + flag);
+// }
 
-void changeBegin(twinBuffer LA, int flag)
-{
-    // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
-    LA->begin = (LA->begin + flag);
-}
+// void changeBegin(twinBuffer LA, int flag)
+// {
+//     // FLAG IS 1 FOR INCREMENT AND -1 FOR DECREMENT
+//     LA->begin = (LA->begin + flag);
+// }
 
 // TAKE ACTIONS BASED ON THE FINAL STATE AND RETURN A TOKEN
 struct SymbolTableEntry *takeActions(twinBuffer LA, struct SymbolTableEntry *token)
@@ -494,40 +490,27 @@ twinBuffer initialiseLA(twinBufferArray bufferArray)
 
 // int main()
 // {
-
 //     // printf("ENTERED MAIN\n");
-
 //     // INITIALISE THE SYMBOL TABLE
 //     insertAllKeywords();
-
 //     // printf("KEYWORDS\n");
-
 //     // TEST THE TWIN BUFFER
 //     FILE *file = readTestFile("test_program_with_errors.txt");
-
 //     // INITIALISE A TWIN BUFFER
 //     twinBufferArray *bufferArray = initialiseTwinBuffer(file);
-
 //     // INITIALISE LA
 //     twinBuffer LA = initialiseLA(bufferArray);
-
 //     // printf("LA INITIALISED\n");
-
 //     // START SCANNING
 //     getStream(bufferArray);
-
 //     // printf("READ INPUT\n");
-
 //     // THE TOKEN
 //     struct SymbolTableEntry *token;
-
 //     // printf("STARTING SCANNING\n");
-
 //     while ((token = getNextToken(LA)))
 //     {
 //         // printf("HU");
 //         printf("(%s : %s) \n", TokenToString(token->tokenType), token->lexeme);
 //     }
-
 //     // printSymbolTable();
 // }
