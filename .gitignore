@@ -12,6 +12,8 @@ Syntax Analyzer/output.txt
 Syntax Analyzer/grammar2.dSYM/
 Syntax Analyzer/stage2exe.dSYM/
 Group 01/stage1exe.dSYM/
+Group 01/outputuhd.txt
+Group 01/computed_sets.txt
 commentremove.txt
 stage1exe
 stage2exe
