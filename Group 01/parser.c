@@ -939,12 +939,6 @@ char *NonTerminalToString(enum NonTerminals nonTerminal)
     }
 }
 
-struct stack
-{
-    struct Variable **stack;
-    int top;
-    int MAX;
-};
 void printStack(struct stack *st, FILE *errors)
 {
     for (int i = 0; i <= st->top; i++)
