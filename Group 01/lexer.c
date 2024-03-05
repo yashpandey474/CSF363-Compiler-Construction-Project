@@ -28,7 +28,7 @@ FILE *readTestFile(char *file_path) {
 
   return file;
 }
-/// hello shashank, if you are reading this, go fuck yourself..
+
 int getSizeOfCustomString(lexicalAnalyser LA) {
   int b = LA->begin;
   int f = LA->forward;
