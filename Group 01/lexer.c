@@ -160,6 +160,7 @@ struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token,
   {
     if (LA->forward == LA->begin)
       LA->forward++;
+
     char *readSymbol = strncustomcpy(LA);
     // printf("%d %d", LA->begin, LA->forward);
     // printf("Read symbol %s\n", readSymbol);
@@ -397,7 +398,7 @@ tokenInfo getNextToken(lexicalAnalyser LA)
   struct SymbolTableEntry *token = initialiseToken();
 
   // RESET TO START STATE
-  LA->state = 0;
+  returnToStart(LA);
 
   // HOLD THE CURRENT CHARACTER
   char character;
@@ -473,10 +474,6 @@ tokenInfo getNextToken(lexicalAnalyser LA)
         // HAVE TO RETURN
         if (token->tokenType != 0)
         {
-          // RESET BEGIN
-          LA->begin = LA->forward;
-          LA->begin = LA->begin % (2 * BUFFER_SIZE + 2);
-          LA->forward = LA->forward % (2 * BUFFER_SIZE + 2);
           return token;
         }
       }
@@ -486,14 +483,6 @@ tokenInfo getNextToken(lexicalAnalyser LA)
     if (characterTypeMap[(int)character] == CT_INVALID && LA->state == 0)
     {
       setErrorMessage(token, LA, true, "");
-
-      // INCREMENT FORWARD BECAUSE CHARACTER IS INVALID; CANNOT RESUME
-      // TOKENISATION
-      LA->forward += 1;
-      LA->begin = LA->forward;
-      // printf("B = %d F = %d\n", LA->begin, LA->forward);
-      LA->begin = LA->begin % (2 * BUFFER_SIZE + 2);
-      LA->forward = LA->forward % (2 * BUFFER_SIZE + 2);
       return token;
     }
 
@@ -520,9 +509,6 @@ tokenInfo getNextToken(lexicalAnalyser LA)
     // HAVE TO RETURN; NON ERROR TOKEN
     if (token->tokenType != 0)
     {
-      LA->begin = LA->forward;
-      LA->begin = LA->begin % (2 * BUFFER_SIZE + 2);
-      LA->forward = LA->forward % (2 * BUFFER_SIZE + 2);
       return token;
     }
 
