@@ -1022,7 +1022,6 @@ void printStack(struct stack *st, FILE *errors)
 {
   for (int i = 0; i <= st->top; i++)
   {
-
     if ((st->stack[i])->flag == 1)
     {
       // printf("%s ", NonTerminalToString((st->stack[i])->val));
@@ -1109,9 +1108,13 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
                          struct ParsingTable *pt, struct stack *st,
                          lexicalAnalyser LA, struct tree_node *parent,
                          bool skipError, struct tree_node **parentpointer,
-                         FILE *errors)
+                         FILE *errors, int toPrint)
 {
+
+  //GET THE TOKENTYPE OF CURRENT TOKEN
   enum Tokentype a = token->tokenType;
+
+  //GET
   struct Variable *X = st->stack[st->top];
 
   // BOTH ARE TERMINALS
@@ -1129,11 +1132,15 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
 
   else if (X->flag == 0)
   {
-    // CALL ERROR FUNCTION
-    fprintf(errors,
-            "Line no. %-5d Error: The token %s for lexeme %s  does not match "
-            "with the expected token %s\n",
-            LA->lineNo, TokenToString(a), token->lexeme, TokenToString(X->val));
+
+    if (toPrint)
+    {
+      // CALL ERROR FUNCTION
+      fprintf(errors,
+              "Line no. %-5d Error: The token %s for lexeme %s  does not match "
+              "with the expected token %s\n",
+              LA->lineNo, TokenToString(a), token->lexeme, TokenToString(X->val));
+    }
 
     // TOKEN NOT BEING SET
     pop(st);
@@ -1145,12 +1152,15 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
   // ERROR: START SKIPPING THE INPUT
   else if (pt->table[X->val][a] == NULL)
   {
-    if (!skipError)
+    if (!skipError && toPrint)
+    {
+
       fprintf(errors,
               "Line no. %-5d Error: Invalid token %s encountered with value %s "
               "stack top %s\n",
               LA->lineNo, TokenToString(a), token->lexeme,
               NonTerminalToString(X->val));
+    }
 
     // go and get the next token [RETURN -1 INSTEAD OF 0]
 
@@ -1163,7 +1173,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
     // SYN TOKEN; POP THE NONTERMINAL
 
     // ERROR IF NOT SKIPPING ERRORS; REPORT THIS ERROR
-    if (!skipError)
+    if (!skipError && toPrint)
     {
       fprintf(errors,
               "Line no. %-5d Error: Invalid token %s encountered with value %s "
@@ -1171,6 +1181,8 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
               LA->lineNo, TokenToString(a), token->lexeme,
               NonTerminalToString(X->val));
     }
+
+    printf("NT %s TOKEN %s\n", NonTerminalToString(X->val), TokenToString(a));
 
     // TOKEN NOT BEING SET
     pop(st);
@@ -1300,7 +1312,6 @@ void print_and_parse_tree(char *testfile, char *outputfile,
                           FirstAndFollow *sets, struct ParsingTable *PT,
                           Grammar G, int toPrint)
 {
-  printf("HELLO");
 
   // VARIABLE FOR THE START SYMBOL
   struct Variable *init = createCopy((struct Variable){NT_PROGRAM, 1});
@@ -1329,18 +1340,21 @@ void print_and_parse_tree(char *testfile, char *outputfile,
   // HOLD CURRENT TOKEN
   struct SymbolTableEntry *token;
 
+
   int res = 0;
   bool skip_error = false;
   getStream(bufferArray);
 
   initialiseStackItems(stack, init);
-
-
-  FILE* errors = fopen("errors.txt", "w");
-  if (errors == NULL)
+  FILE *errors;
+  if (toPrint)
   {
-    printf("Error opening file errors\n");
-    return;
+    errors = fopen("errors_file.txt", "w");
+    if (errors == NULL)
+    {
+      printf("Error opening file errors\n");
+      return;
+    }
   }
 
   while ((token = getNextToken(LA)))
@@ -1359,7 +1373,7 @@ void print_and_parse_tree(char *testfile, char *outputfile,
     {
 
       while ((!isEmptyStack(stack)) &&
-             ((res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors)) == 0))
+             ((res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors, toPrint)) == 0))
       {
         skip_error = false;
 
@@ -1383,12 +1397,11 @@ void print_and_parse_tree(char *testfile, char *outputfile,
       }
     }
   }
-  fclose(errors);
-
   if (toPrint)
   {
 
-    errors = fopen("errors.txt", "r");
+    fclose(errors);
+    errors = fopen("errors_file.txt", "r");
 
     if (errors == NULL)
     {
@@ -1403,10 +1416,7 @@ void print_and_parse_tree(char *testfile, char *outputfile,
     }
 
     fclose(errors);
-  }
 
-  if (toPrint)
-  {
     printParseTree(tree, outputfile);
 
     if (onlyContainsEOF(stack))

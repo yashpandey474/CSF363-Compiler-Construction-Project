@@ -45,12 +45,11 @@ jobs:
         shell: bash
 
 
-
       - name: Test Case 3 (Syntactically correct testcase)
         run: |
           cd Group\ 01/
           printf '3\n0\n' | ./stage1exe "t3.txt" "output.txt"
-          if [ ! -f errors.txt ] || [ -s errors.txt ]; then
+          if [ ! -f errors_file.txt ] || [ -s errors_file.txt ]; then
               echo "Errors file does not exist or is non empty."
               exit 1
           else
@@ -62,7 +61,7 @@ jobs:
         run: |
           cd Group\ 01/
           printf '3\n0\n' | ./stage1exe "t4.txt" "output.txt"
-          if [ ! -f errors.txt ] || [ -s errors.txt ]; then
+          if [ ! -f errors_file.txt ] || [ -s errors_file.txt ]; then
               echo "Errors file does not exist or is non empty."
               exit 1
           else
@@ -74,7 +73,7 @@ jobs:
         run: |
           cd Group\ 01/
           printf '3\n0\n' | ./stage1exe "t5.txt" "output.txt"
-          if [ ! -f errors.txt ] || [ -s errors.txt ]; then
+          if [ ! -f errors_file.txt ] || [ -s errors_file.txt ]; then
               echo "Errors file does not exist or is non empty."
               exit 1
           else
@@ -86,7 +85,7 @@ jobs:
         run: |
           cd Group\ 01/
           printf '3\n0\n' | ./stage1exe "t6.txt" "output.txt"
-          if [ ! -f errors.txt ] || [ ! -s errors.txt ]; then
+          if [ ! -f errors_file.txt ] || [ ! -s errors_file.txt ]; then
               echo "File is empty or does not exist."
               exit 1
           else

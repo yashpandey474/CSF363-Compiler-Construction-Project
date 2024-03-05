@@ -31,7 +31,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
                          struct ParsingTable *pt, struct stack *st,
                          lexicalAnalyser LA, struct tree_node *parent,
                          bool skipError, struct tree_node **parentpointer,
-                         FILE *errors);
+                         FILE *errors, int toPrint);
 struct stack *initialiseStack();
 void computeFirstSet(FirstAndFollow *sets_for_all, struct GrammarRule *G);
 void computeFollowSet(FirstAndFollow *sets_for_all, struct GrammarRule *G);
