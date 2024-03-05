@@ -1019,7 +1019,6 @@ struct Variable *peek(struct stack *st)
   }
   else
   {
-    printf("Stack is empty\n");
     return NULL;
   }
 }
@@ -1055,7 +1054,6 @@ struct Variable *pop(struct stack *st)
 
   if (isEmptyStack(st))
   {
-    printf("Stack is empty\n");
     return NULL;
   }
 
