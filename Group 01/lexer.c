@@ -295,18 +295,25 @@ struct SymbolTableEntry *takeActions(lexicalAnalyser LA,
     // printf("TOOK ACTIONS");
     return token;
   }
+  // delimiter, comment (*), newline (nostar)
 
   // SET TOKEN TYPE [SET FOR TOKEN, NOT SET FOR CARRIAGE_RETURN OR DELIMITER]
   token->tokenType = state;
   // DOUBLE STAR STATES
   if (state == TK_NUM2 || state == TK_LT2)
-
   {
+    //**
     // DECREMENT FORWARD POINTER
     LA->forward -= 1;
   }
-  else if (state == TK_RNUM1)
+  else if (state == TK_LT1 || state == TK_GT || state == TK_FUNID || state == TK_NUM1 || state == TK_RNUM2 || state == TK_FIELDID || state == TK_ID ||state==TK_RUID)
   {
+    //*
+    // do nothing
+  }
+  else
+  {
+    // nostar
     LA->forward += 1;
   }
   token->lexeme = strncustomcpy(LA);
@@ -334,23 +341,6 @@ struct SymbolTableEntry *takeActions(lexicalAnalyser LA,
     {
       getToken(token);
     }
-  }
-  else if (state == TK_LT1 || state == TK_GT)
-  {
-    token->lexeme = strncustomcpy(LA);
-  }
-
-  // FINAL STATE WITHOUT ANY OTHER ACTIONS
-  else
-  {
-    // INCREMENT FORWARD
-    LA->forward += 1;
-    token->lexeme = strncustomcpy(LA);
-
-    // SET LEXEME
-
-    // DONT HAVE TO WORRY ABOUT THE INCREMENT FORWARD IN LOOP BECASUE TOKEN IS
-    // RETURNED BEFORE INCREMENTß
   }
 
   // MULTIPLE ACCEPT STATES FOR THE SAME TOKEN
