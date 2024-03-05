@@ -476,7 +476,7 @@ void serialize_tree(struct tree_node *root)
 {
     printf("%d", root->data->val);
     printf("Serializing tree\n");
-    FILE *output = fopen("tree_structure.json", "w");
+    FILE *output = fopen("Group 01\tree_structure.json", "w");
     if (output == NULL)
     {
         printf("Error opening file\n");
@@ -1323,7 +1323,7 @@ void print_and_parse_tree(char *testfile, char *outputfile, FirstAndFollow *sets
         printf("KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
     }
     // if python graph output and serialising is needed
-    //  serialize_tree(tree->root);
+     serialize_tree(tree->root);
 
     return;
 }

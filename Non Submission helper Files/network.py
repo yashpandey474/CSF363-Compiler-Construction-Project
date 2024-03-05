@@ -53,4 +53,4 @@ def build_interactive_tree_from_json(json_file, output_html_path):
     net.show(output_html_path)
 
 # Specify your JSON file path and the output HTML file path
-build_interactive_tree_from_json('tree_structure.json', 'tree_visualization.html')
+build_interactive_tree_from_json("Group 01/tree_structure.json", 'tree_visualization.html')
