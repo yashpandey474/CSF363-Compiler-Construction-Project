@@ -9,7 +9,7 @@ end
 % RANDOM LEXEMES TO CHECK LEXER'S WORKING
 ;
 fieldidlexeme7623fieldidlexeme2
-32i3dent32
+32b3dent32
 #lexeme2
 9lexeme
 5%
