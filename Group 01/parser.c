@@ -1317,113 +1317,113 @@ void print_and_parse_tree(char *testfile, char *outputfile,
   // READ THE INPUT TEST FILE
   FILE *file = readTestFile(testfile);
 
-  // printf("HEIN");
-  // // TWIN BUFFER
-  // twinBuffer bufferArray = initialiseTwinBuffer(file);
+  printf("HEIN");
+  // TWIN BUFFER
+  twinBuffer bufferArray = initialiseTwinBuffer(file);
 
-  // // COMPUNDED DATASTRUCTURE HOLDING THE BUFFER, LINENO, STATE, BEGIN, FORWARD
-  // lexicalAnalyser LA = initialiseLA(bufferArray);
+  // COMPUNDED DATASTRUCTURE HOLDING THE BUFFER, LINENO, STATE, BEGIN, FORWARD
+  lexicalAnalyser LA = initialiseLA(bufferArray);
 
-  // // HOLD CURRENT TOKEN
-  // struct SymbolTableEntry *token;
+  // HOLD CURRENT TOKEN
+  struct SymbolTableEntry *token;
 
-  // int res = 0;
-  // bool skip_error = false;
+  int res = 0;
+  bool skip_error = false;
 
-  // FILE *errors = fopen("errors.txt", "w");
-  // getStream(bufferArray);
+  FILE *errors = fopen("errors.txt", "w");
+  getStream(bufferArray);
 
-  // initialiseStackItems(stack, init);
+  initialiseStackItems(stack, init);
 
-  // errors = fopen("errors.txt", "a");
+  errors = fopen("errors.txt", "a");
 
-  // while ((token = getNextToken(LA)))
-  // {
-  //   if (token->tokenType == LEXICAL_ERROR)
-  //   {
-  //     // LEXICAL ERRORS
-  //     if (toPrint)
-  //     {
-  //       fprintf(errors, "Line no. %-5d Error: %-30s\n", LA->lineNo,
-  //               token->lexeme);
-  //     }
-  //     continue;
-  //   }
-  //   if (!(token->tokenType == TK_COMMENT))
-  //   {
+  while ((token = getNextToken(LA)))
+  {
+    if (token->tokenType == LEXICAL_ERROR)
+    {
+      // LEXICAL ERRORS
+      if (toPrint)
+      {
+        fprintf(errors, "Line no. %-5d Error: %-30s\n", LA->lineNo,
+                token->lexeme);
+      }
+      continue;
+    }
+    if (!(token->tokenType == TK_COMMENT))
+    {
 
-  //     // fprintf(errors, "\nSTACK BEFORE PARSING\n");
-  //     // printStack(stack, errors);
+      // fprintf(errors, "\nSTACK BEFORE PARSING\n");
+      // printStack(stack, errors);
 
-  //     while ((!isEmptyStack(stack)) &&
-  //            (res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors)) == 0)
-  //     {
-  //       skip_error = false;
+      // while ((!isEmptyStack(stack)) &&
+      //        (res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors)) == 0)
+      // {
+      //   skip_error = false;
 
-  //       if (*parentpointer != NULL)
-  //       {
-  //         node_to_add_to = *parentpointer;
-  //       }
-  //     }
+      //   if (*parentpointer != NULL)
+      //   {
+      //     node_to_add_to = *parentpointer;
+      //   }
+      // }
 
-  //     if (res == -1)
-  //     {
-  //       skip_error = true;
-  //     }
-  //     if (res == 1)
-  //     {
-  //       skip_error = false;
-  //     }
-  //     if (*parentpointer != NULL)
-  //     {
-  //       node_to_add_to = *parentpointer;
-  //     }
+      if (res == -1)
+      {
+        skip_error = true;
+      }
+      if (res == 1)
+      {
+        skip_error = false;
+      }
+      if (*parentpointer != NULL)
+      {
+        node_to_add_to = *parentpointer;
+      }
 
-  //     // fprintf(errors, "\nSTACK AFTER PARSING\n");
-  //     // printStack(stack, errors);
-  //   }
-  // }
-  // fclose(errors);
+      // fprintf(errors, "\nSTACK AFTER PARSING\n");
+      // printStack(stack, errors);
+    }
+  }
+  fclose(errors);
 
-  // if (toPrint)
-  // {
+  if (toPrint)
+  {
 
-  //   errors = fopen("errors.txt", "r");
+    errors = fopen("errors.txt", "r");
 
-  //   if (errors == NULL)
-  //   {
-  //     printf("Failed to open the file.\n");
-  //     return;
-  //   }
+    if (errors == NULL)
+    {
+      printf("Failed to open the file.\n");
+      return;
+    }
 
-  //   char error_line[256];
-  //   while (fgets(error_line, sizeof(error_line), errors) != NULL)
-  //   {
-  //     printf("%s", error_line);
-  //   }
+    char error_line[256];
+    while (fgets(error_line, sizeof(error_line), errors) != NULL)
+    {
+      printf("%s", error_line);
+    }
 
-  //   fclose(errors);
-  // }
+    fclose(errors);
+  }
 
-  // if (toPrint)
-  // {
-  //   printParseTree(tree, outputfile);
+  if (toPrint)
+  {
+    printParseTree(tree, outputfile);
 
-  //   if (onlyContainsEOF(stack))
-  //   {
-  //     printf(
-  //         "KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
-  //   }
-  //   else
-  //   {
-  //     printf("THIS CODE IS SYNTACTICALLY INCORRECT.");
-  //   }
-  // }
+    if (onlyContainsEOF(stack))
+    {
+      printf(
+          "KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
+    }
+    else
+    {
+      printf("THIS CODE IS SYNTACTICALLY INCORRECT.");
+    }
+  }
 
-  // freeAll(tree, LA, token, stack);
+  freeAll(tree, LA, token, stack);
 
   // // if python graph output and serialising is needed
   // //  serialize_tree(tree->root);
 
-  // return;
+  return;
 }
