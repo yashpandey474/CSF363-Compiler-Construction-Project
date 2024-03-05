@@ -108,9 +108,10 @@ void print_token_list(char *filename, int toPrint)
       if (toPrint)
       {
         printf("Line no. %-5d Error: %s\n", LA->lineNo, token->lexeme);
+        fprintf(outputFile, "Line no. %-5d Error: %s\n", LA->lineNo,
+                token->lexeme);
       }
-      fprintf(outputFile, "Line no. %-5d Error: %s\n", LA->lineNo,
-              token->lexeme);
+
     }
     else
     {
@@ -118,13 +119,15 @@ void print_token_list(char *filename, int toPrint)
       {
         printf("Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo,
                token->lexeme, TokenToString(token->tokenType));
-
         fprintf(outputFile, "Line no. %-5d Lexeme %-30s Token %-s\n",
                 LA->lineNo, token->lexeme, TokenToString(token->tokenType));
       }
     }
   }
-  fclose(outputFile);
+
+  if (toPrint){
+    fclose(outputFile);
+  }
   return;
 }
 
@@ -340,8 +343,6 @@ int main(int argc, char *argv[])
   createParseTable(PT, G.productions, sets, synchSet,
                    sizeof(synchSet) / sizeof(synchSet[0]));
 
-  // printf("INITILISATION COMPLETED");
-  // printParsingTable(PT);
   clock_t start_time, end_time;
 
   do

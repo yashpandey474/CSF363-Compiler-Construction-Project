@@ -1038,7 +1038,10 @@ void printStack(struct stack *st, FILE *errors)
   // printf("\n");
   fprintf(errors, "\n");
 }
-bool isEmptyStack(struct stack *st) { return st->top == -1; }
+bool isEmptyStack(struct stack *st)
+{
+  return st->top == -1;
+}
 
 struct Variable *peek(struct stack *st)
 {
@@ -1328,13 +1331,17 @@ void print_and_parse_tree(char *testfile, char *outputfile,
 
   int res = 0;
   bool skip_error = false;
-
-  FILE *errors = fopen("errors.txt", "w");
   getStream(bufferArray);
 
   initialiseStackItems(stack, init);
 
-  errors = fopen("errors.txt", "a");
+
+  FILE* errors = fopen("errors.txt", "w");
+  if (errors == NULL)
+  {
+    printf("Error opening file errors\n");
+    return;
+  }
 
   while ((token = getNextToken(LA)))
   {
@@ -1351,11 +1358,8 @@ void print_and_parse_tree(char *testfile, char *outputfile,
     if (!(token->tokenType == TK_COMMENT))
     {
 
-      // fprintf(errors, "\nSTACK BEFORE PARSING\n");
-      // printStack(stack, errors);
-
       while ((!isEmptyStack(stack)) &&
-             (res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors)) == 0)
+             ((res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors)) == 0))
       {
         skip_error = false;
 
@@ -1377,9 +1381,6 @@ void print_and_parse_tree(char *testfile, char *outputfile,
       {
         node_to_add_to = *parentpointer;
       }
-
-      // fprintf(errors, "\nSTACK AFTER PARSING\n");
-      // printStack(stack, errors);
     }
   }
   fclose(errors);
@@ -1420,9 +1421,6 @@ void print_and_parse_tree(char *testfile, char *outputfile,
   }
 
   freeAll(tree, LA, token, stack);
-
-  // // if python graph output and serialising is needed
-  // //  serialize_tree(tree->root);
 
   return;
 }
