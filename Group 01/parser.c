@@ -72,7 +72,7 @@ bool containsEPS(struct LinkedListSet *set) { return set->booleanArr[TK_EPS]; }
 bool appendSetToSet(struct LinkedListSet *destinationSet,
                     struct LinkedListSet *sourceSet)
 {
-  //to mark whether a change has taken place
+  // to mark whether a change has taken place
   bool changed = false;
   struct Variable var;
   var.flag = 0;
@@ -100,6 +100,7 @@ void fprintSetWithIndex(FILE *cfile, struct LinkedListSet *set, int setIndex,
                         int flag, int firstorfollow)
 {
   char str[10];
+  // to mark the type of set
   if (firstorfollow)
   {
     strcpy(str, "First");
@@ -146,13 +147,6 @@ void printFFSetsTable(FILE *cfile, struct Sets **sets_for_all)
     fprintSetWithIndex(cfile, sets_for_all[i]->followSets, i, 1, 0);
     fprintf(cfile, "\n");
   }
-  // for (int i = 0; i < NUM_TERMINALS; i += 1)
-  // {
-  //     fprintSetWithIndex(cfile, sets_for_all[i+NUM_NON_TERMINALS]->firstSets,
-  //     i, 0, 1); fprintSetWithIndex(cfile,
-  //     sets_for_all[i+NUM_NON_TERMINALS]->followSets, i, 0, 0);
-  //     fprintf(cfile,"\n");
-  // }
 }
 
 struct LinkedListSet *initialiseLLSet()
@@ -384,8 +378,7 @@ void computeFirstSet(struct Sets **sets_for_all,
     sets_for_all[i]->firstSets->booleanArr[i - NUM_NON_TERMINALS] = true;
   }
 
-  // for (int hardik = 0; hardik < 3; hardik += 1)
-  // {
+  // FOR ALL NON TERMINALS
   for (int i = 0; i < NUM_NON_TERMINALS; i++)
   {
     // ONLY COMPUTE THHE SETS ONCE
@@ -394,13 +387,6 @@ void computeFirstSet(struct Sets **sets_for_all,
       computeFirstSetNT(productions, sets_for_all, i);
     }
   }
-  // }
-  // PRINT ALL THE FIRST SETS NON TERMINALS
-  // removed, now printed to file
-  // for (int i = 0; i < NUM_NON_TERMINALS; i += 1)
-  // {
-  //     printSetWithIndex(sets_for_all[i]->firstSets, i, 1, 0);
-  // }
 }
 
 struct Sets **initialiseSetsWhole()
@@ -420,7 +406,6 @@ struct tree_node *create_tree_node(struct Variable *data)
 {
   struct tree_node *new_tree_node =
       (struct tree_node *)malloc(sizeof(struct tree_node));
-  // data->token = NULL;
   new_tree_node->data = data;
   new_tree_node->next = NULL;
   new_tree_node->head = NULL;
@@ -544,7 +529,6 @@ struct tree_node *nextNonTerminal(struct tree_node *current)
 
   if (current->data->flag == 1)
   {
-    // printf("RETURNED: %s\n", NonTerminalToString(current->data->val));
     return current;
   }
   while (current->parent != NULL && current->parent->next == NULL)
@@ -566,10 +550,6 @@ struct tree_node *repeated_add(struct tree_node *parent, struct Variable *nt,
 
   if (parent->data->val != nt->val)
   {
-    // printf("Error: The input does not match the first non-terminal found\n");
-    // printf("Non-terminal entered: %s\n", NonTerminalToString(nt->val));
-    // printf("Non-terminal found: %s\n",
-    // NonTerminalToString(parent->data->val));
     return nextNonTerminal(parent->head);
   }
 
@@ -580,28 +560,15 @@ struct tree_node *repeated_add(struct tree_node *parent, struct Variable *nt,
       continue;
     }
 
-    // printf("VAR = %s\n", NonTerminalToString(rule[var]->flag));
-
     add_tree_node(parent, create_tree_node(rule[var]));
   }
 
   return nextNonTerminal(parent->head);
 }
-// nextParent = add_to_tree(topStack, a, pt, parent);
 struct tree_node *add_to_tree(struct Variable *nt, struct Variable **rule,
                               struct tree_node *parent)
 {
-  // printf("NONTERMINAL IN TREE: %s\n", NonTerminalToString(nt->val));
-
-  parent = repeated_add(parent, nt, rule);
-
-  if (parent != NULL)
-  {
-    // printf("PARENT POINTER; %s\n", NonTerminalToString(parent->data->val));
-  }
-  // printf("TREE RETURNED NEXT NONTERMINAL: %s\n",
-  // NonTerminalToString(parent->data->val));
-  return parent;
+  return repeated_add(parent, nt, rule);
 }
 
 void printNodeDetails(struct tree_node *node, FILE *outfile)
@@ -1112,10 +1079,10 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
                          FILE *errors, int toPrint)
 {
 
-  //GET THE TOKENTYPE OF CURRENT TOKEN
+  // GET THE TOKENTYPE OF CURRENT TOKEN
   enum Tokentype a = token->tokenType;
 
-  //GET THE VARIABLE AT THE TOP OF STACK
+  // GET THE VARIABLE AT THE TOP OF STACK
   struct Variable *X = st->stack[st->top];
 
   // BOTH ARE TERMINALS AND MATCH
@@ -1131,11 +1098,11 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
     return 1;
   }
 
-  //TOKEN AND MISMATCH
+  // TOKEN AND MISMATCH
   else if (X->flag == 0)
   {
 
-    //IF TO PRINT (NOT PRINTING INTO A FILE)
+    // IF TO PRINT (NOT PRINTING INTO A FILE)
     if (toPrint)
     {
       // CALL ERROR FUNCTION
@@ -1343,7 +1310,6 @@ void print_and_parse_tree(char *testfile, char *outputfile,
   // HOLD CURRENT TOKEN
   struct SymbolTableEntry *token;
 
-
   int res = 0;
   bool skip_error = false;
   getStream(bufferArray);
@@ -1421,11 +1387,12 @@ void print_and_parse_tree(char *testfile, char *outputfile,
     fclose(errors);
 
     printParseTree(tree, outputfile);
+    serialize_tree(tree->root);
 
     if (onlyContainsEOF(stack))
     {
       printf(
-          "KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
+          "SYNTAX ANALYSIS COMPLETE\n");
     }
     else
     {
