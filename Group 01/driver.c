@@ -156,9 +156,7 @@ int main(int argc, char *argv[])
 
   // printf("H1");
   insertAllKeywords();
-  int synchSet[] = {TK_ENDRECORD, TK_ENDUNION, TK_SEM, TK_DOT,
-                    TK_CL, TK_SQL, TK_ENDRECORD, TK_ENDWHILE,
-                    TK_ENDUNION, TK_ENDIF, TK_ELSE};
+  int synchSet[] = {};
 
   // printf("SYNCH SET");
 
@@ -381,8 +379,6 @@ int main(int argc, char *argv[])
       printf("Invalid option. Please try again.\n");
     }
   } while (option != 0);
-
-
 
   return 0;
 }
