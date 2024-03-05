@@ -537,8 +537,7 @@ void printNodeDetails(struct tree_node *node, FILE *outfile) {
   int lineNo = -1;
 
   if (node->parent == NULL) {
-    parentNodeSymbol = (char *)malloc(5 * sizeof(char));
-    strcpy(parentNodeSymbol, "ROOT");
+    parentNodeSymbol = "ROOT";
   } else {
     parentNodeSymbol = NonTerminalToString(node->parent->data->val);
   }
