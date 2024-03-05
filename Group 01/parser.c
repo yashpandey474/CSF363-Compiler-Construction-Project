@@ -1317,7 +1317,6 @@ void print_and_parse_tree(char *testfile, char *outputfile,
   // READ THE INPUT TEST FILE
   FILE *file = readTestFile(testfile);
 
-  printf("HEIN");
   // TWIN BUFFER
   twinBuffer bufferArray = initialiseTwinBuffer(file);
 
@@ -1355,16 +1354,16 @@ void print_and_parse_tree(char *testfile, char *outputfile,
       // fprintf(errors, "\nSTACK BEFORE PARSING\n");
       // printStack(stack, errors);
 
-      // while ((!isEmptyStack(stack)) &&
-      //        (res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors)) == 0)
-      // {
-      //   skip_error = false;
+      while ((!isEmptyStack(stack)) &&
+             (res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors)) == 0)
+      {
+        skip_error = false;
 
-      //   if (*parentpointer != NULL)
-      //   {
-      //     node_to_add_to = *parentpointer;
-      //   }
-      // }
+        if (*parentpointer != NULL)
+        {
+          node_to_add_to = *parentpointer;
+        }
+      }
 
       if (res == -1)
       {
