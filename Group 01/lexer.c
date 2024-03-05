@@ -65,9 +65,9 @@ char *strncustomcpy(lexicalAnalyser LA) // copy forward to begin in a string
   // }printf("\n");
 
   int twinBufferSize = 2 * BUFFER_SIZE + 2;
-  int numchars = getSizeOfCustomString(LA) + 1;
+  int numchars = getSizeOfCustomString(LA);
 
-  char *a = (char *)malloc(numchars);
+  char *a = (char *)malloc(numchars+1);
   if (a == NULL) {
     printf("Memory allocation in strncustomcpy failed.");
     return "ERR_1010";
@@ -76,16 +76,11 @@ char *strncustomcpy(lexicalAnalyser LA) // copy forward to begin in a string
   int f = LA->forward % twinBufferSize;
   int i = 0;
   for (; b != f;) {
-    if (LA->bufferArray->buffer[b] != EOF) {
-      a[i] = LA->bufferArray->buffer[b];
-      i++;
-      b += 1;
-    } else {
-      b += 1;
-      b %= twinBufferSize;
-    }
+    if (LA->bufferArray->buffer[b] != EOF)
+      a[i++] = LA->bufferArray->buffer[b];
+    b = (b+1)%twinBufferSize;
   }
-  a[numchars - 1] = '\0';
+  a[numchars] = '\0';
   return a;
 }
 
