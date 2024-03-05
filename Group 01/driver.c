@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <time.h>
 
+// function declarations
 void remove_comments(char *testcasefile, char *cleanFile);
 void print_token_list(char *filename, int toPrint);
 void print_timing_info(clock_t start_time, clock_t end_time);

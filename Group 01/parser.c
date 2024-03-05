@@ -1114,10 +1114,10 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
   //GET THE TOKENTYPE OF CURRENT TOKEN
   enum Tokentype a = token->tokenType;
 
-  //GET
+  //GET THE VARIABLE AT THE TOP OF STACK
   struct Variable *X = st->stack[st->top];
 
-  // BOTH ARE TERMINALS
+  // BOTH ARE TERMINALS AND MATCH
   if (X->val == a && X->flag == 0)
   {
     // TOKEN BEING SET [NO ERROR]
@@ -1130,9 +1130,11 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
     return 1;
   }
 
+  //TOKEN AND MISMATCH
   else if (X->flag == 0)
   {
 
+    //IF TO PRINT (NOT PRINTING INTO A FILE)
     if (toPrint)
     {
       // CALL ERROR FUNCTION
