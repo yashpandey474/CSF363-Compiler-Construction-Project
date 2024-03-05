@@ -1,0 +1,11 @@
+% CHECK LEXICAL ANALYSER
+<-
+<--
+<<..
+123
+123.4
+123.45
+123.4$abcd
+123.45abcd  % RANDOM COMENT 
+123.abcd
+$$
