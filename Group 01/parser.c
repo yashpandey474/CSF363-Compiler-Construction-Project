@@ -1152,8 +1152,6 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
               NonTerminalToString(X->val));
     }
 
-    printf("NT %s TOKEN %s\n", NonTerminalToString(X->val), TokenToString(a));
-
     // TOKEN NOT BEING SET
     pop(st);
 
