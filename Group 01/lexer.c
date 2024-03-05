@@ -32,27 +32,27 @@ FILE *readTestFile(char *file_path) {
 int getSizeOfCustomString(lexicalAnalyser LA) {
   int b = LA->begin;
   int f = LA->forward;
-  int pandey_chootiya = 0;
+  int temp_Var_for_len = 0;
   if ((b < BUFFER_SIZE && f < BUFFER_SIZE) ||
       (b > BUFFER_SIZE && f > BUFFER_SIZE)) {
     if (b < f) {
-      pandey_chootiya = f - b;
+      temp_Var_for_len = f - b;
     } else {
-      pandey_chootiya = 2 * BUFFER_SIZE - f + b;
+      temp_Var_for_len = 2 * BUFFER_SIZE - f + b;
     }
   } else if (b < BUFFER_SIZE && f > BUFFER_SIZE) {
-    pandey_chootiya = f - b - 1;
+    temp_Var_for_len = f - b - 1;
   } else if (b > BUFFER_SIZE && f < BUFFER_SIZE) {
-    pandey_chootiya = 2 * BUFFER_SIZE + 1 - f + b;
+    temp_Var_for_len = 2 * BUFFER_SIZE + 1 - f + b;
   } else {
     if (b == BUFFER_SIZE || b == 2 * BUFFER_SIZE + 1) {
-      pandey_chootiya--;
+      temp_Var_for_len--;
     }
     if (f == BUFFER_SIZE || f == 2 * BUFFER_SIZE + 1) {
-      pandey_chootiya--;
+      temp_Var_for_len--;
     }
   }
-  return pandey_chootiya;
+  return temp_Var_for_len;
 }
 
 char *strncustomcpy(lexicalAnalyser LA) // copy forward to begin in a string
