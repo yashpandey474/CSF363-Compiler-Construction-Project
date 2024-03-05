@@ -1,20 +1,18 @@
 # // GROUP 01
 # // NAMES	                 BITS ID
 # // ------------------------------------------
-# // Yash Pandey	             2021A7PS0661P
-# // Achinthya Hebbar S	     2021A7PS1457P
-# // Ujjwal Aggarwal	         2021A7PS2427P
-# // Hardik Gupta 	         2021A7PS2421P
-# // Agrawal Vansh Anil        2021A7PS2215P
+# Yash Pandey	                2021A7PS0661P
+# Achinthya Hebbar S	        2021A7PS1457P
+# Ujjwal Aggarwal	        2021A7PS2427P
+# Hardik Gupta 	                2021A7PS2421P
+# Agrawal Vansh Anil            2021A7PS2215P
 
 # Define compiler
 CC=gcc
 
-# Define any compile-time flags
-# Assuming the "Lexical Analyzer" directory is not used anymore based on your description
 CFLAGS=-I. -I"./Group 01" -I"./Group 01/Other Files" -Wall -g
 
-# Define the source files explicitly, including the path for those in the "Group 01" and "Other Files" directory
+# Define the source files
 SOURCES=driver.c \
         lexer.c \
         parser.c \
@@ -24,13 +22,12 @@ SOURCES=driver.c \
 # Define the executable file name
 EXECUTABLE=stage1exe
 
-# Default rule for making the executable
+# Default rule
 all: clean $(EXECUTABLE)
 
 # Rule for compiling and linking the executable directly without generating .o files
 $(EXECUTABLE):
 	$(CC) $(CFLAGS) $(SOURCES) -o $(EXECUTABLE)
 
-# Define a clean rule
 clean:
 	rm -f $(EXECUTABLE)
