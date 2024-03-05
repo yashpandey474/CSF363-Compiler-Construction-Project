@@ -2,7 +2,7 @@
 _sumN  input parameter list [int d5cc34, int b2d]  
 output parameter list[real d3];
 	type int : b5b567;
-	b5b567 <- 1;
+	b5b567 <---d5cc34;
 	d3 <--- 123.45E-56;
 	b2d <--- 1;
 	while ( b5b567 <= d5cc34)
@@ -12,7 +12,7 @@ output parameter list[real d3];
 	endwhile
 	return [d3];
 end
-
+$$
 _main
 	type int :b3;
 	type real :c4bd56;

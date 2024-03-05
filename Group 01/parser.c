@@ -663,7 +663,7 @@ void printNodeDetails(struct tree_node *node, FILE *outfile)
   {
     fprintf(outfile,
             "(Lexeme Current Node)%-20s (Line No)%-5d (Token Name)%-20s (Value "
-            "if number)%-20lf (Parent Node Symbol)%-20s (IS leaf node)%-3s "
+            "if number)%-20e (Parent Node Symbol)%-20s (IS leaf node)%-3s "
             "(Node symbol)%-20s\n",
             lexeme, lineNo, TokenToString(node->data->token->tokenType),
             node->data->token->doubleValue, parentNodeSymbol, "yes",

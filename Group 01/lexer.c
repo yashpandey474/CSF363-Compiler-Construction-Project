@@ -227,8 +227,19 @@ void equivalentNumber(lexicalAnalyser lex, int flag, tokenInfo token)
   }
   else
   {
-    // DOUBLE
-    token->doubleValue = atof(token->lexeme);
+    char *end;
+    double value = strtod(token->lexeme, &end);
+
+    // Check if no characters were converted (which means the input was not a valid number)
+    if (end == token->lexeme)
+    {
+      printf("Conversion error occurred: %s is not a valid number.\n", token->lexeme);
+    }
+    else
+    {
+      token->doubleValue = value; // Store the converted double value
+      // printf("Encountered double value %lf", token->doubleValue);
+    }
   }
 }
 void changeForward(lexicalAnalyser LA, int flag)
@@ -306,7 +317,7 @@ struct SymbolTableEntry *takeActions(lexicalAnalyser LA,
     // DECREMENT FORWARD POINTER
     LA->forward -= 1;
   }
-  else if (state == TK_LT1 || state == TK_GT || state == TK_FUNID || state == TK_NUM1 || state == TK_RNUM2 || state == TK_FIELDID || state == TK_ID ||state==TK_RUID)
+  else if (state == TK_LT1 || state == TK_GT || state == TK_FUNID || state == TK_NUM1 || state == TK_RNUM2 || state == TK_FIELDID || state == TK_ID || state == TK_RUID)
   {
     //*
     // do nothing
