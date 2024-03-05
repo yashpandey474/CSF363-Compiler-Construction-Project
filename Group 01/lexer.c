@@ -189,6 +189,8 @@ struct SymbolTableEntry *setErrorMessage(struct SymbolTableEntry *token,
     }
     strncpy(token->lexeme, errorMessage, strlen(errorMessage) + 1);
   }
+
+  // SET TOKEN TYPE TO LEXCIAL ERROR
   token->tokenType = LEXICAL_ERROR;
 
   // Return to start
@@ -306,7 +308,7 @@ struct SymbolTableEntry *takeActions(lexicalAnalyser LA,
     // DECREMENT FORWARD POINTER
     LA->forward -= 1;
   }
-  else if (state == TK_LT1 || state == TK_GT || state == TK_FUNID || state == TK_NUM1 || state == TK_RNUM2 || state == TK_FIELDID || state == TK_ID ||state==TK_RUID)
+  else if (state == TK_LT1 || state == TK_GT || state == TK_FUNID || state == TK_NUM1 || state == TK_RNUM2 || state == TK_FIELDID || state == TK_ID || state == TK_RUID)
   {
     //*
     // do nothing
@@ -379,19 +381,24 @@ struct SymbolTableEntry *initialiseToken()
 
 tokenInfo getNextToken(lexicalAnalyser LA)
 {
+
   // INITIALSE TOKEN
   struct SymbolTableEntry *token = initialiseToken();
 
   // RESET TO START STATE
   LA->state = 0;
 
+  // HOLD THE CURRENT CHARACTER
   char character;
-  // while(1)
+
   while (1)
   {
+    // printf("BEGIN = %d FORWARD = %d\n", LA->begin, LA->forward);
 
     // GET CHARACTER CURRENTLY BEING READ
     character = LA->bufferArray->buffer[LA->forward % (BUFFER_SIZE * 2 + 2)];
+
+    // printf("CHARACTER AT %d = %c\n", LA->forward, character);
 
     // EOF: LAST CHARACTER OF INPUT
     if (character == EOF)
@@ -446,6 +453,7 @@ tokenInfo getNextToken(lexicalAnalyser LA)
           return token;
         }
 
+        // TK_ID OR TK_FUNID WITH MORE THAN MAX. LEXEME SIZE
         if (token->tokenType == LEXICAL_ERROR)
         {
           return token;
@@ -462,8 +470,8 @@ tokenInfo getNextToken(lexicalAnalyser LA)
         }
       }
     }
-    // TODO: CHECK
-    //  CHANGE STATE
+
+    // CHANGE STATE
     if (characterTypeMap[(int)character] == CT_INVALID && LA->state == 0)
     {
       setErrorMessage(token, LA, true, "");
@@ -471,33 +479,34 @@ tokenInfo getNextToken(lexicalAnalyser LA)
       // INCREMENT FORWARD BECAUSE CHARACTER IS INVALID; CANNOT RESUME
       // TOKENISATION
       LA->forward += 1;
+      LA->begin = LA->forward;
+      // printf("B = %d F = %d\n", LA->begin, LA->forward);
+      LA->begin = LA->begin % (2 * BUFFER_SIZE + 2);
+      LA->forward = LA->forward % (2 * BUFFER_SIZE + 2);
       return token;
     }
 
     // GET NEXT STATE
-
-    // printf("\nCHARACTER %c %d FROM STATE %d\xn", character, token->tokenType,
-    // LA->state);
     LA->state = getNextState(LA->state, (int)character);
-    // printf("\nTO STATE %d\n", LA->state);
+
 
     // TRAP STATE
     if (LA->state == -1)
     {
       setErrorMessage(token, LA, true, "");
-      // exit(0);
       return token;
     }
 
     // TAKE ACTIONS FOR THE STATE
     token = takeActions(LA, token);
 
+    // TK_ID OR TK_FUNID WITH MORE THAN MAX SIZE LEXEME
     if (token->tokenType == LEXICAL_ERROR)
     {
       return token;
     }
 
-    // HAVE TO RETURN
+    // HAVE TO RETURN; NON ERROR TOKEN
     if (token->tokenType != 0)
     {
       LA->begin = LA->forward;
