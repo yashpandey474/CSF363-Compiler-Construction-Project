@@ -139,7 +139,7 @@ void print_timing_info(clock_t start_time, clock_t end_time)
 int main(int argc, char *argv[])
 {
     int option;
-    clock_t start_time, end_time;
+    
     printf("FIRST and FOLLOW set automated\n");
     printf("Lexical, Syntax analyzer module developed\n");
     printf("Parse Tree module developed\n");
@@ -168,6 +168,7 @@ int main(int argc, char *argv[])
 
     // printf("INITILISATION COMPLETED");
     // printParsingTable(PT);
+    clock_t start_time, end_time;
 
     do
     {
