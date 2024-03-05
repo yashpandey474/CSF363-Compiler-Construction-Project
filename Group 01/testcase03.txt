@@ -1,2 +1,16 @@
-%MAX VERSTAPPEN
-%TUDUDUDUDU
+_main
+	type int :b3;
+	type real :c4bd56;
+	b3 <--- 7;
+	[c4bd56]<--- call _sumN with parameters [b3];
+	write(c4bd56);
+	return;
+end
+% RANDOM LEXEMES TO CHECK LEXER'S WORKING
+;
+fieldidlexeme7623fieldidlexeme2
+32i3dent32
+#lexeme2
+9lexeme
+5%
+&$
