@@ -1385,7 +1385,7 @@ void print_and_parse_tree(char *testfile, char *outputfile,
     fclose(errors);
 
     printParseTree(tree, outputfile);
-    serialize_tree(tree->root);
+    // serialize_tree(tree->root);
 
     if (onlyContainsEOF(stack))
     {

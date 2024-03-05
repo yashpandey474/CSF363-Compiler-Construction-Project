@@ -131,6 +131,10 @@ void print_token_list(char *filename, int toPrint)
   {
     fclose(outputFile);
   }
+
+  free(token);
+  free(LA->bufferArray);
+  free(LA);
   return;
 }
 
