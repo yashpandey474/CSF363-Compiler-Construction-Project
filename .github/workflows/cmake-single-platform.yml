@@ -3,7 +3,7 @@ name: Run and Test Code on Push to Test Branch
 on:
   push:
     branches:
-      - test
+      - main
 
 jobs:
   build-and-run:
