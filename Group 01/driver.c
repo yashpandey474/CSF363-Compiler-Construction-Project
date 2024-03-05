@@ -16,16 +16,19 @@ void remove_comments(char *testcasefile, char *cleanFile);
 void print_token_list(char *filename, int toPrint);
 void print_timing_info(clock_t start_time, clock_t end_time);
 
-void remove_comments(char *testcasefile, char *cleanFile) {
+void remove_comments(char *testcasefile, char *cleanFile)
+{
   FILE *file = fopen(testcasefile, "r");
-  if (file == NULL) {
+  if (file == NULL)
+  {
     perror("Error opening file");
     return;
   }
 
   // Open an additional file for writing the output
   FILE *outputFile = fopen(cleanFile, "w");
-  if (outputFile == NULL) {
+  if (outputFile == NULL)
+  {
     perror("Error opening output file");
     fclose(file);
     return;
@@ -34,19 +37,27 @@ void remove_comments(char *testcasefile, char *cleanFile) {
   char buffer[50];
   int prev_char = '\0'; // Store the previous character read
 
-  while (fgets(buffer, 50, file) != NULL) {
-    for (int i = 0; buffer[i] != '\0'; i++) {
-      if (prev_char == '%' && buffer[i] != '\n') {
+  while (fgets(buffer, 50, file) != NULL)
+  {
+    for (int i = 0; buffer[i] != '\0'; i++)
+    {
+      if (prev_char == '%' && buffer[i] != '\n')
+      {
         continue;
       }
 
-      if (prev_char == '%' && buffer[i] == '\n') {
+      if (prev_char == '%' && buffer[i] == '\n')
+      {
         printf("%c", buffer[i]);
         fprintf(outputFile, "%c", buffer[i]);
-      } else if (buffer[i] == '\n') {
+      }
+      else if (buffer[i] == '\n')
+      {
         printf("%c", buffer[i]);
         fprintf(outputFile, "%c", buffer[i]);
-      } else if (buffer[i] != '%') {
+      }
+      else if (buffer[i] != '%')
+      {
         printf("%c", buffer[i]);
         fprintf(outputFile, "%c", buffer[i]);
       }
@@ -58,7 +69,8 @@ void remove_comments(char *testcasefile, char *cleanFile) {
   fclose(outputFile);
 }
 
-void print_token_list(char *filename, int toPrint) {
+void print_token_list(char *filename, int toPrint)
+{
 
   // TEST THE TWIN BUFFER
   FILE *file = readTestFile(filename);
@@ -77,25 +89,33 @@ void print_token_list(char *filename, int toPrint) {
 
   // printf("STARTING SCANNING\n");
   FILE *outputFile;
-  if (toPrint) {
+  if (toPrint)
+  {
     outputFile = fopen("lexicaltest.txt", "w");
 
-    if (outputFile == NULL) {
+    if (outputFile == NULL)
+    {
       perror("Error opening output file");
       fclose(file);
       return;
     }
   }
 
-  while ((token = getNextToken(LA))) {
-    if (token->tokenType == LEXICAL_ERROR) {
-      if (toPrint) {
+  while ((token = getNextToken(LA)))
+  {
+    if (token->tokenType == LEXICAL_ERROR)
+    {
+      if (toPrint)
+      {
         printf("Line no. %-5d Error: %s\n", LA->lineNo, token->lexeme);
       }
       fprintf(outputFile, "Line no. %-5d Error: %s\n", LA->lineNo,
               token->lexeme);
-    } else {
-      if (toPrint) {
+    }
+    else
+    {
+      if (toPrint)
+      {
         printf("Line no. %-5d Lexeme %-30s Token %-s\n", LA->lineNo,
                token->lexeme, TokenToString(token->tokenType));
 
@@ -108,7 +128,8 @@ void print_token_list(char *filename, int toPrint) {
   return;
 }
 
-void print_timing_info(clock_t start_time, clock_t end_time) {
+void print_timing_info(clock_t start_time, clock_t end_time)
+{
   double total_CPU_time, total_CPU_time_in_seconds;
 
   total_CPU_time = (double)(end_time - start_time);
@@ -118,14 +139,16 @@ void print_timing_info(clock_t start_time, clock_t end_time) {
   printf("Time in seconds: %f s\n", total_CPU_time_in_seconds);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   int option;
 
   printf("FIRST and FOLLOW set automated\n");
   printf("Lexical, Syntax analyzer module developed\n");
   printf("Parse Tree module developed\n");
 
-  if (argc < 3) {
+  if (argc < 3)
+  {
     printf("Please provide in format %s <inputfile.name> <outputfile.name>\n",
            argv[0]);
     return 1;
@@ -133,9 +156,9 @@ int main(int argc, char *argv[]) {
 
   // printf("H1");
   insertAllKeywords();
-  int synchSet[] = {TK_ENDRECORD, TK_ENDUNION, TK_SEM,       TK_DOT,
-                    TK_CL,        TK_SQL,      TK_ENDRECORD, TK_ENDWHILE,
-                    TK_ENDUNION,  TK_ENDIF,    TK_ELSE};
+  int synchSet[] = {TK_ENDRECORD, TK_ENDUNION, TK_SEM, TK_DOT,
+                    TK_CL, TK_SQL, TK_ENDRECORD, TK_ENDWHILE,
+                    TK_ENDUNION, TK_ENDIF, TK_ELSE};
 
   // printf("SYNCH SET");
 
@@ -321,7 +344,8 @@ int main(int argc, char *argv[]) {
   // printParsingTable(PT);
   clock_t start_time, end_time;
 
-  do {
+  do
+  {
     printf("\nOptions:\n");
     printf("0 : Exit\n");
     printf("1 : Remove comments\n");
@@ -332,7 +356,8 @@ int main(int argc, char *argv[]) {
     printf("Selected option: ");
     scanf("%d", &option);
 
-    switch (option) {
+    switch (option)
+    {
     case 0:
       printf("Exiting...\n");
       break;
@@ -356,6 +381,8 @@ int main(int argc, char *argv[]) {
       printf("Invalid option. Please try again.\n");
     }
   } while (option != 0);
+
+
 
   return 0;
 }

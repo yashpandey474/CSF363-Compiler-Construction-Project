@@ -1111,20 +1111,16 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
   enum Tokentype a = token->tokenType;
   struct Variable *X = st->stack[st->top];
 
-  // printf("Variable address popped %p, Variable %d\n", (void *)X, X->val);
-
   // BOTH ARE TERMINALS
   if (X->val == a && X->flag == 0)
   {
-    // printf( "POPPED TERMINAL: %s\n", TokenToString(X->val));
-
     // TOKEN BEING SET [NO ERROR]
     X->token = token;
 
-    // fprintf(errors, "POPPED TOKEN: %s\n", TokenToString(a));
-
+    // POP THE TOKEN
     pop(st);
 
+    // CORRECT TOKEN; GET NEXT AND STOP SKIPPING ERRORS IF WERE SKIPPING
     return 1;
   }
 
@@ -1137,14 +1133,13 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
             LA->lineNo, TokenToString(a), token->lexeme, TokenToString(X->val));
 
     // TOKEN NOT BEING SET
-
     pop(st);
 
-    // ASSUME ALL TOKENS TO BE IN SYNCH SET OF ALL TOKENS
+    // WRONG TOKEN; STAY AT THIS; ASSUME ALL TOKENS TO BE IN SYNCH SET OF ALL TOKENS
     return 0;
   }
 
-  // ERROR
+  // ERROR: START SKIPPING THE INPUT
   else if (pt->table[X->val][a] == NULL)
   {
     if (!skipError)
@@ -1154,20 +1149,17 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
               LA->lineNo, TokenToString(a), token->lexeme,
               NonTerminalToString(X->val));
 
-    // go and get the next token
+    // go and get the next token [RETURN -1 INSTEAD OF 0]
 
-    // DISCARD INPUT UNTIL SYN OR VALID
+    // ERROR ENTRY; GET NEXT AND START SKIPPING; DISCARD INPUT UNTIL SYN OR VALID
     return -1;
   }
   // SYN
   else if (pt->table[X->val][a][0].val == -1)
   {
     // SYN TOKEN; POP THE NONTERMINAL
-    // printf("Line %-5d Error: Invalid token %s encountered with value %s stack
-    // top %s\n", LA->lineNo, TokenToString(a), token->lexeme,
-    // NonTerminalToString(X.val));
 
-    // ERROR IF NOT SKIPPING
+    // ERROR IF NOT SKIPPING ERRORS; REPORT THIS ERROR
     if (!skipError)
     {
       fprintf(errors,
@@ -1180,22 +1172,15 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
     // TOKEN NOT BEING SET
     pop(st);
 
-    // CONTINUE FROM  SYN TOKEN
+    // SYNCH; STAY AT THIS; IF SKIPPING; STOP SKIPPING; CONTINUE FROM  SYN TOKEN
     return 0;
   }
   else
   {
     // GET THE RULE
-    // struct Variable *arr = pt->table[X.val][a];
     struct Variable *topStack = pop(st);
-
-    // fprintf(errors, "POPPED NT %s ON TOKEN %s %s\n",
-    // NonTerminalToString(topStack->val), TokenToString(a), token->lexeme);
-
     struct Variable **copyRule =
         (struct Variable **)malloc(sizeof(struct Variable *) * MAX_VARS);
-
-    // printRule(topStack->val, copyRule);
 
     for (int var = MAX_VARS - 1; var >= 0; var -= 1)
     {
@@ -1220,23 +1205,13 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
       push(st, copy);
     }
 
-    // printf("While passing to add to tree stack was\n");
-    // printStack(st);
-
     // PASS TO TREE & GET CURRENT NODE`
     parent = add_to_tree(topStack, copyRule, parent);
     *parentpointer = parent;
 
-    // if (parent != NULL)
-    // {
-    //     // printf("RETURNED PARENT: %s\n",
-    //     NonTerminalToString(parent->data->val));
-    // }
-
+    // USED A RULE BUT NOT POPPED TOKEN; STAY AT THIS TOKEN
     return 0;
   }
-
-  // TODO: WHAT TO RETURN IF ERROR
 }
 
 struct stack *initialiseStack()
@@ -1308,6 +1283,10 @@ void freeTree(struct parseTree *tree)
   free(tree);
 }
 
+void freeBufferLA(twinBuffer buffer, lexicalAnalyser LA)
+{
+}
+
 void print_and_parse_tree(char *testfile, char *outputfile,
                           FirstAndFollow *sets, struct ParsingTable *PT,
                           Grammar G, int toPrint)
@@ -1347,15 +1326,6 @@ void print_and_parse_tree(char *testfile, char *outputfile,
 
   initialiseStackItems(stack, init);
 
-  // FILE *cfile = fopen("computed_sets.txt", "w");
-  // if (cfile == NULL)
-  // {
-  //   printf("Error opening file!\n");
-  //   return;
-  // }
-  // printFFSetsTable(cfile, sets);
-  // fclose(cfile);
-
   errors = fopen("errors.txt", "a");
 
   while ((token = getNextToken(LA)))
@@ -1379,6 +1349,8 @@ void print_and_parse_tree(char *testfile, char *outputfile,
       while ((!isEmptyStack(stack)) &&
              (res = parseInputSourceCode(token, PT, stack, LA, node_to_add_to, skip_error, parentpointer, errors)) == 0)
       {
+        skip_error = false;
+
         if (*parentpointer != NULL)
         {
           node_to_add_to = *parentpointer;
@@ -1391,7 +1363,6 @@ void print_and_parse_tree(char *testfile, char *outputfile,
       }
       if (res == 1)
       {
-
         skip_error = false;
       }
       if (*parentpointer != NULL)
@@ -1441,6 +1412,11 @@ void print_and_parse_tree(char *testfile, char *outputfile,
   }
 
   freeTree(tree);
+  free(LA->bufferArray);
+  free(LA);
+  free(token);
+  free(stack->stack);
+  free(stack);
   // freeBufferLA(bufferArray, LA);
   // if python graph output and serialising is needed
   //  serialize_tree(tree->root);
