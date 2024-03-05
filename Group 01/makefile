@@ -7,8 +7,7 @@
 # Hardik Gupta 	                2021A7PS2421P
 # Agrawal Vansh Anil            2021A7PS2215P
 
-# Define compiler
-CC=gcc
+
 
 CFLAGS=-I. -I"./Group 01" -I"./Group 01/Other Files" -Wall -g
 
@@ -27,7 +26,7 @@ all: clean $(EXECUTABLE)
 
 # Rule for compiling and linking the executable directly without generating .o files
 $(EXECUTABLE):
-	$(CC) $(CFLAGS) $(SOURCES) -o $(EXECUTABLE)
+	gcc $(CFLAGS) $(SOURCES) -o $(EXECUTABLE)
 
 clean:
 	rm -f $(EXECUTABLE)
