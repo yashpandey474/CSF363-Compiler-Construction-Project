@@ -9,7 +9,7 @@
 
 
 
-CFLAGS=-I. -I"./Group 01" -I"./Group 01/Other Files" -Wall -g
+CFLAGS=-I. -I"./Group 01" -Wall -g
 
 # Define the source files
 SOURCES=driver.c \
