@@ -72,6 +72,7 @@ bool containsEPS(struct LinkedListSet *set) { return set->booleanArr[TK_EPS]; }
 bool appendSetToSet(struct LinkedListSet *destinationSet,
                     struct LinkedListSet *sourceSet)
 {
+  //to mark whether a change has taken place
   bool changed = false;
   struct Variable var;
   var.flag = 0;

@@ -18,17 +18,20 @@ struct SymbolTableNode *symbolTable[HASH_MAP_SIZE] = {NULL};
 
 // WRITE FUNCTIONS FOR INSERT (TOKEN, LEXEME) AND LOOKUP (LEXEME)
 
-int hash(const char *lexeme) {
+int hash(const char *lexeme)
+{
   // can write functions to rehash when reached 70% of the size
   int hash = 0;
-  while (*lexeme) {
+  while (*lexeme)
+  {
     hash = hash * 31 + *(lexeme++);
     hash = hash % HASH_MAP_SIZE;
   }
   return hash % HASH_MAP_SIZE;
 }
 
-struct SymbolTableEntry *lookup(const char *lexeme) {
+struct SymbolTableEntry *lookup(const char *lexeme)
+{
   // GET THE INDEX
   int index = hash(lexeme);
   // printf("LOOKING %s", lexeme);
@@ -47,14 +50,17 @@ struct SymbolTableEntry *lookup(const char *lexeme) {
   // lexeme %s\n", index, nodeFound, nodeFound->entry->lexeme);
 
   // CHECK IF EXISTS
-  if (nodeFound == NULL) {
+  if (nodeFound == NULL)
+  {
     // printf("Lexeme %s not found\n", lexeme);
     return NULL;
   }
 
-  else {
+  else
+  {
     // LINEAR SEARCH IN LINKED LIST
-    while (nodeFound) {
+    while (nodeFound)
+    {
       if (strcmp(lexeme, nodeFound->entry->lexeme) == 0)
         return nodeFound->entry;
 
@@ -65,11 +71,14 @@ struct SymbolTableEntry *lookup(const char *lexeme) {
   }
 }
 
-struct SymbolTableEntry *installId(const char *lexeme) {
+struct SymbolTableEntry *installId(const char *lexeme)
+{
   return lookup(lexeme);
 }
-const char *CharacterTypeToString(enum CharacterType type) {
-  switch (type) {
+const char *CharacterTypeToString(enum CharacterType type)
+{
+  switch (type)
+  {
   case CT_UNDERSCORE:
     return "CT_UNDERSCORE";
   case CT_INVALID:
@@ -143,8 +152,10 @@ const char *CharacterTypeToString(enum CharacterType type) {
   }
 }
 
-const char *TokenToString(int token) {
-  switch (token) {
+const char *TokenToString(int token)
+{
+  switch (token)
+  {
   case CARRIAGE_RETURN:
     return "CARRIAGE_RETURN";
   case TK_ASSIGNOP:
@@ -284,14 +295,16 @@ const char *TokenToString(int token) {
 }
 
 struct SymbolTableNode *createNode(struct SymbolTableEntry *symbolTableEntry,
-                                   struct SymbolTableNode *next) {
+                                   struct SymbolTableNode *next)
+{
   struct SymbolTableNode *newNode =
       (struct SymbolTableNode *)malloc(sizeof(struct SymbolTableNode));
   newNode->next = next;
   newNode->entry = symbolTableEntry;
   return newNode;
 }
-struct SymbolTableEntry *insertTester(char *lexeme, enum Tokentype token) {
+struct SymbolTableEntry *insertTester(char *lexeme, enum Tokentype token)
+{
   struct SymbolTableEntry *symbolTableEntry =
       (struct SymbolTableEntry *)malloc(sizeof(struct SymbolTableEntry));
   symbolTableEntry->lexeme = lexeme;
@@ -301,7 +314,8 @@ struct SymbolTableEntry *insertTester(char *lexeme, enum Tokentype token) {
   return symbolTableEntry;
 }
 
-struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry) {
+struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry)
+{
   // printf("Inserting %s\n", symbolTableEntry->lexeme);
   char *lexeme = symbolTableEntry->lexeme;
   // printf("\nThe lexeme received in gettoken is ");
@@ -311,7 +325,8 @@ struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry) {
   // }
   struct SymbolTableEntry *exists = lookup(lexeme);
   // printf(">> %s %p\n", lexeme, exists);
-  if (exists == NULL) {
+  if (exists == NULL)
+  {
     // insert into the symbol table using the lexeme as the hash tabel
     // return the new entry
     int lexeme_hash = hash(lexeme);
@@ -323,25 +338,32 @@ struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry) {
   return symbolTableEntry;
 }
 
-void printSymbolTable() {
+void printSymbolTable()
+{
   printf("\n\n\nPrinting symbol table\n");
   int collisionCount = 0;
   int entriesCount = 0;
-  for (int i = 0; i < HASH_MAP_SIZE; i++) {
+  for (int i = 0; i < HASH_MAP_SIZE; i++)
+  {
     printf("%d. ", i);
-    if (symbolTable[i] != NULL) {
+    if (symbolTable[i] != NULL)
+    {
       struct SymbolTableNode *node = symbolTable[i];
-      while (node) {
+      while (node)
+      {
         entriesCount++;
         printf("%s (%s)--->", node->entry->lexeme,
                TokenToString(node->entry->tokenType));
         node = node->next;
-        if (node != NULL) {
+        if (node != NULL)
+        {
           collisionCount++;
         }
       }
       printf("NULL\n");
-    } else {
+    }
+    else
+    {
       printf("NULL\n");
     }
   }
@@ -350,7 +372,8 @@ void printSymbolTable() {
   printf("Hash map size: %d\n", HASH_MAP_SIZE);
 }
 
-void insertAllKeywords() {
+void insertAllKeywords()
+{
   insertTester("with", TK_WITH);
   insertTester("parameters", TK_PARAMETERS);
   insertTester("end", TK_END);

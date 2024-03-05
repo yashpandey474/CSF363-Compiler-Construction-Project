@@ -40,13 +40,15 @@ void remove_comments(char *testcasefile, char *cleanFile)
 
   while (fgets(buffer, 50, file) != NULL)
   {
+    // Iterate through the buffer and print the characters
     for (int i = 0; buffer[i] != '\0'; i++)
     {
+      // ignore the comments until a new line character encountered
       if (prev_char == '%' && buffer[i] != '\n')
       {
         continue;
       }
-
+      // print the remaining characters if not in comment
       if (prev_char == '%' && buffer[i] == '\n')
       {
         printf("%c", buffer[i]);
@@ -88,7 +90,6 @@ void print_token_list(char *filename, int toPrint)
   // THE TOKEN
   struct SymbolTableEntry *token;
 
-  // printf("STARTING SCANNING\n");
   FILE *outputFile;
   if (toPrint)
   {
@@ -104,6 +105,7 @@ void print_token_list(char *filename, int toPrint)
 
   while ((token = getNextToken(LA)))
   {
+    // handling error
     if (token->tokenType == LEXICAL_ERROR)
     {
       if (toPrint)
@@ -112,7 +114,6 @@ void print_token_list(char *filename, int toPrint)
         fprintf(outputFile, "Line no. %-5d Error: %s\n", LA->lineNo,
                 token->lexeme);
       }
-
     }
     else
     {
@@ -126,7 +127,8 @@ void print_token_list(char *filename, int toPrint)
     }
   }
 
-  if (toPrint){
+  if (toPrint)
+  {
     fclose(outputFile);
   }
   return;
@@ -135,8 +137,9 @@ void print_token_list(char *filename, int toPrint)
 void print_timing_info(clock_t start_time, clock_t end_time)
 {
   double total_CPU_time, total_CPU_time_in_seconds;
-
+  // finding the difference between the start and end time
   total_CPU_time = (double)(end_time - start_time);
+  // converting the time to seconds
   total_CPU_time_in_seconds = total_CPU_time / CLOCKS_PER_SEC;
 
   printf("Total CPU time: %f μs\n", total_CPU_time);
@@ -158,13 +161,15 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  // printf("H1");
+  // POPULATE THE SYMBOL TABLE WITH KEYWORDS [SYMBOL TABLE IS A GLOBAL VARIABLE
   insertAllKeywords();
-  int synchSet[] = {TK_ENDRECORD, TK_ENDUNION, TK_SEM, TK_DOT,
+
+  // OUT EXTRA SYNCH SET APART FROM THE FOLLOW SET OF EACH NONTERMINALS
+  int synchSet[] = {TK_ENDRECORD, TK_ENDUNION, TK_SEM,
                     TK_CL, TK_SQL, TK_ENDRECORD, TK_ENDWHILE,
                     TK_ENDUNION, TK_ENDIF, TK_ELSE};
-  // printf("SYNCH SET");
 
+  // THE GRAMMAR IN FORM OF PRODUCTIONS FOR EACH ENUM OF NONTERMINALS
   Grammar G = {
       {{1, {{{NT_OTHER_FUNCTIONS, 1}, {NT_MAIN_FUNCTION, 1}}}},
        {1, {{{TK_MAIN, 0}, {NT_STMTS, 1}, {TK_END, 0}}}},
@@ -335,12 +340,14 @@ int main(int argc, char *argv[])
           {TK_RUID, 0}}}},
        {2, {{{TK_RECORD, 0}}, {{TK_UNION, 0}}}}}};
 
-  // printf("GRAMMAR DEFINED");
-
+  // COMPUTE THE FIRST AND FOLLOW SETS
   FirstAndFollow *sets = computeFirstAndFollow(G.productions);
+
+  // DEFINE THE PARSING TABLE AND CREATE IT
   struct ParsingTable *PT =
       (struct ParsingTable *)malloc(sizeof(struct ParsingTable));
-      
+
+  // CREATE THE PARSING TABLE USING THE PRODUCTIONS, FIRST AND FOLLW SETS AND EXTRA SYNCH SET
   createParseTable(PT, G.productions, sets, synchSet,
                    sizeof(synchSet) / sizeof(synchSet[0]));
 
@@ -364,25 +371,31 @@ int main(int argc, char *argv[])
       printf("Exiting...\n");
       break;
     case 1:
+      // FUNCTION TO REMOVE COMMENTS FROM CODE
       remove_comments(argv[1], "comment_free_code.txt");
       break;
     case 2:
+      // function to print the token list
       print_token_list(argv[1], 1);
       printf("Done");
       break;
     case 3:
+      // function to parse and print the parse tree
       print_and_parse_tree(argv[1], argv[2], sets, PT, G, 1);
       break;
     case 4:
+      // function to print the time taken to execute the code
       start_time = clock();
       print_and_parse_tree(argv[1], argv[2], sets, PT, G, 0);
       end_time = clock();
       print_timing_info(start_time, end_time);
       break;
     default:
+      // if an invalid option is selected
       printf("Invalid option. Please try again.\n");
     }
   } while (option != 0);
 
+  // to make sure that the code is executed until the option 0 is chosen
   return 0;
 }
