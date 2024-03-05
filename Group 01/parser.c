@@ -1144,7 +1144,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
   {
     if (!skipError)
       fprintf(errors,
-              "Line %-5d Error: Invalid token %s encountered with value %s "
+              "Line no. %-5d Error: Invalid token %s encountered with value %s "
               "stack top %s\n",
               LA->lineNo, TokenToString(a), token->lexeme,
               NonTerminalToString(X->val));
@@ -1163,7 +1163,7 @@ int parseInputSourceCode(struct SymbolTableEntry *token,
     if (!skipError)
     {
       fprintf(errors,
-              "Line %-5d Error: Invalid token %s encountered with value %s "
+              "Line no. %-5d Error: Invalid token %s encountered with value %s "
               "stack top %s\n",
               LA->lineNo, TokenToString(a), token->lexeme,
               NonTerminalToString(X->val));
@@ -1287,6 +1287,16 @@ void freeBufferLA(twinBuffer buffer, lexicalAnalyser LA)
 {
 }
 
+void freeAll(parseTree *tree, lexicalAnalyser LA, struct SymbolTableEntry *token, struct stack *stack)
+{
+  freeTree(tree);
+  free(LA->bufferArray);
+  free(LA);
+  free(token);
+  free(stack->stack);
+  free(stack);
+}
+
 void print_and_parse_tree(char *testfile, char *outputfile,
                           FirstAndFollow *sets, struct ParsingTable *PT,
                           Grammar G, int toPrint)
@@ -1399,25 +1409,20 @@ void print_and_parse_tree(char *testfile, char *outputfile,
   if (toPrint)
   {
     printParseTree(tree, outputfile);
-  }
-  if (isEmptyStack(stack))
-  {
-    printf("\nTHIS CODE IS SYNTACTICALLY INCORRECT.\n");
+
+    if (onlyContainsEOF(stack))
+    {
+      printf(
+          "KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
+    }
+    else
+    {
+      printf("THIS CODE IS SYNTACTICALLY INCORRECT.");
+    }
   }
 
-  if (onlyContainsEOF(stack))
-  {
-    printf(
-        "KYA BAAT HEIN TUTUTUDUUU MAX VERSTAPPEN: SYNTAX ANALYSIS COMPLETE\\n");
-  }
+  freeAll(tree, LA, token, stack);
 
-  freeTree(tree);
-  free(LA->bufferArray);
-  free(LA);
-  free(token);
-  free(stack->stack);
-  free(stack);
-  // freeBufferLA(bufferArray, LA);
   // if python graph output and serialising is needed
   //  serialize_tree(tree->root);
 
