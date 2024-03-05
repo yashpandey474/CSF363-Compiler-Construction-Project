@@ -7,13 +7,14 @@
 // Hardik Gupta 	         2021A7PS2421P
 // Agrawal Vansh Anil        2021A7PS2215P
 
-// Enumerated token types
+#include "lexerDef.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "lexerDef.h"
 #include <string.h>
+
 #ifndef LEXER_H
 #define LEXER_H
+
 struct SymbolTableEntry *getToken(struct SymbolTableEntry *symbolTableEntry);
 int getNextState(int currentState, int character);
 void insertAllKeywords();
