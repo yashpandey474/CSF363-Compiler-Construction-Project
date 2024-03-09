@@ -58,5 +58,3 @@ If you encounter any issues or have questions, please file an issue on the proje
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
-
-This README provides a concise overview and instructions for setting up and running the compiler project. It is designed to help users quickly get started and contribute to the project.
