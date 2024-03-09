@@ -42,7 +42,7 @@ The compiler, implemented in C, showcases efficient compilation of the testcase 
    To visualize the parse tree interactively, run the `network.py` script with the serialized JSON output file.
 
    ```
-   python network.py "serialized_output.json"
+   python network.py
    ```
 
 #### Contributing
